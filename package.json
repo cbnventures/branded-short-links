@@ -1,0 +1,70 @@
+{
+  "name": "branded-short-links",
+  "displayName": "Branded Short Links",
+  "version": "1.0.0",
+  "description": "A short link manager for branded links with Google Tag Manager support running on Cloudflare Workers",
+  "main": "",
+  "exports": "./",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "start": "wrangler dev",
+    "authorize": "wrangler login",
+    "deploy": "npm-run-all --sequential deploy:*",
+    "deploy:lint": "npx eslint ./src",
+    "deploy:wrangler": "wrangler deploy"
+  },
+  "types": "",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/cbnventures/branded-short-links.git"
+  },
+  "funding": [
+    {
+      "type": "github",
+      "url": "https://github.com/sponsors/cbnventures"
+    },
+    {
+      "type": "custom",
+      "url": "https://www.cbnventures.io/paypal/"
+    }
+  ],
+  "keywords": [
+    "url-shortener",
+    "branded-links",
+    "google-analytics",
+    "google-tag-manager",
+    "cloudflare"
+  ],
+  "author": {
+    "name": "Jacky Liang",
+    "email": "hello@mrjackyliang.com",
+    "url": "https://www.mrjackyliang.com"
+  },
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/cbnventures/branded-short-links/issues"
+  },
+  "files": [],
+  "homepage": "https://github.com/cbnventures/branded-short-links",
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {
+    "lodash": "4.17.21",
+    "zod": "3.22.4"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "4.20240222.0",
+    "@types/lodash": "4.14.202",
+    "@types/node": "20.11.20",
+    "@typescript-eslint/eslint-plugin": "6.21.0",
+    "@typescript-eslint/parser": "6.21.0",
+    "eslint": "8.57.0",
+    "eslint-config-airbnb-base": "15.0.0",
+    "eslint-config-airbnb-typescript": "17.1.0",
+    "npm-run-all": "4.1.5",
+    "typescript": "5.3.3",
+    "wrangler": "3.29.0"
+  }
+}

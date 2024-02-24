@@ -1,0 +1,31 @@
+name = "branded-short-links"
+main = "src/index.ts"
+compatibility_date = "2024-02-22"
+
+############
+## Routes ##
+############
+routes = [
+  { pattern = "example.com", custom_domain = true },
+]
+
+#################
+## Vars: Links ##
+#################
+[vars.links]
+default = "https://www.example.com"
+items = [
+  { shortcode = "url-1", http_response = 301, redirect_url = "https://www.new-site.com/url-1" },
+  { shortcode = "url-2", http_response = 302, redirect_url = "https://www.new-site.com/url-2" },
+  { shortcode = "url-3", http_response = 303, redirect_url = "https://www.new-site.com/url-3" },
+  { shortcode = "url-4", http_response = 307, redirect_url = "https://www.new-site.com/url-4" },
+  { shortcode = "url-5", http_response = 308, redirect_url = "https://www.new-site.com/url-5" },
+]
+
+####################
+## Vars: Settings ##
+####################
+[vars.settings]
+debug_mode = true
+force_https = true
+gtm_container_id = ""
