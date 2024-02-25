@@ -115,7 +115,7 @@ Coming soon
 ## Sending Data to an ntfy Server
 As an alternative to utilizing third-party tracking tools, visitor access data can be transmitted directly to a [ntfy](https://ntfy.sh/) server. To prevent excess notifications, the link below is pre-configured to send using `min` priority.
 
-- By default, the example link will use `https://ntfy.sh/mytopic`. If you are self-hosting, do not remove the `/publish` ending from the path name.
+- By default, the example link will use `https://ntfy.sh/mytopic`. If you are self-hosting and looking to replace the URL, do not remove the `/publish` ending from the path name.
 - If authentication is required, generate the `auth` parameter using the [Query param](https://docs.ntfy.sh/publish/#query-param) instructions, then replace `[YOUR ENCODED NTFY TOKEN]` with the token you just generated.
 
 ```text
