@@ -121,9 +121,8 @@ export class GoogleTagManager {
 
     // Build the parameter string from Cloudflare properties, accessed shortcode, and headers.
     const properties = {
-      bsl_method: this.#request.method,
+      bsl_redirectUrl: (this.#shortcode) ? this.#shortcode.redirect_url : null,
       bsl_shortcode: (this.#shortcode) ? this.#shortcode.shortcode : null,
-      bsl_url: this.#request.url,
       cf_asn: (this.#request.cf) ? this.#request.cf.asn : null,
       cf_asOrganization: (this.#request.cf) ? this.#request.cf.asOrganization : null,
       cf_city: (this.#request.cf) ? this.#request.cf.city : null,
@@ -144,6 +143,8 @@ export class GoogleTagManager {
       headers_host: this.#request.headers.get('host'),
       headers_userAgent: this.#request.headers.get('user-agent'),
       headers_xRealIp: this.#request.headers.get('x-real-ip'),
+      request_method: this.#request.method,
+      request_url: this.#request.url,
     };
 
     Object.entries(properties).forEach((property) => {

@@ -20,7 +20,7 @@ export const envSchema = z.object({
         z.literal(308),
       ]),
       redirect_url: z.string().url(),
-    })),
+    })).min(1),
   }),
   settings: z.object({
     debug_mode: z.boolean(),
