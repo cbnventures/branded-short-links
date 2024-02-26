@@ -7,7 +7,7 @@ Branded Short Links
 [![Become a GitHub Sponsor](https://img.shields.io/badge/github-sponsor-gray?style=flat-square&logo=githubsponsors&logoColor=%23ffffff&color=%23eaaf41)](https://github.com/sponsors/cbnventures)
 [![Donate via PayPal](https://img.shields.io/badge/paypal-donate-gray?style=flat-square&logo=paypal&logoColor=%23ffffff&color=%23ce4a4a)](https://www.cbnventures.io/paypal/)
 
-Effortlessly manage branded short links with seamless Google Tag Manager integration for advanced analytics, backed by the redundancy of the Cloudflare network infrastructure.
+Effortlessly manage branded short links with seamless Google Tag Manager integration (via the `noscript` feature), backed by the Cloudflare network.
 
 To use this link shortener, here are some steps to follow:
 1. Run `npm install` inside the project directory.
@@ -27,14 +27,14 @@ compatibility_date = "2024-02-22"
 ## Routes ##
 ############
 routes = [
-  { pattern = "example.com", custom_domain = true },
+  { pattern = "examp.le", custom_domain = true },
 ]
 
 #################
 ## Vars: Links ##
 #################
 [vars.links]
-default = "https://www.example.com"
+fallback_url = "https://www.example.com"
 items = [
   { shortcode = "url-1", http_response = 301, redirect_url = "https://www.new-site.com/url-1" },
   { shortcode = "url-2", http_response = 302, redirect_url = "https://www.new-site.com/url-2" },
@@ -51,27 +51,6 @@ debug_mode = true
 force_https = true
 gtm_container_id = ""
 ```
-
-## Configuration Options
-You can easily customize the behavior of the link shortener using these configuration settings:
-
-#### The `links` section:
-| Path                        | Type       | Description                                                                                                                                                                                        | Required | Accepted Values                      |
-|-----------------------------|------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|----------|--------------------------------------|
-| `links`                     | `object`   |                                                                                                                                                                                                    | yes      |                                      |
-| `links.default`             | `string`   | The default URL used if no shortcodes match. The path name (starting with `/`), search parameters (starting with `?`), and hash (starting with `#`) would be forwarded to the origin of this link. | yes      | Valid URL                            |
-| `links.items`               | `object[]` |                                                                                                                                                                                                    | yes      |                                      |
-| `links.items.shortcode`     | `string`   | Path name without the preceding forward slash. For example, in `https://example.com/url-1`, the `url-1` part would be the shortcode.                                                               | yes      |                                      |
-| `links.items.http_response` | `number`   | The HTTP response code to use. View the [Dr. Link Check](https://www.drlinkcheck.com/blog/http-redirects-301-302-303-307-308) for an in-depth explanation.                                         | yes      | `301`, `302`, `303`, `307`, or `308` |
-| `links.items.redirect_url`  | `string`   | Redirect to this URL. If Google Tag Manager is enabled, it will execute first, then redirect.                                                                                                      | yes      | Valid URL                            |
-
-#### The `settings` section:
-| Path                        | Type      | Description                                                                                                                                           | Required | Accepted Values       |
-|-----------------------------|-----------|-------------------------------------------------------------------------------------------------------------------------------------------------------|----------|-----------------------|
-| `settings`                  | `object`  |                                                                                                                                                       | yes      |                       |
-| `settings.debug_mode`       | `boolean` | If `gtm_container_id` is defined, this will show _all_ **Custom Image Tags** responses defined in Google Tag Manager instead of redirecting the user. | yes      |                       |
-| `settings.force_https`      | `boolean` | If a HTTP request is detected, the link shortener will first redirect to HTTPS before tracking and redirection.                                       | yes      |                       |
-| `settings.gtm_container_id` | `string`  | The Google Tag Manager container to use. The Google Tag Manager Container ID should start with `GTM-`. Optional.                                      | no       | Beginning with `GTM-` |
 
 ## Supported Data
 With each request, the link manager will gather user data for each request (retrieved from Cloudflare properties, request headers, etc.). However, the extent of data collection may vary depending on the limitations imposed by web analytics services. The variables supported are listed below:
@@ -103,26 +82,102 @@ With each request, the link manager will gather user data for each request (retr
 | `request_method`         | `request.method`            | The [Request: method](https://developer.mozilla.org/en-US/docs/Web/API/Request/method) property.                                                                                     |
 | `request_url`            | `request.url`               | The [Request: url](https://developer.mozilla.org/en-US/docs/Web/API/Request/url) property.                                                                                           |
 
+## How Does It Work?
+In the world of many analytical tools, a Tag Management System (TMS) like Google Tag Manager makes it straightforward to manage digital marketing deployments, and to consolidate multiple data sources. However, these systems typically rely on embedding JavaScript directly into users' browsers.
+
+This approach poses a challenge for a link shortening tool, for which the aim is to redirect users via a pre-configured "short link" without any client-side code. Moreover, modern browsers receiving a 3xx redirection response will not load the response body, which means scripts may not load as well.
+
+To address this, we can leverage the under-documented `noscript` feature in Google Tag Manager, and have the worker (this link shortener) execute the tags with the available information given in each request.
+
+This approach will satisfy three requirements:
+1. Your environment would essentially be serverless, open-source, and backed by Cloudflare network.
+2. Redirects do not go through the `http-equiv` meta header, which is [considered bad for SEO](https://help.ahrefs.com/en/articles/2433739-what-is-meta-refresh-redirect-and-why-is-it-considered-a-critical-issue).
+3. Minimal, no additional maintenance required. Shortcodes not found would simply fall back to the original domain for further resolution.
+
+## Configure Short Links
+To condense lengthy links into shorter links, configure each short link using the following settings:
+
+- `shortcode`
+  - Assign a unique shortcode or alias to the link. For instance, in `https://examp.le/url-1`, `url-1` serves as the shortcode.
+- `http_response`
+  - Specify the desired HTTP response code - `301`, `302`, `303`, `307`, or `308`. You may read the [Dr. Link Check](https://www.drlinkcheck.com/blog/http-redirects-301-302-303-307-308) blog post for more information.
+- `redirect_url`
+  - Define the destination URL.
+
+Below is an example demonstrating the configuration:
+```toml
+[vars.links]
+fallback_url = "https://www.example.com"
+items = [
+  { shortcode = "url-1", http_response = 301, redirect_url = "https://www.new-site.com/url-1" },
+  { shortcode = "url-2", http_response = 302, redirect_url = "https://www.new-site.com/url-2" },
+  { shortcode = "url-3", http_response = 303, redirect_url = "https://www.new-site.com/url-3" },
+  { shortcode = "url-4", http_response = 307, redirect_url = "https://www.new-site.com/url-4" },
+  { shortcode = "url-5", http_response = 308, redirect_url = "https://www.new-site.com/url-5" },
+]
+```
+
+__Note:__ If a request does not match any configured shortcodes, it will default to the `fallback_url` while retaining the original request.
+
+## Additional Settings
+The link shortener provides additional settings for your convenience. Here's what you can configure:
+
+- To enable debug mode, set the `debug_mode` setting to `true`.
+- To enforce HTTPS, set the `force_https` setting to `true`.
+- To enable Google Tag Manager support, set the `gtm_container_id` to a non-empty value. _Optional._
+
+__Note:__ If `debug_mode` is enabled and the `gtm_container_id` is defined, all custom image tags will run and their responses will be displayed instead of redirecting the user. Please **exercise caution** as enabling debug mode may reveal information typically concealed (e.g. API Secrets or Access Tokens).
+
 ## Setting Up Google Tag Manager
-Coming soon
+When setting up the container for the first time, follow these steps to integrate the variables sent by the link shortener:
 
-## Sending Data to Google Analytics
-Coming soon
+<details>
+  <summary>For each variable, use the following settings:</summary>
 
-## Sending Data to Facebook Pixel
-Coming soon
+- **Name:** _Based on the "Variable" column provided in the [Supported Data](#supported-data) section_
+- **Variable Type:** Data Layer Variable
+- **Data Layer Variable Name:** _Same as the "Name" setting above_
+- **Data Layer Version:** Version 2
+- **Set Default Value:** _Checked_
+  - **Default Value:** N/A
+</details>
 
-## Sending Data to an ntfy Server
+<details>
+  <summary>For each trigger, use the following settings:</summary>
+
+- **Trigger Type:** Page View
+- **This trigger fires on:** Some Page Views
+  - To trigger tags if the user was redirected to the shortcode URL, set the variable to "does not equal N/A".
+  - To trigger tags if the user was redirected to the fallback URL, set the variable to "equals to N/A".
+</details>
+
+__Note:__ For enhanced confidentiality, create a dedicated container exclusively for this link shortener and avoid sharing it with other domains.
+
+## Sending Data to Google Analytics 4
+Once you have completed the setup for Google Tag Manager, we will begin by sending page view data using the Google Analytics 4 Measurement Protocol.
+
+This will be setup as a **Custom Image** tag and not the Google tag.
+
+- To retrieve the API Secret and Measurement ID, view the [query parameters](https://developers.google.com/analytics/devguides/collection/protocol/ga4/reference?client_type=gtag#payload_query_parameters) documentation.
+- Please note that the `bsl_data` parameter is required. The value is a URL encoded version of a stringified JSON object.
+
+```text
+//BSL_POST_REQ=https://www.google-analytics.com/mp/collect?api_secret=[YOUR API SECRET]&measurement_id=[YOUR MEASUREMENT ID]&bsl_data=%7B%22client_id%22%3A%22{{headers_cfRay}}%22%2C%22events%22%3A%5B%7B%22name%22%3A%22select_content%22%2C%22params%22%3A%7B%22content_type%22%3A%22short_link%22%2C%22content_id%22%3A%22{{bsl_shortcode}}%22%7D%7D%5D%7D
+```
+
+__Note:__ It is recommended that you keep these private to your organization. If required, regularly rotate the `api_secret` to avoid excessive spam.
+
+## Sending Data to a ntfy Server
 As an alternative to utilizing third-party tracking tools, visitor access data can be transmitted directly to a [ntfy](https://ntfy.sh/) server. To prevent excess notifications, the link below is pre-configured to send using `min` priority.
 
 - By default, the example link will use `https://ntfy.sh/mytopic`. If you are self-hosting and looking to replace the URL, do not remove the `/publish` ending from the path name.
-- If authentication is required, generate the `auth` parameter using the [Query param](https://docs.ntfy.sh/publish/#query-param) instructions, then replace `[YOUR ENCODED NTFY TOKEN]` with the token you just generated.
+- If authentication is required, generate the `auth` parameter using the [query param](https://docs.ntfy.sh/publish/#query-param) instructions, then replace `[YOUR ENCODED NTFY TOKEN]` with the token you just generated.
 
 ```text
-https://ntfy.sh/mytopic/publish?auth=[YOUR ENCODED NTFY TOKEN]&title=User%20Request%20Received&message=The%20following%20details%20have%20been%20captured%20from%20a%20recent%20user%20request.%0D%0A%0D%0A%F0%9F%94%97%20__User%20Request__%0D%0A__Shortcode%3A__%20{{bsl_shortcode}}%0D%0A__Redirect%20To%3A__%20{{bsl_redirectUrl}}%0D%0A__Request%20Method%3A__%20{{request_method}}%0D%0A__Request%20URL%3A__%20{{request_url}}%0D%0A%0D%0A%F0%9F%8C%A9%EF%B8%8F%20__Cloudflare%20Properties__%0D%0A__City%3A__%20{{cf_city}}%0D%0A__Continent%3A__%20{{cf_continent}}%0D%0A__Country%3A__%20{{cf_country}}%0D%0A__Data%20Center%3A__%20{{cf_colo}}%0D%0A__ISP%3A__%20{{cf_asOrganization}}%20%28{{cf_asn}}%29%0D%0A__Is%20EU%20Country%3A__%20{{cf_isEUCountry}}%0D%0A__Coordinates%3A__%20{{cf_latitude}}%2C%20{{cf_longitude}}%0D%0A__Metro%20Code%3A__%20{{cf_metroCode}}%0D%0A__Postal%20Code%3A__%20{{cf_postalCode}}%0D%0A__Region%3A__%20{{cf_region}}%20%28{{cf_regionCode}}%29%0D%0A__Time%20Zone%3A__%20{{cf_timezone}}%0D%0A%0D%0A%F0%9F%97%A3%20__Headers__%0D%0A__CF-Connecting-IP%3A__%20{{headers_cfConnectingIp}}%0D%0A__CF-IPCountry%3A__%20{{headers_cfIpCountry}}%0D%0A__CF-RAY%3A__%20{{headers_cfRay}}%0D%0A__Host%3A__%20{{headers_host}}%0D%0A__User-Agent%3A__%20{{headers_userAgent}}%0D%0A__X-Real-IP%3A__%20{{headers_xRealIp}}&tags=rotating_light&markdown=yes&priority=min
+//BSL_GET_REQ=https://ntfy.sh/mytopic/publish?auth=[YOUR ENCODED NTFY TOKEN]&title=User%20Request%20Received&message=The%20following%20details%20have%20been%20captured%20from%20a%20recent%20user%20request.%0D%0A%0D%0A%F0%9F%94%97%20__User%20Request__%0D%0A__Shortcode%3A__%20{{bsl_shortcode}}%0D%0A__Redirect%20To%3A__%20{{bsl_redirectUrl}}%0D%0A__Request%20Method%3A__%20{{request_method}}%0D%0A__Request%20URL%3A__%20{{request_url}}%0D%0A%0D%0A%F0%9F%8C%A9%EF%B8%8F%20__Cloudflare%20Properties__%0D%0A__City%3A__%20{{cf_city}}%0D%0A__Continent%3A__%20{{cf_continent}}%0D%0A__Country%3A__%20{{cf_country}}%0D%0A__Data%20Center%3A__%20{{cf_colo}}%0D%0A__ISP%3A__%20{{cf_asOrganization}}%20%28{{cf_asn}}%29%0D%0A__Is%20EU%20Country%3A__%20{{cf_isEUCountry}}%0D%0A__Coordinates%3A__%20{{cf_latitude}}%2C%20{{cf_longitude}}%0D%0A__Metro%20Code%3A__%20{{cf_metroCode}}%0D%0A__Postal%20Code%3A__%20{{cf_postalCode}}%0D%0A__Region%3A__%20{{cf_region}}%20%28{{cf_regionCode}}%29%0D%0A__Time%20Zone%3A__%20{{cf_timezone}}%0D%0A%0D%0A%F0%9F%97%A3%20__Headers__%0D%0A__CF-Connecting-IP%3A__%20{{headers_cfConnectingIp}}%0D%0A__CF-IPCountry%3A__%20{{headers_cfIpCountry}}%0D%0A__CF-RAY%3A__%20{{headers_cfRay}}%0D%0A__Host%3A__%20{{headers_host}}%0D%0A__User-Agent%3A__%20{{headers_userAgent}}%0D%0A__X-Real-IP%3A__%20{{headers_xRealIp}}&tags=rotating_light&markdown=yes&priority=min
 ```
 
-__Note:__ The `auth` tokens are encoded in base64 without padding (considered plain text). To maintain secrecy, Google Tag Manager would be accessed via the Cloudflare infrastructure, not the user's browser. Please ensure the confidentiality of your GTM container ID to prevent potential token exposure.
+__Note:__ It is recommended that you keep these private to your organization. If required, regularly rotate the `auth` token to avoid excessive spam.
 
 ## Credits and Appreciation
 If you find value in the ongoing development of this proxy and wish to express your appreciation, you have the option to become our supporter on [GitHub Sponsors](https://github.com/sponsors/cbnventures) or make a one-time donation through [PayPal](https://www.cbnventures.io/paypal/).

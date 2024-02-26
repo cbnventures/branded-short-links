@@ -9,7 +9,7 @@ import { textGtmContainerId } from '@/lib/regex.js';
  */
 export const envSchema = z.object({
   links: z.object({
-    default: z.string().url(),
+    fallback_url: z.string().url(),
     items: z.array(z.object({
       shortcode: z.string().min(1),
       http_response: z.union([

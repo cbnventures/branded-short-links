@@ -1,4 +1,18 @@
 /**
+ * Text bsl get req.
+ *
+ * @since 1.0.0
+ */
+export const textBslGetReq = /^(\/\/BSL_GET_REQ=)(.+)$/;
+
+/**
+ * Text bsl post req.
+ *
+ * @since 1.0.0
+ */
+export const textBslPostReq = /^(\/\/BSL_POST_REQ=)(.+)$/;
+
+/**
  * Text gtm container id.
  *
  * @since 1.0.0

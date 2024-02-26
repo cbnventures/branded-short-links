@@ -1,6 +1,12 @@
 import _ from 'lodash';
 
-import { textImgSrc, textParenthesisLeft, textParenthesisRight } from '@/lib/regex.js';
+import {
+  textBslGetReq,
+  textBslPostReq,
+  textImgSrc,
+  textParenthesisLeft,
+  textParenthesisRight,
+} from '@/lib/regex.js';
 import type {
   GoogleTagManagerBuildUrlReturns,
   GoogleTagManagerConstructorContainerId,
@@ -11,9 +17,12 @@ import type {
   GoogleTagManagerExecuteReturns,
   GoogleTagManagerExtractTagsHtmlText,
   GoogleTagManagerExtractTagsReturns,
+  GoogleTagManagerProcessUrlReturns,
+  GoogleTagManagerProcessUrlUrl,
   GoogleTagManagerRequest,
   GoogleTagManagerShortcode,
 } from '@/types/index.d.ts';
+import { getUrlParameterValue, removeUrlParameter } from '@/lib/utility.js';
 
 /**
  * Google Tag Manager.
@@ -80,17 +89,17 @@ export class GoogleTagManager {
       const urls = GoogleTagManager.extractTags(gtmResponseText);
 
       for (let i = 0; i < urls.length; i += 1) {
-        const urlResponse = await fetch(urls[i]);
+        const processedUrl = await GoogleTagManager.processUrl(urls[i]);
 
         responses.push({
-          success: urlResponse.status === 200,
+          success: processedUrl.status === 200,
           response: {
-            headers: Object.fromEntries(urlResponse.headers),
-            ok: urlResponse.ok,
-            status: urlResponse.status,
-            statusText: urlResponse.statusText,
-            text: await urlResponse.text(),
-            url: urlResponse.url,
+            headers: Object.fromEntries(processedUrl.headers),
+            ok: processedUrl.ok,
+            status: processedUrl.status,
+            statusText: processedUrl.statusText,
+            text: await processedUrl.text(),
+            url: processedUrl.url,
           },
         });
       }
@@ -162,6 +171,50 @@ export class GoogleTagManager {
     });
 
     return `https://www.googletagmanager.com/ns.html?id=${this.#containerId}${parameters}`;
+  }
+
+  /**
+   * Google Tag Manager - Process url.
+   *
+   * @param {GoogleTagManagerProcessUrlUrl} url - Url.
+   *
+   * @private
+   *
+   * @returns {GoogleTagManagerProcessUrlReturns}
+   *
+   * @since 1.0.0
+   */
+  private static async processUrl(url: GoogleTagManagerProcessUrlUrl): GoogleTagManagerProcessUrlReturns {
+    // For GET requests, remove the beginning tag, and then fetch.
+    if (url.startsWith('//BSL_GET_REQ=')) {
+      return fetch(url.replace(textBslGetReq, '$2'));
+    }
+
+    // For POST requests, remove the beginning tag, process the "bsl_data" parameter, then fetch.
+    if (url.startsWith('//BSL_POST_REQ=')) {
+      const urlWithoutTag = url.replace(textBslPostReq, '$2');
+      const bslData = getUrlParameterValue(urlWithoutTag, 'bsl_data');
+      const newUrl = removeUrlParameter(urlWithoutTag, ['bsl_data', 'gtmcb']);
+
+      // A POST request must include the "bsl_data" parameter.
+      if (bslData === null) {
+        throw new Error(`Attempting to perform a POST request for "${url}", but the "bsl_data" parameter does not exist.`);
+      }
+
+      console.log(JSON.parse(bslData));
+
+      return fetch(newUrl, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: bslData,
+      });
+    }
+
+    console.warn(`The "${url}" URL does not start with either "//BSL_GET_REQ=" or "//BSL_POST_REQ=". It will be processed as GET request ...`);
+
+    return fetch(url);
   }
 
   /**

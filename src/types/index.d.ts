@@ -1,6 +1,17 @@
 import type { Shortcode } from '@/types/shared.d.ts';
 
 /**
+ * Get url parameter value.
+ *
+ * @since 1.0.0
+ */
+export type GetUrlParameterValueUrl = string;
+
+export type GetUrlParameterValueParameter = string;
+
+export type GetUrlParameterValueReturns = string | null;
+
+/**
  * Google Tag Manager - Build url.
  *
  * @since 1.0.0
@@ -53,6 +64,15 @@ export type GoogleTagManagerExtractTagsHtmlText = string;
 export type GoogleTagManagerExtractTagsReturns = string[];
 
 /**
+ * Google Tag Manager - Process url.
+ *
+ * @since 1.0.0
+ */
+export type GoogleTagManagerProcessUrlUrl = string;
+
+export type GoogleTagManagerProcessUrlReturns = Promise<global.Response>;
+
+/**
  * Google Tag Manager - Request.
  *
  * @since 1.0.0
@@ -85,3 +105,14 @@ export type InitializeReturns = Promise<Response>;
 export type PrettyPrintData = object | object[];
 
 export type PrettyPrintReturns = string | null;
+
+/**
+ * Remove url parameter.
+ *
+ * @since 1.0.0
+ */
+export type RemoveUrlParameterUrl = string;
+
+export type RemoveUrlParameterParameters = string[];
+
+export type RemoveUrlParameterReturns = string;

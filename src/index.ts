@@ -62,11 +62,11 @@ export async function initialize(request: InitializeRequest, env: InitializeEnv)
       }
     }
 
-    // If shortcode not found, redirect to default url with original parameters.
+    // If shortcode not found, redirect to the fallback url with original parameters.
     if (shortcode === undefined) {
-      const defaultUrl = new URL(links.default);
+      const fallbackUrl = new URL(links.fallback_url);
 
-      return Response.redirect(`${defaultUrl.origin}${requestUrl.pathname}${requestUrl.search}${requestUrl.hash}`, 307);
+      return Response.redirect(`${fallbackUrl.origin}${requestUrl.pathname}${requestUrl.search}${requestUrl.hash}`, 307);
     }
 
     return Response.redirect(shortcode.redirect_url, shortcode.http_response);
