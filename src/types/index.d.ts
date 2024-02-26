@@ -70,6 +70,7 @@ export type GoogleTagManagerExtractTagsReturns = string[];
  */
 export type GoogleTagManagerProcessUrlUrl = string;
 
+// @ts-ignore
 export type GoogleTagManagerProcessUrlReturns = Promise<global.Response>;
 
 /**
