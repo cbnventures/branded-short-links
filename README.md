@@ -96,7 +96,7 @@ This approach will satisfy four different goals:
 1. Your environment would essentially be serverless, open-source, and backed by Cloudflare network.
 2. Redirects do not go through the `http-equiv` meta header, which is [considered bad for SEO](https://help.ahrefs.com/en/articles/2433739-what-is-meta-refresh-redirect-and-why-is-it-considered-a-critical-issue).
 3. No additional maintenance required. Shortcodes not found would simply fall back to the original domain for further resolution.
-4. Developers would not need to re-configure and re-deploy the link shortener just to add a new script.
+4. Developers would not need to re-configure and re-deploy the link shortener just to add a new tag.
 
 ## Configure Short Links
 To condense lengthy links into shorter links, configure each short link using the following settings:
@@ -130,7 +130,7 @@ The link shortener provides additional settings for your convenience. Here's wha
 - To enforce HTTPS, set the `force_https` setting to `true`.
 - To enable Google Tag Manager support, set the `gtm_container_id` to a non-empty value. _Optional._
 
-__Note:__ If `debug_mode` is enabled and the `gtm_container_id` is defined, all custom image tags will run and their responses will be displayed instead of redirecting the user. Please **exercise caution** as enabling debug mode may reveal information typically concealed (e.g. API Secrets and Access Tokens).
+__Note:__ If `debug_mode` is enabled and the `gtm_container_id` is defined, all custom image tags will run and their responses will be displayed instead of redirecting the user. Please __exercise caution__ as enabling debug mode may reveal information typically concealed (e.g. API Secrets and Access Tokens).
 
 ## Setting Up Google Tag Manager
 When setting up the container for the first time, follow these steps to integrate the variables sent by the link shortener:
@@ -138,29 +138,35 @@ When setting up the container for the first time, follow these steps to integrat
 <details>
   <summary>For each variable, use the following settings:</summary>
 
-- **Name:** _Based on the "Variable" column provided in the [Supported Data](#supported-data) section_
-- **Variable Type:** Data Layer Variable
-- **Data Layer Variable Name:** _Same as the "Name" setting above_
-- **Data Layer Version:** Version 2
-- **Set Default Value:** _Checked_
-  - **Default Value:** N/A
+- __Name:__ _Based on the "Variable" column provided in the [Supported Data](#supported-data) section_
+- __Variable Type:__ Data Layer Variable
+- __Data Layer Variable Name:__ _Same as the "Name" setting above_
+- __Data Layer Version:__ Version 2
+- __Set Default Value:__ _Checked_
+  - __Default Value:__ N/A
 </details>
 
 <details>
   <summary>For each trigger, use the following settings:</summary>
 
-- **Trigger Type:** Page View
-- **This trigger fires on:** Some Page Views
-  - To trigger tags if the user was redirected to the shortcode URL, set the variable to "does not equal N/A".
-  - To trigger tags if the user was redirected to the fallback URL, set the variable to "equals to N/A".
+- __Trigger Type:__ Page View
+- __This trigger fires on:__ Some Page Views
+  - To trigger tags if the user was redirected to the __shortcode URL__:
+    - Left box: Select the `bsl_shortcode` variable.
+    - Center box: Select __does not equal__.
+    - Right box: Type __N/A__.
+  - To trigger tags if the user was redirected to the __fallback URL__:
+    - Left box: Select the `bsl_shortcode` variable.
+    - Center box: Select __equals to__.
+    - Right box: Type __N/A__.
 </details>
 
 __Note:__ For enhanced confidentiality, create a dedicated container exclusively for this link shortener and avoid sharing it with other domains.
 
 ## Sending Data to Google Analytics 4
-Once you have completed the setup for Google Tag Manager, we will begin by sending page view data using the Google Analytics 4 Measurement Protocol.
+Once you have completed the setup for Google Tag Manager, the link shortener will begin by sending page view data using the Google Analytics 4 Measurement Protocol.
 
-This will be setup as a **Custom Image** tag and not the Google tag.
+This will be setup as a __Custom Image__ tag and not the Google tag.
 
 - To retrieve the API Secret and Measurement ID, view the [query parameters](https://developers.google.com/analytics/devguides/collection/protocol/ga4/reference?client_type=gtag#payload_query_parameters) documentation, then replace the `[YOUR API SECRET]` and `[YOUR MEASUREMENT ID]` with the information retrieved.
 - Please note that the `bsl_data` parameter is required when performing a `POST` request. The value is a URL encoded version of a JSON object.
@@ -195,11 +201,19 @@ __Note:__ The `bsl_data` parameter will hold a URL encoded version of a JSON obj
 ## Limiting Bad Traffic
 When you first set up the link shortener, you may notice a large amount of unwanted traffic attempting to find exploits. Here's how we handled it with a single WAF rule:
 
-1. Send traffic data into your [ntfy](https://ntfy.sh/) server, observe, check, and add suspicious ASNs.
+1. Send traffic data into your [ntfy](https://ntfy.sh/) server, observe the incoming request, then add suspicious ASNs.
 2. Enable the "Known Bots" checkbox.
 3. Set the "Threat Score" greater than or equal to 5.
 
 Finally, set the action to [Interactive Challenge](https://developers.cloudflare.com/waf/reference/cloudflare-challenges/).
 
+## Configuration for Cloudflare
+When deploying, there are a few things you need to be aware of:
+
+1. A domain name is required.
+   - You can conveniently [register domains](https://www.cloudflare.com/products/registrar/) within Cloudflare at cost, without markup fees as seen with other domain registrars.
+2. Routes are not supported (when `custom_domain` is set to `false`).
+   - This is because the link shortener matches the beginning of the path without the forward slash (e.g. `examp.le/url-1` will match `url-1`) defined in the link items in your `wrangler.toml` file.
+
 ## Credits and Appreciation
-If you find value in the ongoing development of this proxy and wish to express your appreciation, you have the option to become our supporter on [GitHub Sponsors](https://github.com/sponsors/cbnventures) or make a one-time donation through [PayPal](https://www.cbnventures.io/paypal/).
+If you find value in the ongoing development of this url shortener and wish to express your appreciation, you have the option to become our supporter on [GitHub Sponsors](https://github.com/sponsors/cbnventures) or make a one-time donation through [PayPal](https://www.cbnventures.io/paypal/).
