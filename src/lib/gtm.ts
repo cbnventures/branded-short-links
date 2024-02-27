@@ -194,7 +194,7 @@ export class GoogleTagManager {
     if (url.startsWith('//BSL_POST_REQ=')) {
       const urlWithoutTag = url.replace(textBslPostReq, '$2');
       const bslData = getUrlParameterValue(urlWithoutTag, 'bsl_data');
-      const newUrl = removeUrlParameter(urlWithoutTag, ['bsl_data', 'gtmcb']);
+      const newUrl = removeUrlParameter(urlWithoutTag, ['bsl_data']);
 
       // A POST request must include the "bsl_data" parameter.
       if (bslData === null) {

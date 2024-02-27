@@ -7,6 +7,7 @@ compatibility_date = "2024-02-22"
 ############
 routes = [
   { pattern = "examp.le", custom_domain = true },
+  { pattern = "www.examp.le", custom_domain = true },
 ]
 
 #################
