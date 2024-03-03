@@ -201,11 +201,11 @@ __Note:__ The `bsl_data` parameter will hold a URL encoded version of a JSON obj
 ## Limiting Bad Traffic
 When you first set up the link shortener, you may notice a large amount of unwanted traffic attempting to find exploits. Here's how we handled it with a single WAF rule:
 
-1. Send traffic data into your [ntfy](https://ntfy.sh/) server, observe the incoming request, then add suspicious ASNs.
-2. Enable the "Known Bots" checkbox.
-3. Set the "Threat Score" greater than or equal to 5.
+1. Select "Known Bots" from the "Field" dropdown and set it to enable.
+2. Select "Threat Score" from the "Field" dropdown and set it to "greater than or equal to".
+3. Select "URI Path" from the "Field" dropdown and set it to "does not equal to".
 
-Finally, set the action to [Interactive Challenge](https://developers.cloudflare.com/waf/reference/cloudflare-challenges/).
+Finally, set the action to [Managed Challenge](https://developers.cloudflare.com/waf/reference/cloudflare-challenges/).
 
 ## Configuration for Cloudflare
 When deploying, there are a few things you need to be aware of:
