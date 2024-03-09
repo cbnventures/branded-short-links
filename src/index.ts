@@ -41,7 +41,7 @@ export async function initialize(request: InitializeRequest, env: InitializeEnv)
       return Response.redirect(requestUrl.href, 301);
     }
 
-    const shortcode = links.items.find((item) => requestUrl.pathname.substring(1) === item.shortcode);
+    const shortcode = links.items.find((item) => requestUrl.pathname === item.shortcode);
 
     // Load Google Tag Manager, and query all the "Custom Image Tags" that are found.
     if (settings.gtm_container_id !== undefined) {

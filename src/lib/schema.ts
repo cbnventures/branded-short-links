@@ -11,7 +11,7 @@ export const envSchema = z.object({
   links: z.object({
     fallback_url: z.string().url(),
     items: z.array(z.object({
-      shortcode: z.string().min(1),
+      shortcode: z.string().startsWith('/').min(2),
       http_response: z.union([
         z.literal(301),
         z.literal(302),

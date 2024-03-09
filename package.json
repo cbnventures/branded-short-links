@@ -1,7 +1,7 @@
 {
   "name": "branded-short-links",
   "displayName": "Branded Short Links",
-  "version": "1.0.2",
+  "version": "1.1.0",
   "description": "A short link manager for branded links with Google Tag Manager support running on Cloudflare Workers",
   "main": "",
   "exports": "./",
@@ -57,14 +57,14 @@
   "devDependencies": {
     "@cloudflare/workers-types": "4.20240222.0",
     "@types/lodash": "4.14.202",
-    "@types/node": "20.11.20",
-    "@typescript-eslint/eslint-plugin": "6.21.0",
-    "@typescript-eslint/parser": "6.21.0",
+    "@types/node": "20.11.25",
+    "@typescript-eslint/eslint-plugin": "7.1.1",
+    "@typescript-eslint/parser": "7.1.1",
     "eslint": "8.57.0",
     "eslint-config-airbnb-base": "15.0.0",
-    "eslint-config-airbnb-typescript": "17.1.0",
+    "eslint-config-airbnb-typescript": "18.0.0",
     "npm-run-all": "4.1.5",
-    "typescript": "5.3.3",
-    "wrangler": "3.29.0"
+    "typescript": "5.4.2",
+    "wrangler": "3.32.0"
   }
 }

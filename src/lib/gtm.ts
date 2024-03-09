@@ -201,8 +201,6 @@ export class GoogleTagManager {
         throw new Error(`Attempting to perform a POST request for "${url}", but the "bsl_data" parameter does not exist.`);
       }
 
-      console.log(JSON.parse(bslData));
-
       return fetch(newUrl, {
         method: 'POST',
         headers: {

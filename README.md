@@ -37,11 +37,11 @@ routes = [
 [vars.links]
 fallback_url = "https://www.example.com"
 items = [
-  { shortcode = "url-1", http_response = 301, redirect_url = "https://www.new-site.com/url-1" },
-  { shortcode = "url-2", http_response = 302, redirect_url = "https://www.new-site.com/url-2" },
-  { shortcode = "url-3", http_response = 303, redirect_url = "https://www.new-site.com/url-3" },
-  { shortcode = "url-4", http_response = 307, redirect_url = "https://www.new-site.com/url-4" },
-  { shortcode = "url-5", http_response = 308, redirect_url = "https://www.new-site.com/url-5" },
+  { shortcode = "/url-1", http_response = 301, redirect_url = "https://www.new-site.com/url-1" },
+  { shortcode = "/url-2", http_response = 302, redirect_url = "https://www.new-site.com/url-2" },
+  { shortcode = "/url-3", http_response = 303, redirect_url = "https://www.new-site.com/url-3" },
+  { shortcode = "/url-4", http_response = 307, redirect_url = "https://www.new-site.com/url-4" },
+  { shortcode = "/url-5", http_response = 308, redirect_url = "https://www.new-site.com/url-5" },
 ]
 
 ####################
@@ -102,7 +102,7 @@ This approach will satisfy four different goals:
 To condense lengthy links into shorter links, configure each short link using the following settings:
 
 - `shortcode`
-  - A unique shortcode or alias. For instance, in `https://examp.le/url-1`, `url-1` serves as the shortcode.
+  - A unique shortcode or alias. For instance, in `https://examp.le/url-1`, `/url-1` serves as the shortcode.
 - `http_response`
   - The desired HTTP response code — `301`, `302`, `303`, `307`, or `308`. You may read the [Dr. Link Check](https://www.drlinkcheck.com/blog/http-redirects-301-302-303-307-308) blog post for more information.
 - `redirect_url`
@@ -113,13 +113,21 @@ Below is an example demonstrating the configuration:
 [vars.links]
 fallback_url = "https://www.example.com"
 items = [
-  { shortcode = "url-1", http_response = 301, redirect_url = "https://www.new-site.com/url-1" },
-  { shortcode = "url-2", http_response = 302, redirect_url = "https://www.new-site.com/url-2" },
-  { shortcode = "url-3", http_response = 303, redirect_url = "https://www.new-site.com/url-3" },
-  { shortcode = "url-4", http_response = 307, redirect_url = "https://www.new-site.com/url-4" },
-  { shortcode = "url-5", http_response = 308, redirect_url = "https://www.new-site.com/url-5" },
+  { shortcode = "/url-1", http_response = 301, redirect_url = "https://www.new-site.com/url-1" },
+  { shortcode = "/url-2", http_response = 302, redirect_url = "https://www.new-site.com/url-2" },
+  { shortcode = "/url-3", http_response = 303, redirect_url = "https://www.new-site.com/url-3" },
+  { shortcode = "/url-4", http_response = 307, redirect_url = "https://www.new-site.com/url-4" },
+  { shortcode = "/url-5", http_response = 308, redirect_url = "https://www.new-site.com/url-5" },
 ]
 ```
+
+Below is an example demonstrating how will redirects work if `url-1` is defined like the configuration above:
+
+| User Request                               | Matching Shortcode | Redirect URL                     |
+|--------------------------------------------|--------------------|----------------------------------|
+| `https://examp.le/url-1`                   | `/url-1`           | `https://www.new-site.com/url-1` |
+| `https://examp.le/url-1?abc=123#somehash`  | `/url-1`           | `https://www.new-site.com/url-1` |
+| `https://examp.le/url-1/?abc=123#somehash` | Fallback URL       |                                  |
 
 __Note:__ If a request does not match any configured shortcodes, the request will default to the `fallback_url` while retaining the original request.
 
@@ -201,9 +209,9 @@ __Note:__ The `bsl_data` parameter will hold a URL encoded version of a JSON obj
 ## Limiting Bad Traffic
 When you first set up the link shortener, you may notice a large amount of unwanted traffic attempting to find exploits. Here's how we handled it with a single WAF rule:
 
-1. Select "Known Bots" from the "Field" dropdown and set it to enable.
-2. Select "Threat Score" from the "Field" dropdown and set it to "greater than or equal to".
-3. Select "URI Path" from the "Field" dropdown and set it to "does not equal to".
+1. Select "Known Bots" from the "Field" dropdown and set it to "enable".
+2. Select "Threat Score" from the "Field" dropdown and set it to "greater than or equal to" and "5".
+3. Select "URI Path" from the "Field" dropdown and set it to "does not equal" and "`/url-1`".
 
 Finally, set the action to [Managed Challenge](https://developers.cloudflare.com/waf/reference/cloudflare-challenges/).
 
