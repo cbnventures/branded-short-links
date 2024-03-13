@@ -21,7 +21,7 @@ Here is an example of how the `wrangler.toml` file for this link shortener shoul
 ```toml
 name = "branded-short-links"
 main = "src/index.ts"
-compatibility_date = "2024-02-22"
+compatibility_date = "2024-03-12"
 
 ############
 ## Routes ##

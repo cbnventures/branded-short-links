@@ -39,3 +39,10 @@ export const textParenthesisLeft = /\(/g;
  * @since 1.0.0
  */
 export const textParenthesisRight = /\)/g;
+
+/**
+ * Text trailing slash.
+ *
+ * @since 1.0.0
+ */
+export const textTrailingSlash = /\/$/;
