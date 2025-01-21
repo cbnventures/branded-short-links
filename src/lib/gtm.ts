@@ -7,6 +7,7 @@ import {
   textParenthesisLeft,
   textParenthesisRight,
 } from '@/lib/regex.js';
+import { getUrlParameterValue, removeUrlParameter } from '@/lib/utility.js';
 import type {
   GoogleTagManagerBuildUrlReturns,
   GoogleTagManagerConstructorContainerId,
@@ -22,7 +23,6 @@ import type {
   GoogleTagManagerRequest,
   GoogleTagManagerShortcode,
 } from '@/types/index.d.ts';
-import { getUrlParameterValue, removeUrlParameter } from '@/lib/utility.js';
 
 /**
  * Google Tag Manager.
