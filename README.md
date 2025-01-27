@@ -172,7 +172,7 @@ When setting up the container for the first time, follow these steps to integrat
 __Note:__ For enhanced confidentiality, create a dedicated container exclusively for this link shortener and avoid sharing it with other domains.
 
 ## Sending Data to Tracking Tools
-A tool to generate tracking links is provided through this [included tool](https://github.com/cbnventures/branded-short-links/blob/main/linkgen/). Pre-fill buttons are included for popular tracking solutions.
+A tool to generate tracking links is provided through this [included tool](https://raw.githack.com/cbnventures/branded-short-links/main/linkgen/index.html). Pre-fill buttons are included for popular tracking solutions.
 
 - [Google Analytics 4] To retrieve the API Secret and Measurement ID, view the [query parameters](https://developers.google.com/analytics/devguides/collection/protocol/ga4/reference?client_type=gtag#payload_query_parameters) documentation.
 - [ntfy Server] If authentication is required, generate the `auth` parameter using the [query param](https://docs.ntfy.sh/publish/#query-param) instructions.
