@@ -146,7 +146,7 @@ When setting up the container for the first time, follow these steps to integrat
 <details>
   <summary>For each variable, use the following settings:</summary>
 
-- __Name:__ _Based on the "Variable" column provided in the [Supported Data](#supported-data) section_
+- __Name:__ _Based on the "Variable Name" column provided in the [Supported Data](#supported-data) section_
 - __Variable Type:__ Data Layer Variable
 - __Data Layer Variable Name:__ _Same as the "Name" setting above_
 - __Data Layer Version:__ Version 2
@@ -171,40 +171,11 @@ When setting up the container for the first time, follow these steps to integrat
 
 __Note:__ For enhanced confidentiality, create a dedicated container exclusively for this link shortener and avoid sharing it with other domains.
 
-## Sending Data to Google Analytics 4
-Once you have completed the setup for Google Tag Manager, the link shortener will begin by sending page view data using the Google Analytics 4 Measurement Protocol.
+## Sending Data to Tracking Tools
+A tool to generate tracking links is provided through this [included tool](https://github.com/cbnventures/branded-short-links/blob/main/linkgen/). Pre-fill buttons are included for popular tracking solutions.
 
-This will be setup as a __Custom Image__ tag and not the Google tag.
-
-- To retrieve the API Secret and Measurement ID, view the [query parameters](https://developers.google.com/analytics/devguides/collection/protocol/ga4/reference?client_type=gtag#payload_query_parameters) documentation, then replace the `[YOUR API SECRET]` and `[YOUR MEASUREMENT ID]` with the information retrieved.
-- Please note that the `bsl_data` parameter is required when performing a `POST` request. The value is a URL encoded version of a JSON object.
-
-```text
-//BSL_POST_REQ=https://www.google-analytics.com/mp/collect?api_secret=[YOUR API SECRET]&measurement_id=[YOUR MEASUREMENT ID]&bsl_data=%7B%22client_id%22%3A%22{{headers_cfRay}}%22%2C%22events%22%3A%5B%7B%22name%22%3A%22select_content%22%2C%22params%22%3A%7B%22content_type%22%3A%22short_link%22%2C%22content_id%22%3A%22{{bsl_shortcode}}%22%7D%7D%5D%7D
-```
-
-__Note:__ It is recommended that you keep the API Secret private to your organization. If required, regularly rotate the `api_secret` to avoid excessive spam.
-
-## Sending Data to a ntfy Server
-As an alternative to utilizing third-party analytical tools, visitor access data can be transmitted directly to a [ntfy](https://ntfy.sh/) server. To prevent excess notifications, the link below is pre-configured to send using `min` priority.
-
-- By default, the example link will use `https://ntfy.sh/mytopic`. If you are self-hosting and looking to replace the URL, be sure to not remove the `/publish` ending from the path name.
-- If authentication is required, generate the `auth` parameter using the [query param](https://docs.ntfy.sh/publish/#query-param) instructions, then replace `[YOUR ENCODED NTFY TOKEN]` with the token you just generated.
-
-```text
-//BSL_GET_REQ=https://ntfy.sh/mytopic/publish?auth=[YOUR ENCODED NTFY TOKEN]&title=User%20Request%20Received&message=The%20following%20details%20have%20been%20captured%20from%20a%20recent%20user%20request.%0D%0A%0D%0A%F0%9F%94%97%20__User%20Request__%0D%0A__Shortcode%3A__%20{{bsl_shortcode}}%0D%0A__Redirect%20To%3A__%20{{bsl_redirectUrl}}%0D%0A__Request%20Method%3A__%20{{request_method}}%0D%0A__Request%20URL%3A__%20{{request_url}}%0D%0A%0D%0A%F0%9F%8C%A9%EF%B8%8F%20__Cloudflare%20Properties__%0D%0A__City%3A__%20{{cf_city}}%0D%0A__Continent%3A__%20{{cf_continent}}%0D%0A__Country%3A__%20{{cf_country}}%0D%0A__Data%20Center%3A__%20{{cf_colo}}%0D%0A__ISP%3A__%20{{cf_asOrganization}}%20%28{{cf_asn}}%29%0D%0A__Is%20EU%20Country%3A__%20{{cf_isEUCountry}}%0D%0A__Coordinates%3A__%20{{cf_latitude}}%2C%20{{cf_longitude}}%0D%0A__Metro%20Code%3A__%20{{cf_metroCode}}%0D%0A__Postal%20Code%3A__%20{{cf_postalCode}}%0D%0A__Region%3A__%20{{cf_region}}%20%28{{cf_regionCode}}%29%0D%0A__Time%20Zone%3A__%20{{cf_timezone}}%0D%0A%0D%0A%F0%9F%97%A3%20__Headers__%0D%0A__CF-Connecting-IP%3A__%20{{headers_cfConnectingIp}}%0D%0A__CF-IPCountry%3A__%20{{headers_cfIpCountry}}%0D%0A__CF-RAY%3A__%20{{headers_cfRay}}%0D%0A__Host%3A__%20{{headers_host}}%0D%0A__User-Agent%3A__%20{{headers_userAgent}}%0D%0A__X-Real-IP%3A__%20{{headers_xRealIp}}&tags=rotating_light&markdown=yes&priority=min
-```
-
-__Note:__ It is recommended that you keep the Access Token private to your organization. If required, regularly rotate the `auth` token to avoid excessive spam.
-
-## Sending Data to Other Tracking Tools
-The amount of support for analytical tools can be extended by using the built-in prefixes. Most will use `GET` requests only, but some will only allow `POST` requests for sending data.
-
-Be sure to start the URL with the following:
-- For `GET` requests, start the URL with `//BSL_GET_REQ=`.
-- For `POST` requests, start the URL with `//BSL_POST_REQ=` and include a `bsl_data` parameter.
-
-__Note:__ The `bsl_data` parameter will hold a URL encoded version of a JSON object and will be converted to a request body. The parameter will be removed from the original URL afterwards.
+- [Google Analytics 4] To retrieve the API Secret and Measurement ID, view the [query parameters](https://developers.google.com/analytics/devguides/collection/protocol/ga4/reference?client_type=gtag#payload_query_parameters) documentation.
+- [ntfy Server] If authentication is required, generate the `auth` parameter using the [query param](https://docs.ntfy.sh/publish/#query-param) instructions.
 
 ## Limiting Bad Traffic
 When you first set up the link shortener, you may notice a large amount of unwanted traffic attempting to find exploits. Here's how we handled it with a single WAF rule:
