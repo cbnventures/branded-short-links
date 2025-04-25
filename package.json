@@ -1,7 +1,7 @@
 {
   "name": "branded-short-links",
   "displayName": "Branded Short Links",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "A short link manager for branded links with Google Tag Manager support running on Cloudflare Workers",
   "main": "",
   "exports": "./",

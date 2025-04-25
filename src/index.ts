@@ -39,7 +39,12 @@ export async function initialize(request: InitializeRequest, env: InitializeEnv)
     if (settings.force_https && requestUrl.protocol === 'http:') {
       requestUrl.protocol = 'https:';
 
-      return Response.redirect(requestUrl.href, 301);
+      return new Response(null, {
+        status: 301,
+        headers: {
+          Location: requestUrl.href,
+        },
+      });
     }
 
     const shortcode = links.items.find((item) => requestUrl.pathname.replace(textTrailingSlash, '') === item.shortcode);
@@ -67,10 +72,20 @@ export async function initialize(request: InitializeRequest, env: InitializeEnv)
     if (shortcode === undefined) {
       const fallbackUrl = new URL(links.fallback_url);
 
-      return Response.redirect(`${fallbackUrl.origin}${requestUrl.pathname}${requestUrl.search}${requestUrl.hash}`, 307);
+      return new Response(null, {
+        status: 301,
+        headers: {
+          Location: `${fallbackUrl.origin}${requestUrl.pathname}${requestUrl.search}${requestUrl.hash}`,
+        },
+      });
     }
 
-    return Response.redirect(shortcode.redirect_url, shortcode.http_response);
+    return new Response(null, {
+      status: shortcode.http_response,
+      headers: {
+        Location: shortcode.redirect_url,
+      },
+    });
   } catch (error) {
     return new Response([
       'Internal Server Error',
