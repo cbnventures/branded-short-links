@@ -17,7 +17,12 @@ import { Controller, useFieldArray, useForm } from 'react-hook-form';
 import z from 'zod';
 
 import JsonEditor from '@/linkgen/src/components/editor';
-import { preFillFacebookPixel, preFillGoogleAnalytics4, preFillNtfyServer } from '@/linkgen/src/lib/pre-fill';
+import {
+  preFillFacebookPixel,
+  preFillGoogleAnalytics4,
+  preFillNtfyServer,
+  preFillPostHogCloud,
+} from '@/linkgen/src/lib/pre-fill';
 import { generateBslLink } from '@/linkgen/src/lib/utility';
 import { generateMuiStyles } from '@/linkgen/src/styles/generator';
 import type { GeneratorHandleAddParameterReturns, GeneratorHandleRemoveParameterIndex, GeneratorHandleRemoveParameterReturns } from '@/types/linkgen.d.ts';
@@ -136,6 +141,7 @@ export default function Generator() {
             <Button variant="contained" fullWidth onClick={() => reset(preFillFacebookPixel)}>Facebook Pixel</Button>
             <Button variant="contained" fullWidth onClick={() => reset(preFillGoogleAnalytics4)}>Google Analytics 4</Button>
             <Button variant="contained" fullWidth onClick={() => reset(preFillNtfyServer)}>ntfy Server</Button>
+            <Button variant="contained" fullWidth onClick={() => reset(preFillPostHogCloud)}>PostHog Cloud</Button>
           </Stack>
         </Grid2>
         <Grid2 size={{ xs: 12, md: 9 }}>
