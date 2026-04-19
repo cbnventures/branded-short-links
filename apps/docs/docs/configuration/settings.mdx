@@ -1,0 +1,223 @@
+---
+id: settings
+title: Configuration Settings
+description: Define your short links, analytics trackers, and worker settings through a single JSON configuration file.
+sidebar_position: 1
+keywords:
+  - branded short links
+  - configuration
+  - config.json
+  - settings
+  - links
+  - shortcode
+  - redirect
+  - fallback url
+  - environment variables
+  - config validation
+  - worker name
+  - base domain
+tags:
+  - configuration
+  - settings
+  - links
+  - validation
+---
+
+Define your short links, analytics trackers, and worker settings through a single JSON configuration file managed by the CLI.
+
+## Config File Location
+
+The CLI resolves `config.json` by checking these locations in order:
+
+1. Current working directory
+2. Project root (detected by `package.json`)
+3. user config directory (`~/.config/branded-short-links/`)
+
+If no config file exists, the CLI copies `config.sample.json` into the user config directory as a starting point.
+
+## Structure
+
+The config file has three top-level sections:
+
+```json
+{
+  "settings": { ... },
+  "links": { ... },
+  "trackers": [ ... ]
+}
+```
+
+## Settings
+
+Controls worker identity and debug behavior.
+
+| Field                  | Type      | Required | Description                                                  |
+|------------------------|-----------|:--------:|--------------------------------------------------------------|
+| `worker_name`          | `string`  |    Yes   | Name of the Cloudflare Worker deployment.                    |
+| `base_domain`          | `string`  |    Yes   | Custom domain for short links (e.g., `example.com`).           |
+| `show_response_output` | `boolean` |    Yes   | Show masked config on the landing and 404 pages for debugging. |
+
+```json
+{
+  "settings": {
+    "worker_name": "branded-short-links",
+    "base_domain": "example.com",
+    "show_response_output": false
+  }
+}
+```
+
+## Links
+
+Defines the shortcode-to-URL mappings and an optional fallback.
+
+| Field          | Type     | Required | Description                                               |
+|----------------|----------|:--------:|-----------------------------------------------------------|
+| `fallback_url` | `string` |    No    | Default redirect for unmatched shortcodes. Must be a valid URL. |
+| `items`        | `array`  |    Yes   | Array of link items (see below).                          |
+
+### Link Item
+
+Each item maps a shortcode path to a destination URL with a specific redirect status.
+
+| Field           | Type     | Required | Description                                                    |
+|-----------------|----------|:--------:|----------------------------------------------------------------|
+| `shortcode`     | `string` |    Yes   | Path segment starting with `/` (e.g., `/github`). Min 2 chars. |
+| `http_response` | `number` |    Yes   | HTTP redirect status: `301`, `302`, `303`, `307`, or `308`.    |
+| `redirect_url`  | `string` |    Yes   | Destination URL. Must be a valid URL.                          |
+
+```json
+{
+  "links": {
+    "fallback_url": "https://example.com",
+    "items": [
+      {
+        "shortcode": "/github",
+        "http_response": 301,
+        "redirect_url": "https://github.com/yourname"
+      },
+      {
+        "shortcode": "/linkedin",
+        "http_response": 302,
+        "redirect_url": "https://linkedin.com/in/yourname"
+      }
+    ]
+  }
+}
+```
+
+### Redirect Status Codes
+
+| Code  | Name               | Use Case                                                 |
+|-------|--------------------|----------------------------------------------------------|
+| `301` | Moved Permanently  | Permanent redirect. Search engines transfer link equity. |
+| `302` | Found              | Temporary redirect. Original URL retains SEO value.      |
+| `303` | See Other          | Redirect after POST. Forces GET on the destination.      |
+| `307` | Temporary Redirect | Temporary redirect. Preserves the original HTTP method.  |
+| `308` | Permanent Redirect | Permanent redirect. Preserves the original HTTP method.  |
+
+### Shortcode Matching
+
+The worker strips trailing slashes before matching. Query strings and hash fragments are not used for matching and are not forwarded to the redirect destination for matched shortcodes — the redirect always goes to the exact `redirect_url` from your config. This differs from fallback redirects, which do preserve the original path, query, and hash (see below).
+
+| Request                                  | Matched Shortcode | Redirect Destination          |
+|------------------------------------------|-------------------|-------------------------------|
+| `https://example.com/github`             | `/github`         | `https://github.com/yourname` |
+| `https://example.com/github?ref=twitter` | `/github`         | `https://github.com/yourname` |
+| `https://example.com/github/`            | `/github`         | `https://github.com/yourname` |
+| `https://example.com/unknown`            | (none)            | Fallback URL or 404 page      |
+
+### Fallback URL Behavior
+
+When a request doesn't match any shortcode and a `fallback_url` is configured, the redirect behavior depends on the request path:
+
+- **Root path (`/`)** — Redirects to the fallback URL's origin only (e.g., `https://example.com`). The original path, query string, and hash are not forwarded.
+- **Any other path** — Redirects to the fallback URL's origin with the original pathname, query string, and hash fragment preserved (e.g., `/about?ref=home#section` appended to the fallback origin).
+
+Fallback redirects always use HTTP status `301` (Moved Permanently). This is not configurable — only shortcode redirects use the per-link `http_response` setting.
+
+When no `fallback_url` is configured, the root path serves the landing page and all other unmatched paths serve a 404 page.
+
+## Trackers
+
+An array of analytics integrations. Each tracker has a `type` field that determines which additional fields are required. All trackers fire in parallel on every matched shortcode redirect.
+
+See [Trackers](/docs/configuration/trackers/) for the full reference on each tracker type.
+
+### Quick Reference
+
+| Type                 | Required Fields                        |
+|----------------------|----------------------------------------|
+| `ga4`                | `name`, `measurement_id`, `api_secret` |
+| `facebook`           | `name`, `pixel_id`                     |
+| `ntfy`               | `name`, `server`, `topic`, `token`     |
+| `ntfy-reverse-proxy` | `name`, `url`; optional: `token`       |
+| `posthog`            | `name`, `host`, `api_key`              |
+| `plain-text`         | `name`, `url`; optional: `token`       |
+
+## Sample Config
+
+The full sample configuration file:
+
+```json
+{
+  "settings": {
+    "worker_name": "branded-short-links",
+    "base_domain": "example.com",
+    "show_response_output": false
+  },
+  "links": {
+    "fallback_url": "https://example.com",
+    "items": [
+      {
+        "shortcode": "/example",
+        "http_response": 301,
+        "redirect_url": "https://example.com/destination"
+      }
+    ]
+  },
+  "trackers": [
+    {
+      "name": "my-ga4",
+      "type": "ga4",
+      "measurement_id": "",
+      "api_secret": ""
+    }
+  ]
+}
+```
+
+## Validation
+
+Run the validate command to check your config against the schema:
+
+```bash
+bsl validate
+```
+
+Validation checks:
+
+- All required fields are present and correctly typed.
+- URLs are valid format.
+- Shortcodes start with `/` and are at least 2 characters.
+- HTTP response codes are one of the allowed values.
+- No duplicate shortcodes exist.
+- No duplicate tracker names exist.
+- Tracker-specific fields match the declared type (extra fields are rejected).
+
+## Environment Variables
+
+The CLI resolves `.env` by checking these locations in order (same as config resolution):
+
+1. Current working directory
+2. Project root (detected by `package.json`)
+3. user config directory (`~/.config/branded-short-links/`)
+
+The first `.env` file found is loaded automatically. During first deploy, the CLI saves new tokens to `~/.config/branded-short-links/.env`.
+
+| Variable               | Purpose                                      |
+|------------------------|----------------------------------------------|
+| `CLOUDFLARE_API_TOKEN` | API token for Cloudflare Workers deployment. |
+| `NODE_ENV`             | Node.js environment setting.                 |
+| `LOG_LEVEL`            | Controls CLI log verbosity.                  |
+| `LOG_TIME`             | Enables timestamps in CLI log output.        |

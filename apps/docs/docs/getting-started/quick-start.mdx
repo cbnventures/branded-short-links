@@ -1,0 +1,107 @@
+---
+id: quick-start
+title: Quick Start
+description: Install the CLI, configure your first short link, and deploy to Cloudflare Workers in minutes.
+sidebar_position: 1
+keywords:
+  - branded short links
+  - quick start
+  - installation
+  - cli setup
+  - cloudflare workers
+  - deploy
+  - npm install
+  - first link
+  - interactive menu
+  - bsl command
+tags:
+  - getting started
+  - installation
+  - quick start
+  - cli
+---
+
+Install Branded Short Links and deploy your first short link to Cloudflare Workers.
+
+## Install
+
+Install the package globally to use the `bsl` command anywhere:
+
+```bash
+npm install -g branded-short-links
+```
+
+Or run it directly without installing:
+
+```bash
+npx branded-short-links
+```
+
+Both `branded-short-links` and `bsl` are registered as CLI aliases — they do the same thing.
+
+## First-Time Setup
+
+### 1. Launch the Interactive Menu
+
+Run the CLI with no arguments to start the guided setup:
+
+```bash
+bsl
+```
+
+The interactive menu walks you through configuring settings, links, and trackers step by step.
+
+### 2. Configure Settings
+
+Select **Settings** from the main menu. You're prompted for three values:
+
+- **Worker name** — The name of your Cloudflare Worker (e.g., `branded-short-links`).
+- **Base domain** — The custom domain your short links live on (e.g., `example.com`).
+- **Show response output** — Whether the landing page displays masked config for debugging. Keep this `false` in production.
+
+### 3. Add Your First Link
+
+Select **Manage Links > Add** from the menu. Each link maps a shortcode to a destination URL:
+
+- **Shortcode** — The path segment after your domain (e.g., `/github`). Must start with `/`.
+- **HTTP response** — The redirect status code: `301`, `302`, `303`, `307`, or `308`.
+- **Redirect URL** — The full destination URL (e.g., `https://github.com/yourname`).
+
+You can also set an optional **fallback URL** that catches any request that doesn't match a configured shortcode.
+
+### 4. Add Trackers (Optional)
+
+Attach analytics trackers that fire server-side on every redirect. Supported types:
+
+- **GA4** — Google Analytics 4 Measurement Protocol
+- **Facebook** — Meta Pixel PageView (noscript endpoint)
+- **PostHog** — PostHog event capture
+- **ntfy** — Push notifications via ntfy
+- **Reverse Proxy for ntfy** — Push notifications through an [ntfy-reverse-proxy](https://github.com/cbnventures/ntfy-reverse-proxy) endpoint
+- **Plain Text** — Plain text webhook to any endpoint
+
+See [Trackers](/docs/configuration/trackers/) for setup details on each type.
+
+### 5. Deploy
+
+Run the deploy command from the interactive menu or directly:
+
+```bash
+bsl deploy
+```
+
+The deploy process validates your config, verifies Cloudflare API permissions, generates `wrangler.toml`, lints the source, and deploys the worker. See [Deployment](/docs/deployment/cloudflare/) for the full walkthrough.
+
+## What Happens Next
+
+Once deployed, your short links are live:
+
+| Request                          | Result                                       |
+|----------------------------------|----------------------------------------------|
+| `https://yourdomain.com/github`  | Fires trackers, redirects to destination     |
+| `https://yourdomain.com/resume`  | Fires trackers, redirects to destination     |
+| `https://yourdomain.com/unknown` | Redirects to fallback URL (if configured)    |
+| `https://yourdomain.com/`        | Redirects to fallback, or shows landing page |
+| `https://yourdomain.com/missing` | Redirects to fallback, or shows 404 page     |
+
+Trackers are optional — you can deploy with an empty `"trackers": []` array and add them later.

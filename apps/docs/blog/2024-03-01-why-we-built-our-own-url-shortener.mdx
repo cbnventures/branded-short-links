@@ -1,0 +1,56 @@
+---
+title: "Why We Built Our Own URL Shortener"
+description: We wanted branded short links on our own domain with full control over redirect behavior. So we built a URL shortener on Cloudflare Workers.
+slug: why-we-built-our-own-url-shortener
+authors:
+  - mrjackyliang
+tags:
+  - short-links
+  - branded-domains
+  - cloudflare-workers
+  - url-shortener
+---
+
+URL shorteners are everywhere, and most of them work just fine for casual use. But when we needed short links on our own domain with full control over redirect behavior, the existing options didn't quite fit.
+
+We wanted `yourdomain.com/github` — not a generic shortener domain. We wanted to choose between 301 and 302 redirects. And we wanted to own the configuration and deployment rather than relying on a managed shortener service.
+
+Branded Short Links runs on Cloudflare Workers — it still depends on Cloudflare as infrastructure, but the shortener logic, configuration, and domain are entirely yours.
+
+{/* truncate */}
+
+## What Branded Short Links Does
+
+Branded Short Links is a URL shortener that runs on Cloudflare Workers. You define shortcodes — like `/github`, `/linkedin`, `/resume` — and map each one to a destination URL with a specific HTTP redirect status code. The worker handles the redirect at the edge, globally, with no server to maintain.
+
+That's it. No dashboard, no account, no monthly fee. Your domain, your shortcodes, your redirect rules.
+
+## Why Self-Hosted Matters
+
+Most URL shorteners — including the major ones — support custom domains. The domain itself isn't the differentiator. What's different here is owning the entire stack.
+
+With a managed shortener, your click data flows through their servers. Your redirect behavior is limited to what their platform supports. And your pricing scales with usage — more clicks, higher tier. With Branded Short Links, the worker code is yours, the configuration is version-controllable, and the click data never leaves your Cloudflare account. There's no per-click pricing, no feature gating, and no third party sitting between your links and your visitors.
+
+## Redirect Status Codes
+
+Not all redirects are equal. Branded Short Links supports five HTTP redirect codes:
+
+- **301** — Permanent redirect. Search engines transfer link equity to the destination. Use this for links that won't change.
+- **302** — Temporary redirect. The shortcode might point somewhere else later. Use this for campaigns or time-limited links.
+- **303** — See Other. Redirects with a GET request regardless of the original method.
+- **307** — Temporary redirect that preserves the HTTP method.
+- **308** — Permanent redirect that preserves the HTTP method.
+
+Most shorteners give you 301 or 302. Having the full range means you can match the redirect behavior to the use case.
+
+## Fallback URL
+
+When someone visits a shortcode that doesn't exist, the worker redirects to a fallback URL instead of showing an error page. If they visit the root domain, they get the fallback origin. If they visit a path that doesn't match any shortcode, the fallback preserves the original path, query string, and hash.
+
+This means your short link domain doubles as a branded redirect — `yourdomain.com` sends visitors to your main site, and `yourdomain.com/github` sends them to your GitHub profile.
+
+## Getting Started
+
+Configuration is defined in a `wrangler.toml` file and deployed to Cloudflare Workers. A sample configuration is included in the repository.
+
+Check out the [quickstart guide](/docs/getting-started/quick-start) to set it up.

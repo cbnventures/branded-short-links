@@ -1,95 +1,35 @@
 {
-  "name": "branded-short-links",
-  "displayName": "Branded Short Links",
-  "version": "1.2.2",
-  "description": "A short link manager for branded links with Google Tag Manager support running on Cloudflare Workers",
-  "main": "",
-  "exports": "./",
-  "type": "module",
+  "name": "branded-short-links-project",
+  "version": "0.0.0",
+  "license": "MIT",
   "private": true,
   "scripts": {
-    "start": "npm-run-all --parallel start:*",
-    "start:wrangler": "wrangler dev",
-    "start:linkgen": "vite serve",
-    "build": "npm-run-all --sequential build:*",
-    "build:linkgen": "vite build",
-    "deploy": "npm-run-all --sequential deploy:*",
-    "deploy:lint": "npx eslint ./src",
-    "deploy:wrangler": "wrangler deploy"
+    "dev": "turbo run dev",
+    "build": "turbo run build --concurrency=2",
+    "check": "turbo run check --concurrency=2",
+    "deploy": "turbo run deploy --concurrency=2",
+    "clean": "turbo run clean",
+    "manage": "npm run manage --workspace packages/branded-short-links",
+    "tail": "node ./scripts/tail-logs.mjs",
+    "changelog": "nova utility changelog",
+    "recipes": "nova utility run-recipes --replace-file",
+    "postinstall": "node ./scripts/link-nova.mjs"
   },
-  "types": "",
-  "repository": {
-    "type": "git",
-    "url": "git://github.com/cbnventures/branded-short-links.git"
-  },
-  "funding": [
-    {
-      "type": "github",
-      "url": "https://github.com/sponsors/cbnventures"
-    },
-    {
-      "type": "custom",
-      "url": "https://www.cbnventures.io/paypal/"
-    }
+  "workspaces": [
+    "./apps/*",
+    "./packages/*"
   ],
-  "keywords": [
-    "url-shortener",
-    "branded-links",
-    "google-analytics",
-    "google-tag-manager",
-    "cloudflare"
-  ],
-  "author": {
-    "name": "Jacky Liang",
-    "email": "hello@mrjackyliang.com",
-    "url": "https://www.mrjackyliang.com"
-  },
-  "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/cbnventures/branded-short-links/issues"
-  },
-  "files": [],
-  "homepage": "https://github.com/cbnventures/branded-short-links",
+  "packageManager": "npm@11.11.0",
   "engines": {
-    "node": ">=20"
-  },
-  "dependencies": {
-    "@emotion/react": "11.14.0",
-    "@emotion/styled": "11.14.0",
-    "@fortawesome/fontawesome-svg-core": "6.7.2",
-    "@fortawesome/free-solid-svg-icons": "6.7.2",
-    "@fortawesome/react-fontawesome": "0.2.2",
-    "@hookform/resolvers": "3.10.0",
-    "@monaco-editor/react": "4.6.0",
-    "@mui/material": "6.4.1",
-    "lodash": "4.17.21",
-    "react": "18.3.1",
-    "react-dom": "18.3.1",
-    "react-hook-form": "7.54.2",
-    "zod": "3.24.1"
+    "node": "^20 || ^22 || ^24"
   },
   "devDependencies": {
-    "@cloudflare/workers-types": "4.20250121.0",
-    "@eslint/js": "9.18.0",
-    "@stylistic/eslint-plugin": "2.13.0",
-    "@types/lodash": "4.17.14",
-    "@types/node": "22.10.7",
-    "@types/react": "18.3.18",
-    "@types/react-dom": "18.3.5",
-    "@typescript-eslint/eslint-plugin": "8.21.0",
-    "@typescript-eslint/parser": "8.21.0",
-    "@vitejs/plugin-react": "4.3.4",
-    "eslint": "9.18.0",
-    "eslint-import-resolver-typescript": "3.7.0",
-    "eslint-plugin-import": "2.31.0",
-    "eslint-plugin-jsx-a11y": "6.10.2",
-    "eslint-plugin-react": "7.37.4",
-    "eslint-plugin-react-hooks": "5.1.0",
-    "globals": "15.14.0",
-    "npm-run-all": "4.1.5",
-    "typescript": "5.7.3",
-    "vite": "6.0.11",
-    "vite-tsconfig-paths": "5.1.4",
-    "wrangler": "3.103.2"
+    "@cbnventures/nova": "0.15.3",
+    "jiti": "2.6.1",
+    "prompts": "2.4.2",
+    "turbo": "2.8.12"
+  },
+  "overrides": {
+    "webpack": ">=5.95.0 <5.106.0"
   }
 }

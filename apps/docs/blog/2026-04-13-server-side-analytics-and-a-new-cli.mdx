@@ -1,0 +1,78 @@
+---
+title: "What's New in v2.0.0: Server-Side Analytics and a New CLI"
+description: "Version 2.0.0 adds server-side analytics tracking — GA4, Meta Pixel, PostHog, ntfy, ntfy-reverse-proxy, and plain-text webhooks — plus an interactive CLI for configuration management."
+slug: whats-new-in-v2
+authors:
+  - mrjackyliang
+tags:
+  - release
+  - short-links
+  - analytics
+  - server-side-tracking
+  - cli
+  - cloudflare-workers
+---
+
+Version 1.x of Branded Short Links handled redirects and optionally fired analytics through a Google Tag Manager container — server-side, from the worker itself. That worked, but it meant routing all tracking through GTM and configuring tags, triggers, and variables inside Google's interface.
+
+Version 2.0.0 replaces the GTM integration with direct server-side trackers. Instead of funneling everything through a single GTM container, each tracker fires independently from the worker — GA4, Facebook, PostHog, ntfy, Reverse Proxy for ntfy, or plain-text webhooks — with no middleman.
+
+{/* truncate */}
+
+## Server-Side Trackers
+
+Six tracker types are supported, and they all fire in parallel without blocking the redirect:
+
+**GA4 (Google Analytics 4)** — Sends a `select_content` event via the Measurement Protocol with the shortcode, redirect URL, and a client ID derived from Cloudflare's `CF-RAY` header.
+
+**Meta Pixel** — Fires a PageView event via the Meta Pixel noscript endpoint. This works even when the Meta Pixel JavaScript is blocked on the client side — the event goes directly from the worker to Meta's servers.
+
+**PostHog** — Captures a `User Request Captured` event with shortcode details, using the `CF-RAY` or `CF-Connecting-IP` header as the distinct ID.
+
+**ntfy** — Sends a detailed Markdown-formatted push notification to an ntfy server topic with the shortcode, destination URL, full Cloudflare geolocation data, and request headers. Configured with server URL, topic, and token.
+
+**Reverse Proxy for ntfy** — Same Markdown-formatted body and ntfy headers as the ntfy tracker, but configured with a single URL and optional token. Designed for users who deploy [ntfy-reverse-proxy](https://github.com/cbnventures/ntfy-reverse-proxy) and don't need to specify server and topic separately.
+
+**Plain-text webhooks** — POSTs a detailed plain-text summary with full Cloudflare geolocation data and request headers to any HTTPS endpoint, with optional Bearer token authentication. Same content as the ntfy tracker but without Markdown formatting — useful for logging to custom webhook endpoints.
+
+All trackers fire in parallel and never block the redirect. If one tracker fails, the others still complete normally.
+
+## Why We Removed GTM
+
+The v1.x GTM integration worked by fetching Google's `ns.html` noscript endpoint from the worker, parsing the returned HTML for image tags, and then processing each extracted URL as a GET or POST request. It was server-side, but it was a workaround — we were essentially scraping GTM's noscript fallback output to fire trackers from the edge.
+
+That approach had real downsides:
+
+- **Fragile.** It depended on GTM's HTML output format staying consistent. If Google changed how the noscript container rendered, the parser would break.
+- **Split configuration.** Shortcodes lived in the worker config, but tracker logic lived in GTM's web interface. Two places to manage, two places for things to go wrong.
+- **Indirect.** Every analytics request routed through Google's servers first, then to the actual tracker endpoint. That's an extra hop and an extra dependency.
+- **Hard to debug.** When a tracker failed, it wasn't clear whether the issue was in the GTM tag configuration, the container fetch, the HTML parsing, or the tracker endpoint.
+
+Direct trackers eliminate all of this. Each tracker is a single function that sends a request straight to the provider's API. Configuration lives alongside your shortcodes in one project. No scraping, no middleman, no GTM interface to manage.
+
+## Interactive CLI
+
+Configuration in v1.x meant editing a `wrangler.toml` file by hand. Version 2.0.0 adds an interactive CLI. Running `npx branded-short-links` with no arguments launches a menu with four sections:
+
+- **Manage Links** — Add, edit, and remove shortcodes with redirect codes and destination URLs
+- **Manage Trackers** — Add, edit, and remove analytics trackers with type-specific fields
+- **Settings** — Configure the worker name, base domain, and debug output
+- **Deploy** — Validate, generate, and deploy to Cloudflare Workers in one step
+
+Direct commands are also available for scripting:
+
+```bash
+npx branded-short-links validate
+npx branded-short-links generate
+npx branded-short-links deploy
+```
+
+## Landing Page
+
+Version 2.0.0 includes a branded landing page served when visitors access the root domain directly. It supports light and dark mode and optionally displays masked debug output showing the current configuration (with credentials redacted) for troubleshooting.
+
+## Upgrading
+
+Version 2.0.0 uses a new configuration format. The GTM container ID setting has been removed in favor of server-side trackers.
+
+See the [quickstart guide](/docs/getting-started/quick-start) for the new configuration format and deployment steps.

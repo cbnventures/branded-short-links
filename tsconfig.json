@@ -1,52 +1,21 @@
 {
+  "extends": [
+    "@cbnventures/nova/presets/tsconfig/dx-essentials.json",
+    "@cbnventures/nova/presets/tsconfig/dx-strict.json",
+    "@cbnventures/nova/presets/tsconfig/fw-docusaurus.json"
+  ],
   "compilerOptions": {
-    "allowJs": false,
-    "allowSyntheticDefaultImports": true,
-    "baseUrl": "./",
-    "esModuleInterop": true,
-    "forceConsistentCasingInFileNames": true,
-    "incremental": false,
-    "isolatedModules": false,
-    "jsx": "preserve",
-    "lib": [
-      "DOM",
-      "DOM.Iterable",
-      "ESNext"
-    ],
-    "module": "ESNext",
-    "moduleResolution": "Node",
-    "noEmit": false,
-    "noFallthroughCasesInSwitch": true,
-    "noImplicitAny": true,
-    "noImplicitReturns": true,
-    "noUnusedLocals": true,
-    "outDir": "./build",
-    "paths": {
-      "@/*": [
-        "./src/*"
-      ]
-    },
-    "plugins": [],
-    "removeComments": true,
-    "resolveJsonModule": true,
-    "rootDir": "./src",
-    "skipLibCheck": false,
-    "sourceMap": true,
-    "strict": true,
-    "target": "ESNext",
+    "allowJs": true,
+    "checkJs": false,
+    "declaration": false,
+    "declarationMap": false,
+    "noEmit": true,
     "types": [
-      "@cloudflare/workers-types",
-      "lodash",
-      "node",
-      "react",
-      "react-dom"
+      "@types/node"
     ]
   },
   "include": [
-    "**/*.ts",
-    "**/*.tsx"
-  ],
-  "exclude": [
-    "node_modules"
+    "./eslint.config.ts",
+    "./scripts/**/*.mjs"
   ]
 }

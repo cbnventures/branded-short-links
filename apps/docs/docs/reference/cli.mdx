@@ -1,0 +1,152 @@
+---
+id: cli
+title: CLI Reference
+description: Manage links, trackers, settings, and deployments through the branded-short-links command-line interface.
+sidebar_position: 1
+keywords:
+  - branded short links
+  - cli
+  - command line
+  - bsl
+  - validate
+  - generate
+  - deploy
+  - links
+  - trackers
+  - interactive menu
+  - npm scripts
+tags:
+  - cli
+  - reference
+  - commands
+  - tools
+---
+
+Manage links, trackers, settings, and deployments through the `branded-short-links` command-line interface.
+
+## Usage
+
+The CLI is available as `branded-short-links` or the shorter alias `bsl`:
+
+```bash
+# Interactive mode (no arguments)
+bsl
+
+# Direct command
+bsl <command>
+```
+
+When you run `bsl` with no arguments, the interactive menu launches. When you pass a command, it runs directly and exits.
+
+## Interactive Menu
+
+The interactive menu provides a guided experience for managing your entire configuration. It presents a main menu with these options:
+
+- **Manage Links** — Sub-menu with: Add, Edit, Remove, Set Fallback URL, Back.
+- **Manage Trackers** — Sub-menu with: Add, Edit, Remove, Back.
+- **Settings** — Update worker name, base domain, and debug output toggle.
+- **Deploy** — Run the full deployment pipeline to Cloudflare Workers (with interactive token prompting if needed). See [Deployment](/docs/deployment/cloudflare/).
+- **Exit** — Quit the menu. You can also press Ctrl+C at any prompt.
+
+Changes are saved to `config.json` immediately after each operation (add, edit, remove, etc.). There's no separate save step. See [Configuration](/docs/configuration/settings/) for the full config reference.
+
+### Config File Selection
+
+When launching the interactive menu, the CLI checks for `config.json` in the current directory, project root, and user config directory:
+
+- **Multiple found** — You're prompted to choose which config file to use.
+- **One found** — That config file is used automatically.
+- **None found** — A new config file is created in the user config directory (`~/.config/branded-short-links/config.json`).
+
+## Commands
+
+### `bsl validate`
+
+Validate the configuration file against the schema and check for duplicates.
+
+```bash
+bsl validate
+```
+
+Checks performed:
+
+- Schema validation (field types, required fields, URL formats).
+- Duplicate shortcode detection.
+- Duplicate tracker name detection.
+
+Prints "Config is valid." on success, or lists all validation errors.
+
+### `bsl generate`
+
+Generate a `wrangler.toml` file from the current configuration.
+
+```bash
+bsl generate
+```
+
+Outputs a Wrangler configuration file with:
+
+- Worker name and compatibility date (set to current date).
+- Custom domain routes for the base domain (and `www.` variant for two-part domains).
+- Stringified `SETTINGS`, `LINKS`, and `TRACKERS` as Worker environment variables.
+
+When run standalone, the generated file doesn't include the `account_id` field. The `bsl deploy` command generates a wrangler.toml with `account_id` included (derived from the permission verification step). For local development, the standalone output is sufficient.
+
+### `bsl deploy`
+
+Run the full deployment pipeline to Cloudflare Workers.
+
+```bash
+bsl deploy
+```
+
+The deploy process runs these steps in order:
+
+1. **Resolve API token** — Loads from `.env` or `CLOUDFLARE_API_TOKEN` env var. When run from the interactive menu, prompts you to enter one if not found.
+2. **Validate config** — Runs schema and duplicate checks.
+3. **Verify permissions** — Checks the API token has Workers Scripts, Workers Routes, and Email Routing Rules permissions.
+4. **Generate wrangler.toml** — Writes the deployment configuration with account ID, routes, and serialized config vars.
+5. **Run lint** — Runs ESLint against `./src`. Any error stops the deployment.
+6. **Deploy worker** — Runs `wrangler deploy` with the generated config.
+7. **Print summary** — Displays all configured shortcodes with URLs, redirect codes, and active trackers.
+
+See [Deployment](/docs/deployment/cloudflare/) for the full walkthrough.
+
+### `bsl links remove <shortcode>`
+
+Remove a link by its shortcode path.
+
+```bash
+bsl links remove /github
+```
+
+The shortcode must include the leading `/`.
+
+### `bsl trackers remove <name>`
+
+Remove a tracker by its name.
+
+```bash
+bsl trackers remove my-ga4
+```
+
+## Global Options
+
+| Flag            | Description                   |
+|-----------------|-------------------------------|
+| `-V, --version` | Display the current version.  |
+| `-h, --help`    | Display help for the command. |
+
+## npm Scripts
+
+If you're working within the project repository, these npm scripts are available from the workspace root:
+
+| Script           | What It Does                                        |
+|------------------|-----------------------------------------------------|
+| `npm run manage` | Launch the interactive config management menu.      |
+| `npm run dev`    | Start a local development server via Wrangler.      |
+| `npm run build`  | Build the CLI and worker for deployment.            |
+| `npm run check`  | Run lint, type-check, and test suite.               |
+| `npm run deploy` | Build and deploy to Cloudflare Workers.             |
+| `npm run clean`  | Remove the build output directory.                  |
+| `npm run tail`   | Tail live logs from the deployed Cloudflare Worker. |

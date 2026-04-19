@@ -1,0 +1,267 @@
+{
+  "project": {
+    "name": {
+      "title": "Branded Short Links",
+      "slug": "branded-short-links"
+    },
+    "description": {
+      "short": "Custom-domain URL shortener with direct server-side analytics tracking",
+      "long": "Branded short links with server-side tracker integration (GA4 Measurement Protocol, Meta Pixel, PostHog, ntfy, Reverse Proxy for ntfy, plain-text webhooks), powered by Cloudflare Workers. Interactive CLI for configuration, validation, and deployment."
+    },
+    "keywords": [
+      "url-shortener",
+      "branded-links",
+      "cloudflare-workers",
+      "analytics",
+      "ga4",
+      "facebook",
+      "posthog",
+      "ntfy"
+    ],
+    "legalName": "CBN Ventures LLC",
+    "pronouns": "business",
+    "platforms": [
+      "nodejs"
+    ],
+    "startingYear": 2024,
+    "license": "MIT"
+  },
+  "entities": [
+    {
+      "name": "CBN Ventures",
+      "email": "contact@cbnventures.io",
+      "url": "https://www.cbnventures.io/",
+      "roles": [
+        "author"
+      ]
+    },
+    {
+      "name": "Jacky Liang",
+      "email": "hello@mrjackyliang.com",
+      "url": "https://www.mrjackyliang.com/",
+      "roles": [
+        "contributor",
+        "supporter"
+      ]
+    }
+  ],
+  "emails": {
+    "bugs": "bugs@cbnventures.io"
+  },
+  "workflows": [
+    {
+      "template": "check-sponsor-gated-issues",
+      "suffix": "project",
+      "triggers": [],
+      "settings": {
+        "PERSONAL_ACCESS_TOKEN": "PERSONAL_ACCESS_TOKEN"
+      }
+    },
+    {
+      "template": "lock-inactive-issues",
+      "suffix": "project",
+      "triggers": [
+        "schedule"
+      ]
+    },
+    {
+      "template": "publish-to-cloudflare-pages-docusaurus",
+      "suffix": "docs",
+      "triggers": [
+        "release"
+      ],
+      "settings": {
+        "DOCUSAURUS_WORKING_DIR": "./apps/docs",
+        "ROOT_WORKING_DIR": "./"
+      }
+    },
+    {
+      "template": "publish-to-github-packages",
+      "suffix": "bsl",
+      "triggers": [
+        "release"
+      ],
+      "settings": {
+        "NPM_WORKING_DIR": "./packages/branded-short-links",
+        "ROOT_WORKING_DIR": "./"
+      }
+    },
+    {
+      "template": "publish-to-npm",
+      "suffix": "bsl",
+      "triggers": [
+        "release"
+      ],
+      "settings": {
+        "NPM_TOKEN": "NPM_TOKEN",
+        "NPM_WORKING_DIR": "./packages/branded-short-links",
+        "ROOT_WORKING_DIR": "./"
+      }
+    }
+  ],
+  "urls": {
+    "homepage": "https://bsl.cbnventures.io/",
+    "repository": "git+https://github.com/cbnventures/branded-short-links.git",
+    "bugs": "https://github.com/cbnventures/branded-short-links/issues",
+    "license": "https://github.com/cbnventures/branded-short-links/blob/HEAD/LICENSE",
+    "logo": "https://bsl.cbnventures.io/images/logo.svg",
+    "documentation": "https://bsl.cbnventures.io/",
+    "github": "https://github.com/cbnventures/branded-short-links",
+    "npm": "https://www.npmjs.com/package/branded-short-links",
+    "fundSources": [
+      "https://github.com/sponsors/cbnventures",
+      "https://www.paypal.com/biz/profile/cbnventures"
+    ],
+    "privacyPolicy": "https://www.cbnventures.io/privacy/",
+    "termsOfUse": "https://www.cbnventures.io/terms/"
+  },
+  "workspaces": {
+    "./": {
+      "role": "project",
+      "policy": "freezable",
+      "name": "branded-short-links-project",
+      "recipes": {
+        "cleanup": [
+          true,
+          {
+            "removeUnknownKeys": true,
+            "reorderKeys": true
+          }
+        ],
+        "normalize-artifacts": [
+          true
+        ],
+        "normalize-bundler": [
+          true
+        ],
+        "normalize-dependencies": [
+          true,
+          {
+            "pinDependencyVersions": true,
+            "pinDevDependencyVersions": true
+          }
+        ],
+        "normalize-modules": [
+          true
+        ],
+        "normalize-tooling": [
+          true
+        ],
+        "sync-environment": [
+          true,
+          {
+            "trackNodeLtsVersions": true
+          }
+        ],
+        "sync-identity": [
+          true
+        ],
+        "sync-ownership": [
+          true
+        ]
+      }
+    },
+    "./apps/docs": {
+      "role": "docs",
+      "policy": "freezable",
+      "name": "branded-short-links-docs",
+      "recipes": {
+        "cleanup": [
+          true,
+          {
+            "removeUnknownKeys": true,
+            "reorderKeys": true
+          }
+        ],
+        "normalize-artifacts": [
+          true
+        ],
+        "normalize-bundler": [
+          true
+        ],
+        "normalize-dependencies": [
+          true,
+          {
+            "pinDependencyVersions": true,
+            "pinDevDependencyVersions": true
+          }
+        ],
+        "normalize-modules": [
+          true
+        ],
+        "normalize-tooling": [
+          true
+        ],
+        "sync-environment": [
+          true,
+          {
+            "trackNodeLtsVersions": true
+          }
+        ],
+        "sync-identity": [
+          true
+        ],
+        "sync-ownership": [
+          true
+        ]
+      }
+    },
+    "./packages/branded-short-links": {
+      "role": "package",
+      "policy": "distributable",
+      "name": "branded-short-links",
+      "recipes": {
+        "cleanup": [
+          true,
+          {
+            "removeUnknownKeys": true,
+            "reorderKeys": true
+          }
+        ],
+        "normalize-artifacts": [
+          true
+        ],
+        "normalize-bundler": [
+          true
+        ],
+        "normalize-dependencies": [
+          true,
+          {
+            "pinDependencyVersions": true,
+            "pinDevDependencyVersions": true
+          }
+        ],
+        "normalize-modules": [
+          true
+        ],
+        "normalize-tooling": [
+          true
+        ],
+        "sync-environment": [
+          true,
+          {
+            "trackNodeLtsVersions": true
+          }
+        ],
+        "sync-identity": [
+          true,
+          {
+            "description": true,
+            "keywords": true
+          }
+        ],
+        "sync-ownership": [
+          true,
+          {
+            "homepage": true,
+            "bugs": true,
+            "author": true,
+            "contributors": true,
+            "funding": true,
+            "repository": true
+          }
+        ]
+      }
+    }
+  }
+}

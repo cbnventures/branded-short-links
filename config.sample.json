@@ -1,0 +1,25 @@
+{
+  "settings": {
+    "worker_name": "branded-short-links",
+    "base_domain": "example.com",
+    "show_response_output": false
+  },
+  "links": {
+    "fallback_url": "https://example.com",
+    "items": [
+      {
+        "shortcode": "/example",
+        "http_response": 301,
+        "redirect_url": "https://example.com/destination"
+      }
+    ]
+  },
+  "trackers": [
+    {
+      "name": "my-ga4",
+      "type": "ga4",
+      "measurement_id": "",
+      "api_secret": ""
+    }
+  ]
+}

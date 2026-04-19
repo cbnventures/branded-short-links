@@ -1,0 +1,182 @@
+---
+id: troubleshooting
+title: Troubleshooting Guide
+description: Solve common issues with configuration, deployment, DNS, SSL, and runtime behavior.
+sidebar_position: 3
+keywords:
+  - branded short links
+  - troubleshooting
+  - errors
+  - configuration issues
+  - deployment issues
+  - dns
+  - ssl
+  - cloudflare
+  - api token
+  - trackers
+  - waf
+  - bot fight mode
+tags:
+  - troubleshooting
+  - errors
+  - debugging
+  - support
+  - reference
+---
+
+Solve common issues with configuration, deployment, and runtime behavior.
+
+## Configuration Issues
+
+### "Config is invalid" on validate or deploy
+
+The config file doesn't pass schema validation. Run `bsl validate` to see the specific errors. Common causes:
+
+- **Missing required fields** — Check that `settings`, `links`, and `trackers` are all present at the top level.
+- **Invalid URL format** — All URLs (`fallback_url`, `redirect_url`, tracker endpoints) must be valid URLs. Tracker URLs for `ntfy`, `posthog`, and `plain-text` must start with `https://`.
+- **Invalid shortcode** — Shortcodes must start with `/` and be at least 2 characters (e.g., `/g` is the minimum).
+- **Wrong HTTP response code** — Only `301`, `302`, `303`, `307`, and `308` are accepted.
+- **Extra fields on trackers** — Trackers don't accept extra fields. Adding fields that don't belong to the tracker type (e.g., `api_secret` on a `facebook` tracker) causes validation failure.
+- **Invalid ntfy token** — The `token` field on `ntfy` trackers must start with `tk_`.
+
+### Duplicate shortcode or tracker name errors
+
+Each shortcode and each tracker name must be unique within the config. The validate command checks for duplicates beyond what schema validation catches.
+
+### Config file not found
+
+The CLI checks these locations in order: current working directory, project root, `~/.config/branded-short-links/`. If you're running the CLI from an unexpected directory, pass in from the correct location or move your `config.json` to the user config directory.
+
+## Deployment Issues
+
+### API token verification fails
+
+- Confirm your token hasn't expired in the Cloudflare dashboard.
+- Verify the token has the three required permission scopes: **Account > Workers Scripts > Edit**, **Zone > Workers Routes > Edit**, **Zone > Email Routing Rules > Edit**.
+- Make sure the token's zone permissions include the zone that contains your `base_domain`.
+
+### Permission verification fails for the base domain
+
+The CLI resolves the Cloudflare zone by trying progressively shorter domain segments. If your `base_domain` is a subdomain (e.g., `go.example.com`), make sure the token has access to the parent zone (`example.com`).
+
+### Lint fails during deploy
+
+The deploy pipeline runs ESLint against `./src`. Any error blocks the deployment. Fix lint issues before redeploying:
+
+```bash
+npm run check:lint
+```
+
+### wrangler deploy fails
+
+- Verify Wrangler is installed as a dependency (`npm install`).
+- Check that your Cloudflare account ID is correct. The CLI derives it from the zone information during permission verification.
+- If you see authentication errors, your API token may lack the Workers Scripts Edit permission.
+
+## DNS and SSL Issues
+
+### DNS_PROBE_FINISHED_NXDOMAIN
+
+The browser or `curl` says the domain cannot be resolved. The custom domain route was deployed but Cloudflare hasn't created the DNS record yet, or DNS hasn't propagated.
+
+1. Wait a few minutes after deploy. Cloudflare auto-creates DNS records for Workers custom domains.
+2. Verify in **Dashboard > DNS > Records** that a record exists for your domain.
+3. Verify in **Dashboard > Workers & Pages > your-worker > Settings > Domains & Routes** that the custom domain is listed.
+4. Check propagation: `dig yourdomain.com`
+
+### ERR_SSL_VERSION_OR_CIPHER_MISMATCH
+
+The browser shows an SSL error when accessing the custom domain. Cloudflare hasn't provisioned the SSL certificate yet.
+
+1. Wait up to 15 minutes. Certificate provisioning happens automatically.
+2. Check **Dashboard > SSL/TLS > Edge Certificates** for certificate status.
+3. Ensure your SSL/TLS mode is set to "Full" or "Full (strict)" in **Dashboard > SSL/TLS > Overview**.
+
+### 403 Forbidden (Cloudflare HTML page)
+
+POST requests or automated tools return a Cloudflare "Sorry, you have been blocked" HTML page instead of reaching the worker. Bot Fight Mode or WAF rules are blocking the requests.
+
+- **Option 1:** Disable Bot Fight Mode at **Dashboard > Security > Bots > Bot Fight Mode > Off**.
+- **Option 2:** Create a WAF skip rule at **Dashboard > Security > WAF > Custom Rules**:
+  - Condition: `(http.host contains "yourdomain.com")`
+  - Action: Skip > All Super Bot Fight Mode Rules
+  - Position: First
+- **Option 3:** Block by geography instead: `(http.host contains "yourdomain.com") and (not ip.geoip.country in {"US" "CA"})` with action **Block**.
+
+Free plan users cannot skip Bot Fight Mode via WAF rules. You'd need to either disable it entirely or upgrade to Pro.
+
+### TLS Handshake Failure (from Docker Containers)
+
+Containers (e.g., Watchtower, webhook runners) fail with `remote error: tls: handshake failure` when sending requests through your worker. The container's CA certificate bundle is outdated (baked in at image build time) and doesn't trust Cloudflare's edge certificate chain.
+
+Mount the host's CA certificates into the container:
+
+```text
+-v /etc/ssl/certs:/etc/ssl/certs:ro
+```
+
+On Synology NAS, the cert path is `/etc/ssl/certs/`. Add this volume mount to your Docker run command or compose file and restart the container.
+
+## Runtime Issues
+
+### Trackers not firing
+
+- Check that your tracker credentials are correct (API secrets, tokens, pixel IDs).
+- Tail the worker logs to see tracker dispatch activity:
+
+```bash
+npm run tail
+```
+
+- Each tracker fires independently. A failure in one tracker doesn't affect others.
+- Tracker errors are silently handled — failures are not logged to the worker logs. Check the individual analytics service dashboards to confirm events are arriving.
+- To debug tracker issues, consider adding a plain-text tracker pointing to an endpoint you control (e.g., an ntfy topic or a request bin) so you can verify payloads are being sent.
+
+### Redirect goes to fallback instead of matching shortcode
+
+- Shortcodes are matched exactly (after stripping the trailing slash). Check that your config shortcode matches the path you're requesting.
+- Shortcodes must include the leading `/` (e.g., `/github`, not `github`).
+- Paths with a trailing slash are stripped before matching, so `/github/` matches `/github`. However, additional path segments don't match (e.g., `/github/repos` doesn't match `/github`).
+
+### Landing page shows instead of redirect
+
+The landing page is served when:
+
+- The request hits the root path (`/`) and no `fallback_url` is configured.
+- The request hits an unmatched path and no `fallback_url` is configured (this shows the 404 page).
+
+If you want all unmatched requests to redirect somewhere, set a `fallback_url` in your config.
+
+### 405 Method Not Allowed
+
+The worker only accepts `GET` and `HEAD` requests. `POST`, `PUT`, `DELETE`, and other methods return a `405` JSON response. This is expected behavior for a URL shortener.
+
+### Debug output on landing page
+
+If you see config output on the landing page, `show_response_output` is set to `true`. Sensitive values (API secrets, tokens, measurement IDs) are masked with `••••••`, but you'd still want to set this to `false` in production.
+
+## Limiting Unwanted Traffic
+
+After deployment, you may see unwanted traffic probing for exploits. You can set up a Cloudflare WAF rule to mitigate.
+
+### WAF Rule Setup
+
+1. Go to **Dashboard > Security > WAF > Custom Rules**.
+2. Create a rule with these conditions using the expression builder:
+   - Select **Known Bots** from the Field dropdown and set it to **enabled**.
+   - Select **Threat Score** from the Field dropdown and set it to **greater than or equal to** `5`.
+   - Select **URI Path** from the Field dropdown and set it to **does not equal** `/github` (repeat for each of your shortcodes).
+3. Set the action to **Managed Challenge**.
+
+### Example Expression
+
+If your shortcodes are `/github` and `/linkedin`, the WAF rule expression looks like:
+
+```text
+(cf.bot_management.score lt 30) or
+(cf.threat_score ge 5) and
+(http.request.uri.path ne "/github") and
+(http.request.uri.path ne "/linkedin")
+```
+
+This blocks automated scanners and high-threat-score traffic while allowing legitimate visitors to reach your configured shortcodes. Adjust the shortcode paths to match your configuration.

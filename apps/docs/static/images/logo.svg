@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="1024px" height="1024px" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>bsl-logo</title>
+    <defs>
+        <path d="M0,0 L1024,0 L1024,1024 L0,1024 L0,0 Z" id="path-1"></path>
+    </defs>
+    <g id="bsl-logo" stroke="none" fill="none" xlink:href="#path-1" fill-rule="evenodd">
+        <use fill="#84CC16" xlink:href="#path-1"></use>
+        <g id="nova-logo-nobg" transform="translate(160, 160)" stroke="#D3FF90" stroke-width="1">
+            <g id="Group" transform="translate(-63.25, 58.4375)">
+                <polyline id="Path" stroke-width="96.5334337" transform="translate(243.2572, 341.1261) rotate(-133) translate(-243.2572, -341.1261)" points="50.1416089 495.545308 243.184515 186.615976 436.372744 495.636135"></polyline>
+                <polyline id="Path" stroke-width="96.5334337" transform="translate(593.0166, 245.8827) rotate(45) translate(-593.0166, -245.8827)" points="399.904236 400.304335 592.943789 91.3700329 786.129019 400.395384"></polyline>
+            </g>
+        </g>
+    </g>
+</svg>
