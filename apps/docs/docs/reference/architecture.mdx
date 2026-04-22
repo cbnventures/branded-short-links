@@ -153,12 +153,12 @@ The config file is never deployed directly. The CLI serializes each section as a
 
 ```text
 packages/branded-short-links/src/
-|-- worker/                 <-- Cloudflare Worker runtime
+|-- worker/                <-- Cloudflare Worker runtime
 |   |-- index.ts           <-- Request handler, routing logic
 |   |-- trackers.ts        <-- Tracker dispatch (GA4, Facebook, ntfy, Reverse Proxy for ntfy, PostHog, plain-text)
 |   '-- landing/
 |       '-- page.ts        <-- Landing page and 404 page HTML generation
-|-- cli/                    <-- Node.js CLI runtime
+|-- cli/                   <-- Node.js CLI runtime
 |   |-- index.ts           <-- CLI entry point (Commander)
 |   |-- commands/
 |   |   |-- config-io.ts   <-- Config file read/write
@@ -174,7 +174,7 @@ packages/branded-short-links/src/
 |   |-- schema.ts          <-- Zod validation schemas (all types)
 |   |-- regex.ts           <-- Centralized regex patterns
 |   '-- item.ts            <-- App name constant
-'-- types/                  <-- TypeScript declarations (.d.ts), mirrors src/
+'-- types/                 <-- TypeScript declarations (.d.ts), mirrors src/
 ```
 
 Worker code and CLI code are cleanly separated because they run on different runtimes (Cloudflare Workers vs. Node.js). They share the `lib/` directory for schemas and utilities.

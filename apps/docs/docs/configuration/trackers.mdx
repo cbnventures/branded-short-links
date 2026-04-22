@@ -78,7 +78,9 @@ Send `select_content` events to Google Analytics 4 via the Measurement Protocol 
 - **Endpoint:** `https://www.google-analytics.com/mp/collect`
 - **Event name:** `select_content`
 - **Parameters:** `content_type` (`short_link`), `content_id` (shortcode), `link_url` (redirect URL)
-- **Client ID:** Extracted from the `CF-RAY` header, falls back to `"unknown"`. Note: `CF-RAY` is a Cloudflare request identifier, not a persistent user identifier. Each request generates a unique `CF-RAY`, so GA4 treats every redirect as a distinct client. This is sufficient for counting events but doesn't support user-level attribution or session tracking.
+- **Client ID:** Extracted from the `CF-RAY` header, falls back to `"unknown"`.
+
+Note: `CF-RAY` is a Cloudflare request identifier, not a persistent user identifier. Each request generates a unique `CF-RAY`, so GA4 treats every redirect as a distinct client. This is sufficient for counting events but doesn't support user-level attribution or session tracking.
 
 #### How to Get Your Credentials
 
