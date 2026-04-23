@@ -1,5 +1,10 @@
 # branded-short-links
 
+## 2.0.2 - 2026-04-23
+
+### UPDATED
+- Updated nova dependency to v0.17.0.
+
 ## 2.0.1 - 2026-04-21
 
 ### FIXED
