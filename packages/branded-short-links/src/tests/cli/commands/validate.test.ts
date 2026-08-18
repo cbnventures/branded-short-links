@@ -1,8 +1,8 @@
 import {
   existsSync, mkdtempSync, rmSync, writeFileSync,
-} from 'fs';
-import { tmpdir } from 'os';
-import { join } from 'path';
+} from 'node:fs';
+import { tmpdir } from 'node:os';
+import { join } from 'node:path';
 
 import {
   afterEach, beforeEach, describe, expect, it,
@@ -11,24 +11,43 @@ import {
 import { validateConfig } from '../../../cli/commands/validate.js';
 
 import type {
-  TestsCliCommandsValidateConfigContent,
-  TestsCliCommandsValidateConfigPath,
-  TestsCliCommandsValidateDuplicateConfig,
-  TestsCliCommandsValidateInvalidConfig,
-  TestsCliCommandsValidateMinimalConfig,
-  TestsCliCommandsValidateResult,
-  TestsCliCommandsValidateTempDir,
-  TestsCliCommandsValidateTempDirPath,
-  TestsCliCommandsValidateValidConfig,
+  Tests_Cli_Commands_Validate_ValidateConfig_ConfigPath,
+  Tests_Cli_Commands_Validate_ValidateConfig_FailsForDuplicateShortcodes_ConfigContent,
+  Tests_Cli_Commands_Validate_ValidateConfig_FailsForDuplicateShortcodes_DuplicateConfig,
+  Tests_Cli_Commands_Validate_ValidateConfig_FailsForDuplicateShortcodes_Result,
+  Tests_Cli_Commands_Validate_ValidateConfig_FailsForDuplicateTrackerNames_ConfigContent,
+  Tests_Cli_Commands_Validate_ValidateConfig_FailsForDuplicateTrackerNames_DuplicateConfig,
+  Tests_Cli_Commands_Validate_ValidateConfig_FailsForDuplicateTrackerNames_Result,
+  Tests_Cli_Commands_Validate_ValidateConfig_FailsForInvalidFallbackURL_ConfigContent,
+  Tests_Cli_Commands_Validate_ValidateConfig_FailsForInvalidFallbackURL_InvalidConfig,
+  Tests_Cli_Commands_Validate_ValidateConfig_FailsForInvalidFallbackURL_Result,
+  Tests_Cli_Commands_Validate_ValidateConfig_FailsForMissingLinksSection_ConfigContent,
+  Tests_Cli_Commands_Validate_ValidateConfig_FailsForMissingLinksSection_InvalidConfig,
+  Tests_Cli_Commands_Validate_ValidateConfig_FailsForMissingLinksSection_Result,
+  Tests_Cli_Commands_Validate_ValidateConfig_FailsForMissingSettingsFields_ConfigContent,
+  Tests_Cli_Commands_Validate_ValidateConfig_FailsForMissingSettingsFields_InvalidConfig,
+  Tests_Cli_Commands_Validate_ValidateConfig_FailsForMissingSettingsFields_Result,
+  Tests_Cli_Commands_Validate_ValidateConfig_OsTmpDir,
+  Tests_Cli_Commands_Validate_ValidateConfig_PassesForAValidConfig_ConfigContent,
+  Tests_Cli_Commands_Validate_ValidateConfig_PassesForAValidConfig_Result,
+  Tests_Cli_Commands_Validate_ValidateConfig_PassesForAValidConfig_ValidConfig,
+  Tests_Cli_Commands_Validate_ValidateConfig_PassesWithEmptyItemsAndTrackers_ConfigContent,
+  Tests_Cli_Commands_Validate_ValidateConfig_PassesWithEmptyItemsAndTrackers_MinimalConfig,
+  Tests_Cli_Commands_Validate_ValidateConfig_PassesWithEmptyItemsAndTrackers_Result,
+  Tests_Cli_Commands_Validate_ValidateConfig_ReturnsValidTrueWithNoDuplicatesAcrossDifferentShortcodes_ConfigContent,
+  Tests_Cli_Commands_Validate_ValidateConfig_ReturnsValidTrueWithNoDuplicatesAcrossDifferentShortcodes_Result,
+  Tests_Cli_Commands_Validate_ValidateConfig_ReturnsValidTrueWithNoDuplicatesAcrossDifferentShortcodes_ValidConfig,
+  Tests_Cli_Commands_Validate_ValidateConfig_TempDir,
+  Tests_Cli_Commands_Validate_ValidateConfig_TempDirPath,
 } from '../../../types/tests/cli/commands/validate.test.d.ts';
 
 describe('validateConfig', () => {
-  let tempDir: TestsCliCommandsValidateTempDir = undefined;
-  let configPath: TestsCliCommandsValidateConfigPath = undefined;
+  let tempDir: Tests_Cli_Commands_Validate_ValidateConfig_TempDir = undefined;
+  let configPath: Tests_Cli_Commands_Validate_ValidateConfig_ConfigPath = undefined;
 
   beforeEach(() => {
-    const osTmpDir: TestsCliCommandsValidateTempDirPath = tmpdir();
-    const tempDirPath: TestsCliCommandsValidateTempDirPath = join(osTmpDir, 'bsl-test-');
+    const osTmpDir: Tests_Cli_Commands_Validate_ValidateConfig_OsTmpDir = tmpdir();
+    const tempDirPath: Tests_Cli_Commands_Validate_ValidateConfig_TempDirPath = join(osTmpDir, 'bsl-test-');
 
     tempDir = mkdtempSync(tempDirPath);
     configPath = join(tempDir, 'config.json');
@@ -45,7 +64,7 @@ describe('validateConfig', () => {
   });
 
   it('passes for a valid config', () => {
-    const validConfig: TestsCliCommandsValidateValidConfig = {
+    const validConfig: Tests_Cli_Commands_Validate_ValidateConfig_PassesForAValidConfig_ValidConfig = {
       settings: {
         worker_name: 'test-worker',
         base_domain: 'bsl.example.com',
@@ -67,11 +86,11 @@ describe('validateConfig', () => {
       }],
     };
 
-    const configContent: TestsCliCommandsValidateConfigContent = JSON.stringify(validConfig, null, 2);
+    const configContent: Tests_Cli_Commands_Validate_ValidateConfig_PassesForAValidConfig_ConfigContent = JSON.stringify(validConfig, null, 2);
 
     writeFileSync(configPath!, configContent);
 
-    const result: TestsCliCommandsValidateResult = validateConfig(configPath!);
+    const result: Tests_Cli_Commands_Validate_ValidateConfig_PassesForAValidConfig_Result = validateConfig(configPath!);
 
     expect(result['valid']).toBe(true);
 
@@ -81,7 +100,7 @@ describe('validateConfig', () => {
   });
 
   it('fails for missing settings fields', () => {
-    const invalidConfig: TestsCliCommandsValidateInvalidConfig = {
+    const invalidConfig: Tests_Cli_Commands_Validate_ValidateConfig_FailsForMissingSettingsFields_InvalidConfig = {
       settings: {
         show_response_output: false,
       },
@@ -92,11 +111,11 @@ describe('validateConfig', () => {
       trackers: [],
     };
 
-    const configContent: TestsCliCommandsValidateConfigContent = JSON.stringify(invalidConfig, null, 2);
+    const configContent: Tests_Cli_Commands_Validate_ValidateConfig_FailsForMissingSettingsFields_ConfigContent = JSON.stringify(invalidConfig, null, 2);
 
     writeFileSync(configPath!, configContent);
 
-    const result: TestsCliCommandsValidateResult = validateConfig(configPath!);
+    const result: Tests_Cli_Commands_Validate_ValidateConfig_FailsForMissingSettingsFields_Result = validateConfig(configPath!);
 
     expect(result['valid']).toBe(false);
 
@@ -106,7 +125,7 @@ describe('validateConfig', () => {
   });
 
   it('fails for missing links section', () => {
-    const invalidConfig: TestsCliCommandsValidateInvalidConfig = {
+    const invalidConfig: Tests_Cli_Commands_Validate_ValidateConfig_FailsForMissingLinksSection_InvalidConfig = {
       settings: {
         worker_name: 'test-worker',
         base_domain: 'bsl.example.com',
@@ -115,11 +134,11 @@ describe('validateConfig', () => {
       trackers: [],
     };
 
-    const configContent: TestsCliCommandsValidateConfigContent = JSON.stringify(invalidConfig, null, 2);
+    const configContent: Tests_Cli_Commands_Validate_ValidateConfig_FailsForMissingLinksSection_ConfigContent = JSON.stringify(invalidConfig, null, 2);
 
     writeFileSync(configPath!, configContent);
 
-    const result: TestsCliCommandsValidateResult = validateConfig(configPath!);
+    const result: Tests_Cli_Commands_Validate_ValidateConfig_FailsForMissingLinksSection_Result = validateConfig(configPath!);
 
     expect(result['valid']).toBe(false);
 
@@ -129,7 +148,7 @@ describe('validateConfig', () => {
   });
 
   it('fails for duplicate shortcodes', () => {
-    const duplicateConfig: TestsCliCommandsValidateDuplicateConfig = {
+    const duplicateConfig: Tests_Cli_Commands_Validate_ValidateConfig_FailsForDuplicateShortcodes_DuplicateConfig = {
       settings: {
         worker_name: 'test-worker',
         base_domain: 'bsl.example.com',
@@ -153,11 +172,11 @@ describe('validateConfig', () => {
       trackers: [],
     };
 
-    const configContent: TestsCliCommandsValidateConfigContent = JSON.stringify(duplicateConfig, null, 2);
+    const configContent: Tests_Cli_Commands_Validate_ValidateConfig_FailsForDuplicateShortcodes_ConfigContent = JSON.stringify(duplicateConfig, null, 2);
 
     writeFileSync(configPath!, configContent);
 
-    const result: TestsCliCommandsValidateResult = validateConfig(configPath!);
+    const result: Tests_Cli_Commands_Validate_ValidateConfig_FailsForDuplicateShortcodes_Result = validateConfig(configPath!);
 
     expect(result['valid']).toBe(false);
 
@@ -167,7 +186,7 @@ describe('validateConfig', () => {
   });
 
   it('fails for duplicate tracker names', () => {
-    const duplicateConfig: TestsCliCommandsValidateDuplicateConfig = {
+    const duplicateConfig: Tests_Cli_Commands_Validate_ValidateConfig_FailsForDuplicateTrackerNames_DuplicateConfig = {
       settings: {
         worker_name: 'test-worker',
         base_domain: 'bsl.example.com',
@@ -192,11 +211,11 @@ describe('validateConfig', () => {
       ],
     };
 
-    const configContent: TestsCliCommandsValidateConfigContent = JSON.stringify(duplicateConfig, null, 2);
+    const configContent: Tests_Cli_Commands_Validate_ValidateConfig_FailsForDuplicateTrackerNames_ConfigContent = JSON.stringify(duplicateConfig, null, 2);
 
     writeFileSync(configPath!, configContent);
 
-    const result: TestsCliCommandsValidateResult = validateConfig(configPath!);
+    const result: Tests_Cli_Commands_Validate_ValidateConfig_FailsForDuplicateTrackerNames_Result = validateConfig(configPath!);
 
     expect(result['valid']).toBe(false);
 
@@ -206,7 +225,7 @@ describe('validateConfig', () => {
   });
 
   it('passes with empty items and trackers', () => {
-    const minimalConfig: TestsCliCommandsValidateMinimalConfig = {
+    const minimalConfig: Tests_Cli_Commands_Validate_ValidateConfig_PassesWithEmptyItemsAndTrackers_MinimalConfig = {
       settings: {
         worker_name: 'test-worker',
         base_domain: 'bsl.example.com',
@@ -219,11 +238,11 @@ describe('validateConfig', () => {
       trackers: [],
     };
 
-    const configContent: TestsCliCommandsValidateConfigContent = JSON.stringify(minimalConfig, null, 2);
+    const configContent: Tests_Cli_Commands_Validate_ValidateConfig_PassesWithEmptyItemsAndTrackers_ConfigContent = JSON.stringify(minimalConfig, null, 2);
 
     writeFileSync(configPath!, configContent);
 
-    const result: TestsCliCommandsValidateResult = validateConfig(configPath!);
+    const result: Tests_Cli_Commands_Validate_ValidateConfig_PassesWithEmptyItemsAndTrackers_Result = validateConfig(configPath!);
 
     expect(result['valid']).toBe(true);
 
@@ -233,7 +252,7 @@ describe('validateConfig', () => {
   });
 
   it('fails for invalid fallback URL', () => {
-    const invalidConfig: TestsCliCommandsValidateInvalidConfig = {
+    const invalidConfig: Tests_Cli_Commands_Validate_ValidateConfig_FailsForInvalidFallbackURL_InvalidConfig = {
       settings: {
         worker_name: 'test-worker',
         base_domain: 'bsl.example.com',
@@ -246,11 +265,11 @@ describe('validateConfig', () => {
       trackers: [],
     };
 
-    const configContent: TestsCliCommandsValidateConfigContent = JSON.stringify(invalidConfig, null, 2);
+    const configContent: Tests_Cli_Commands_Validate_ValidateConfig_FailsForInvalidFallbackURL_ConfigContent = JSON.stringify(invalidConfig, null, 2);
 
     writeFileSync(configPath!, configContent);
 
-    const result: TestsCliCommandsValidateResult = validateConfig(configPath!);
+    const result: Tests_Cli_Commands_Validate_ValidateConfig_FailsForInvalidFallbackURL_Result = validateConfig(configPath!);
 
     expect(result['valid']).toBe(false);
 
@@ -260,7 +279,7 @@ describe('validateConfig', () => {
   });
 
   it('returns valid true with no duplicates across different shortcodes', () => {
-    const validConfig: TestsCliCommandsValidateValidConfig = {
+    const validConfig: Tests_Cli_Commands_Validate_ValidateConfig_ReturnsValidTrueWithNoDuplicatesAcrossDifferentShortcodes_ValidConfig = {
       settings: {
         worker_name: 'test-worker',
         base_domain: 'bsl.example.com',
@@ -296,11 +315,11 @@ describe('validateConfig', () => {
       ],
     };
 
-    const configContent: TestsCliCommandsValidateConfigContent = JSON.stringify(validConfig, null, 2);
+    const configContent: Tests_Cli_Commands_Validate_ValidateConfig_ReturnsValidTrueWithNoDuplicatesAcrossDifferentShortcodes_ConfigContent = JSON.stringify(validConfig, null, 2);
 
     writeFileSync(configPath!, configContent);
 
-    const result: TestsCliCommandsValidateResult = validateConfig(configPath!);
+    const result: Tests_Cli_Commands_Validate_ValidateConfig_ReturnsValidTrueWithNoDuplicatesAcrossDifferentShortcodes_Result = validateConfig(configPath!);
 
     expect(result['valid']).toBe(true);
 

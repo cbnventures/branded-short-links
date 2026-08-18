@@ -12,7 +12,7 @@ const settingsSchema = z.object({
   worker_name: z.string().min(1),
   base_domain: z.string().min(1),
   show_response_output: z.boolean(),
-});
+}).strict();
 
 /**
  * Lib - Schema - Link Item Schema.
@@ -32,7 +32,7 @@ const linkItemSchema = z.object({
     z.literal(308),
   ]),
   redirect_url: z.string().url(),
-});
+}).strict();
 
 /**
  * Lib - Schema - Links Schema.
@@ -45,10 +45,10 @@ const linkItemSchema = z.object({
 const linksSchema = z.object({
   fallback_url: z.string().url().optional(),
   items: z.array(linkItemSchema),
-});
+}).strict();
 
 /**
- * Lib - Schema - Ga Tracker Schema.
+ * Lib - Schema - Ga4 Tracker Schema.
  *
  * Validates a Google Analytics 4 tracker requiring
  * a measurement ID and API secret with strict mode.
@@ -166,7 +166,7 @@ const configSchema = z.object({
   links: linksSchema,
   trackers: z.array(trackerSchema),
   settings: settingsSchema,
-});
+}).strict();
 
 export {
   configSchema,

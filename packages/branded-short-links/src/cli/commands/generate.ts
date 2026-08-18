@@ -1,5 +1,5 @@
-import { mkdirSync, writeFileSync } from 'fs';
-import { dirname, resolve } from 'path';
+import { mkdirSync, writeFileSync } from 'node:fs';
+import { dirname, resolve } from 'node:path';
 
 import { Bootstrap } from '@cbnventures/nova/toolkit';
 
@@ -7,26 +7,43 @@ import { configSchema } from '../../lib/schema.js';
 import { loadConfig } from './config-io.js';
 
 import type {
-  CliCommandsGenerateGenerateWranglerTomlAccountId,
-  CliCommandsGenerateGenerateWranglerTomlCompatibilityDate,
-  CliCommandsGenerateGenerateWranglerTomlConfig,
-  CliCommandsGenerateGenerateWranglerTomlConfigPath,
-  CliCommandsGenerateGenerateWranglerTomlDefaultPath,
-  CliCommandsGenerateGenerateWranglerTomlLines,
-  CliCommandsGenerateGenerateWranglerTomlLinks,
-  CliCommandsGenerateGenerateWranglerTomlLinksAsString,
-  CliCommandsGenerateGenerateWranglerTomlOutputDir,
-  CliCommandsGenerateGenerateWranglerTomlOutputPath,
-  CliCommandsGenerateGenerateWranglerTomlProjectRoot,
-  CliCommandsGenerateGenerateWranglerTomlReturn,
-  CliCommandsGenerateGenerateWranglerTomlSettings,
-  CliCommandsGenerateGenerateWranglerTomlSettingsAsString,
-  CliCommandsGenerateGenerateWranglerTomlTrackers,
-  CliCommandsGenerateGenerateWranglerTomlTrackersAsString,
+  Cli_Commands_Generate_DefaultWranglerTomlPath,
+  Cli_Commands_Generate_GenerateWranglerToml_AccountId,
+  Cli_Commands_Generate_GenerateWranglerToml_CompatibilityDate,
+  Cli_Commands_Generate_GenerateWranglerToml_Config,
+  Cli_Commands_Generate_GenerateWranglerToml_ConfigPath,
+  Cli_Commands_Generate_GenerateWranglerToml_Lines,
+  Cli_Commands_Generate_GenerateWranglerToml_Links,
+  Cli_Commands_Generate_GenerateWranglerToml_LinksAsString,
+  Cli_Commands_Generate_GenerateWranglerToml_OutputDir,
+  Cli_Commands_Generate_GenerateWranglerToml_OutputPath,
+  Cli_Commands_Generate_GenerateWranglerToml_Returns,
+  Cli_Commands_Generate_GenerateWranglerToml_Settings,
+  Cli_Commands_Generate_GenerateWranglerToml_SettingsAsString,
+  Cli_Commands_Generate_GenerateWranglerToml_Trackers,
+  Cli_Commands_Generate_GenerateWranglerToml_TrackersAsString,
+  Cli_Commands_Generate_ProjectRoot,
 } from '../../types/cli/commands/generate.d.ts';
 
-const projectRoot: CliCommandsGenerateGenerateWranglerTomlProjectRoot = Bootstrap.getProjectRoot() ?? process.cwd();
-const defaultWranglerTomlPath: CliCommandsGenerateGenerateWranglerTomlDefaultPath = resolve(projectRoot, 'wrangler.toml');
+/**
+ * CLI - Commands - Generate - Project Root.
+ *
+ * Absolute path to the resolved project root used as the base
+ * for locating the default Wrangler configuration output.
+ *
+ * @since 2.0.3
+ */
+const projectRoot: Cli_Commands_Generate_ProjectRoot = Bootstrap.getProjectRoot() ?? process.cwd();
+
+/**
+ * CLI - Commands - Generate - Default Wrangler Toml Path.
+ *
+ * Absolute path where the generated Wrangler configuration file
+ * is written when no explicit output path is supplied.
+ *
+ * @since 2.0.3
+ */
+const defaultWranglerTomlPath: Cli_Commands_Generate_DefaultWranglerTomlPath = resolve(projectRoot, 'wrangler.toml');
 
 /**
  * CLI - Commands - Generate - Wrangler Toml.
@@ -34,31 +51,37 @@ const defaultWranglerTomlPath: CliCommandsGenerateGenerateWranglerTomlDefaultPat
  * Builds a Wrangler configuration file from the project config
  * and writes it to the specified output path.
  *
+ * @param {Cli_Commands_Generate_GenerateWranglerToml_ConfigPath} configPath  - Config path.
+ * @param {Cli_Commands_Generate_GenerateWranglerToml_OutputPath} outputPath  - Output path.
+ * @param {Cli_Commands_Generate_GenerateWranglerToml_AccountId}  [accountId] - Account id.
+ *
+ * @returns {Cli_Commands_Generate_GenerateWranglerToml_Returns}
+ *
  * @since 2.0.0
  */
-function generateWranglerToml(configPath: CliCommandsGenerateGenerateWranglerTomlConfigPath, outputPath: CliCommandsGenerateGenerateWranglerTomlOutputPath = defaultWranglerTomlPath, accountId?: CliCommandsGenerateGenerateWranglerTomlAccountId): CliCommandsGenerateGenerateWranglerTomlReturn {
-  const config: CliCommandsGenerateGenerateWranglerTomlConfig = configSchema.parse(loadConfig(configPath));
-  const settings: CliCommandsGenerateGenerateWranglerTomlSettings = config['settings'];
-  const links: CliCommandsGenerateGenerateWranglerTomlLinks = config['links'];
-  const trackers: CliCommandsGenerateGenerateWranglerTomlTrackers = config['trackers'];
-  const compatibilityDate: CliCommandsGenerateGenerateWranglerTomlCompatibilityDate = new Date().toISOString().slice(0, 10);
+function generateWranglerToml(configPath: Cli_Commands_Generate_GenerateWranglerToml_ConfigPath, outputPath: Cli_Commands_Generate_GenerateWranglerToml_OutputPath = defaultWranglerTomlPath, accountId?: Cli_Commands_Generate_GenerateWranglerToml_AccountId): Cli_Commands_Generate_GenerateWranglerToml_Returns {
+  const config: Cli_Commands_Generate_GenerateWranglerToml_Config = configSchema.parse(loadConfig(configPath));
+  const settings: Cli_Commands_Generate_GenerateWranglerToml_Settings = config['settings'];
+  const links: Cli_Commands_Generate_GenerateWranglerToml_Links = config['links'];
+  const trackers: Cli_Commands_Generate_GenerateWranglerToml_Trackers = config['trackers'];
+  const compatibilityDate: Cli_Commands_Generate_GenerateWranglerToml_CompatibilityDate = new Date().toISOString().slice(0, 10);
 
-  const settingsAsString: CliCommandsGenerateGenerateWranglerTomlSettingsAsString = JSON.stringify(settings);
-  const linksAsString: CliCommandsGenerateGenerateWranglerTomlLinksAsString = JSON.stringify(links);
-  const trackersAsString: CliCommandsGenerateGenerateWranglerTomlTrackersAsString = JSON.stringify(trackers);
+  const settingsAsString: Cli_Commands_Generate_GenerateWranglerToml_SettingsAsString = JSON.stringify(settings);
+  const linksAsString: Cli_Commands_Generate_GenerateWranglerToml_LinksAsString = JSON.stringify(links);
+  const trackersAsString: Cli_Commands_Generate_GenerateWranglerToml_TrackersAsString = JSON.stringify(trackers);
 
-  const lines: CliCommandsGenerateGenerateWranglerTomlLines = [
+  const lines: Cli_Commands_Generate_GenerateWranglerToml_Lines = [
     `name = "${settings['worker_name']}"`,
     'main = "packages/branded-short-links/build/src/worker/index.js"',
     `compatibility_date = "${compatibilityDate}"`,
-    ...(accountId !== undefined ? [`account_id = "${accountId}"`] : []),
+    ...((accountId !== undefined) ? [`account_id = "${accountId}"`] : []),
     '',
     '################',
     '#### Routes ####',
     '################',
     'routes = [',
     `  { pattern = "${settings['base_domain']}", custom_domain = true },`,
-    ...(settings['base_domain'].split('.').length === 2 ? [`  { pattern = "www.${settings['base_domain']}", custom_domain = true },`] : []),
+    ...((settings['base_domain'].split('.').length === 2) ? [`  { pattern = "www.${settings['base_domain']}", custom_domain = true },`] : []),
     ']',
     '',
     '##############',
@@ -70,7 +93,7 @@ function generateWranglerToml(configPath: CliCommandsGenerateGenerateWranglerTom
     `TRACKERS = ${JSON.stringify(trackersAsString)}`,
   ];
 
-  const outputDir: CliCommandsGenerateGenerateWranglerTomlOutputDir = dirname(outputPath);
+  const outputDir: Cli_Commands_Generate_GenerateWranglerToml_OutputDir = dirname(outputPath);
 
   mkdirSync(outputDir, { recursive: true });
   writeFileSync(outputPath, `${lines.join('\n')}\n`);

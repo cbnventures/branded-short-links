@@ -1,21 +1,17 @@
 ---
 id: settings
 title: Configuration Settings
-description: Define your short links, analytics trackers, and worker settings through a single JSON configuration file.
+description: Define your short links, analytics trackers, and worker settings through a single JSON configuration file managed by the CLI.
 sidebar_position: 1
 keywords:
   - branded short links
-  - configuration
   - config.json
   - settings
   - links
   - shortcode
-  - redirect
   - fallback url
-  - environment variables
   - config validation
-  - worker name
-  - base domain
+  - environment variables
 tags:
   - configuration
   - settings
@@ -23,7 +19,9 @@ tags:
   - validation
 ---
 
-Define your short links, analytics trackers, and worker settings through a single JSON configuration file managed by the CLI.
+import { Terminology } from '@cbnventures/docusaurus-preset-nova/blocks';
+
+Define your short links, analytics <Terminology title="background analytics integration on a link" to="/docs/reference/terminology#tracker">trackers</Terminology>, and <Terminology title="edge function that serves your redirects" to="/docs/reference/terminology#cloudflare-worker">worker</Terminology> settings through a single JSON configuration file managed by the CLI.
 
 ## Config File Location
 
@@ -31,15 +29,15 @@ The CLI resolves `config.json` by checking these locations in order:
 
 1. Current working directory
 2. Project root (detected by `package.json`)
-3. user config directory (`~/.config/branded-short-links/`)
+3. User config directory (`~/.config/branded-short-links/`)
 
-If no config file exists, the CLI copies `config.sample.json` into the user config directory as a starting point.
+If no <Terminology title="the config.json deployment settings file" to="/docs/reference/terminology#config">config</Terminology> file exists, the CLI copies `config.sample.json` into the user config directory as a starting point.
 
 ## Structure
 
-The config file has three top-level sections:
+The <Terminology title="the config.json deployment settings file" to="/docs/reference/terminology#config">config</Terminology> file has three top-level sections:
 
-```json
+```json title="config.json"
 {
   "settings": { ... },
   "links": { ... },
@@ -49,15 +47,15 @@ The config file has three top-level sections:
 
 ## Settings
 
-Controls worker identity and debug behavior.
+Controls <Terminology title="edge function that serves your redirects" to="/docs/reference/terminology#cloudflare-worker">worker</Terminology> identity and debug behavior.
 
 | Field                  | Type      | Required | Description                                                  |
-|------------------------|-----------|:--------:|--------------------------------------------------------------|
-| `worker_name`          | `string`  |    Yes   | Name of the Cloudflare Worker deployment.                    |
-| `base_domain`          | `string`  |    Yes   | Custom domain for short links (e.g., `example.com`).           |
-| `show_response_output` | `boolean` |    Yes   | Show masked config on the landing and 404 pages for debugging. |
+|------------------------|:---------:|----------|--------------------------------------------------------------|
+| `worker_name`          | `string`  |    Yes   | Name of the <Terminology title="edge function that serves your redirects" to="/docs/reference/terminology#cloudflare-worker">Cloudflare Worker</Terminology> deployment. |
+| `base_domain`          | `string`  |    Yes   | <Terminology title="domain your shortcodes live on" to="/docs/reference/terminology#base-domain">Base domain</Terminology> for short links (e.g., `example.com`). |
+| `show_response_output` | `boolean` |    Yes   | Show masked <Terminology title="the config.json deployment settings file" to="/docs/reference/terminology#config">config</Terminology> on the <Terminology title="branded page served at the root" to="/docs/reference/terminology#landing-page">landing</Terminology> and <Terminology title="page shown when nothing else matches" to="/docs/reference/terminology#404-page">404</Terminology> pages for debugging. |
 
-```json
+```json title="config.json"
 {
   "settings": {
     "worker_name": "branded-short-links",
@@ -69,24 +67,24 @@ Controls worker identity and debug behavior.
 
 ## Links
 
-Defines the shortcode-to-URL mappings and an optional fallback.
+Defines the <Terminology title="path segment that maps to a URL" to="/docs/reference/terminology#shortcode">shortcode</Terminology>-to-URL mappings and an optional <Terminology title="redirect used when no shortcode matches" to="/docs/reference/terminology#fallback-url">fallback</Terminology>.
 
 | Field          | Type     | Required | Description                                               |
-|----------------|----------|:--------:|-----------------------------------------------------------|
-| `fallback_url` | `string` |    No    | Default redirect for unmatched shortcodes. Must be a valid URL. |
-| `items`        | `array`  |    Yes   | Array of link items (see below).                          |
+|----------------|:--------:|----------|-----------------------------------------------------------|
+| `fallback_url` | `string` |    No    | Default redirect for unmatched <Terminology title="path segment that maps to a URL" to="/docs/reference/terminology#shortcode">shortcodes</Terminology>. Must be a valid URL. |
+| `items`        | `array`  |    Yes   | Array of <Terminology title="single shortcode-to-URL config entry" to="/docs/reference/terminology#link-item">link items</Terminology> (see below). |
 
 ### Link Item
 
-Each item maps a shortcode path to a destination URL with a specific redirect status.
+Each <Terminology title="single shortcode-to-URL config entry" to="/docs/reference/terminology#link-item">item</Terminology> maps a <Terminology title="path segment that maps to a URL" to="/docs/reference/terminology#shortcode">shortcode</Terminology> path to a destination URL with a specific redirect status.
 
 | Field           | Type     | Required | Description                                                    |
-|-----------------|----------|:--------:|----------------------------------------------------------------|
+|-----------------|:--------:|----------|----------------------------------------------------------------|
 | `shortcode`     | `string` |    Yes   | Path segment starting with `/` (e.g., `/github`). Min 2 chars. |
 | `http_response` | `number` |    Yes   | HTTP redirect status: `301`, `302`, `303`, `307`, or `308`.    |
 | `redirect_url`  | `string` |    Yes   | Destination URL. Must be a valid URL.                          |
 
-```json
+```json title="config.json"
 {
   "links": {
     "fallback_url": "https://example.com",
@@ -118,31 +116,33 @@ Each item maps a shortcode path to a destination URL with a specific redirect st
 
 ### Shortcode Matching
 
-The worker strips trailing slashes before matching. Query strings and hash fragments are not used for matching and are not forwarded to the redirect destination for matched shortcodes — the redirect always goes to the exact `redirect_url` from your config. This differs from fallback redirects, which do preserve the original path, query, and hash (see below).
+The <Terminology title="edge function that serves your redirects" to="/docs/reference/terminology#cloudflare-worker">worker</Terminology> strips trailing slashes before matching. Query strings and hash fragments are not used for matching and are not forwarded to the redirect destination for matched <Terminology title="path segment that maps to a URL" to="/docs/reference/terminology#shortcode">shortcodes</Terminology> — the redirect always goes to the exact `redirect_url` from your <Terminology title="the config.json deployment settings file" to="/docs/reference/terminology#config">config</Terminology>.
 
-| Request                                  | Matched Shortcode | Redirect Destination          |
-|------------------------------------------|-------------------|-------------------------------|
-| `https://example.com/github`             | `/github`         | `https://github.com/yourname` |
-| `https://example.com/github?ref=twitter` | `/github`         | `https://github.com/yourname` |
-| `https://example.com/github/`            | `/github`         | `https://github.com/yourname` |
-| `https://example.com/unknown`            | (none)            | Fallback URL or 404 page      |
+This differs from <Terminology title="redirect used when no shortcode matches" to="/docs/reference/terminology#fallback-url">fallback</Terminology> redirects, which do preserve the original path, query, and hash (see below).
+
+| Request                                  | Matched Shortcode | Redirect Destination                                                                                                                                                                                                                                                |
+|------------------------------------------|-------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `https://example.com/github`             | `/github`         | `https://github.com/yourname`                                                                                                                                                                                                                                       |
+| `https://example.com/github?ref=twitter` | `/github`         | `https://github.com/yourname`                                                                                                                                                                                                                                       |
+| `https://example.com/github/`            | `/github`         | `https://github.com/yourname`                                                                                                                                                                                                                                       |
+| `https://example.com/unknown`            | (none)            | <Terminology title="redirect used when no shortcode matches" to="/docs/reference/terminology#fallback-url">Fallback URL</Terminology> or <Terminology title="page shown when nothing else matches" to="/docs/reference/terminology#404-page">404 page</Terminology> |
 
 ### Fallback URL Behavior
 
-When a request doesn't match any shortcode and a `fallback_url` is configured, the redirect behavior depends on the request path:
+When a request doesn't match any <Terminology title="path segment that maps to a URL" to="/docs/reference/terminology#shortcode">shortcode</Terminology> and a `fallback_url` is configured, the redirect behavior depends on the request path:
 
-- **Root path (`/`)** — Redirects to the fallback URL's origin only (e.g., `https://example.com`). The original path, query string, and hash are not forwarded.
-- **Any other path** — Redirects to the fallback URL's origin with the original pathname, query string, and hash fragment preserved (e.g., `/about?ref=home#section` appended to the fallback origin).
+- **Root path (`/`)** — Redirects to the <Terminology title="redirect used when no shortcode matches" to="/docs/reference/terminology#fallback-url">fallback URL</Terminology>'s origin only (e.g., `https://example.com`). The original path, query string, and hash are not forwarded.
+- **Any other path** — Redirects to the <Terminology title="redirect used when no shortcode matches" to="/docs/reference/terminology#fallback-url">fallback URL</Terminology>'s origin with the original pathname, query string, and hash fragment preserved (e.g., `/about?ref=home#section` appended to the <Terminology title="redirect used when no shortcode matches" to="/docs/reference/terminology#fallback-url">fallback</Terminology> origin).
 
-Fallback redirects always use HTTP status `301` (Moved Permanently). This is not configurable — only shortcode redirects use the per-link `http_response` setting.
+<Terminology title="redirect used when no shortcode matches" to="/docs/reference/terminology#fallback-url">Fallback</Terminology> redirects always use HTTP status `301` (Moved Permanently). This is not configurable — only <Terminology title="path segment that maps to a URL" to="/docs/reference/terminology#shortcode">shortcode</Terminology> redirects use the per-link `http_response` setting.
 
-When no `fallback_url` is configured, the root path serves the landing page and all other unmatched paths serve a 404 page.
+When no `fallback_url` is configured, the root path serves the <Terminology title="branded page served at the root" to="/docs/reference/terminology#landing-page">landing page</Terminology> and all other unmatched paths serve a <Terminology title="page shown when nothing else matches" to="/docs/reference/terminology#404-page">404 page</Terminology>.
 
 ## Trackers
 
-An array of analytics integrations. Each tracker has a `type` field that determines which additional fields are required. All trackers fire in parallel on every matched shortcode redirect.
+An array of analytics integrations. Each <Terminology title="background analytics integration on a link" to="/docs/reference/terminology#tracker">tracker</Terminology> has a `type` field that determines which additional fields are required. All <Terminology title="background analytics integration on a link" to="/docs/reference/terminology#tracker">trackers</Terminology> fire in parallel on every matched <Terminology title="path segment that maps to a URL" to="/docs/reference/terminology#shortcode">shortcode</Terminology> redirect.
 
-See [Trackers](/docs/configuration/trackers/) for the full reference on each tracker type.
+See [Trackers](/docs/configuration/trackers/) for the full reference on each <Terminology title="background analytics integration on a link" to="/docs/reference/terminology#tracker">tracker</Terminology> type.
 
 ### Quick Reference
 
@@ -159,7 +159,7 @@ See [Trackers](/docs/configuration/trackers/) for the full reference on each tra
 
 The full sample configuration file:
 
-```json
+```json title="config.json"
 {
   "settings": {
     "worker_name": "branded-short-links",
@@ -189,7 +189,7 @@ The full sample configuration file:
 
 ## Validation
 
-Run the validate command to check your config against the schema:
+Run the validate command to check your <Terminology title="the config.json deployment settings file" to="/docs/reference/terminology#config">config</Terminology> against the schema:
 
 ```bash
 bsl validate
@@ -199,25 +199,25 @@ Validation checks:
 
 - All required fields are present and correctly typed.
 - URLs are valid format.
-- Shortcodes start with `/` and are at least 2 characters.
+- <Terminology title="path segment that maps to a URL" to="/docs/reference/terminology#shortcode">Shortcodes</Terminology> start with `/` and are at least 2 characters.
 - HTTP response codes are one of the allowed values.
-- No duplicate shortcodes exist.
-- No duplicate tracker names exist.
-- Tracker-specific fields match the declared type (extra fields are rejected).
+- No duplicate <Terminology title="path segment that maps to a URL" to="/docs/reference/terminology#shortcode">shortcodes</Terminology> exist.
+- No duplicate <Terminology title="background analytics integration on a link" to="/docs/reference/terminology#tracker">tracker</Terminology> names exist.
+- <Terminology title="background analytics integration on a link" to="/docs/reference/terminology#tracker">Tracker</Terminology>-specific fields match the declared type (extra fields are rejected).
 
 ## Environment Variables
 
-The CLI resolves `.env` by checking these locations in order (same as config resolution):
+The CLI resolves `.env` by checking these locations in order (same as <Terminology title="the config.json deployment settings file" to="/docs/reference/terminology#config">config</Terminology> resolution):
 
 1. Current working directory
 2. Project root (detected by `package.json`)
-3. user config directory (`~/.config/branded-short-links/`)
+3. User config directory (`~/.config/branded-short-links/`)
 
-The first `.env` file found is loaded automatically. During first deploy, the CLI saves new tokens to `~/.config/branded-short-links/.env`.
+The first `.env` file found is loaded automatically. During first deploy, the CLI saves new <Terminology title="Cloudflare credential authorizing CLI deployments" to="/docs/reference/terminology#api-token">tokens</Terminology> to `~/.config/branded-short-links/.env`.
 
-| Variable               | Purpose                                      |
-|------------------------|----------------------------------------------|
-| `CLOUDFLARE_API_TOKEN` | API token for Cloudflare Workers deployment. |
-| `NODE_ENV`             | Node.js environment setting.                 |
-| `LOG_LEVEL`            | Controls CLI log verbosity.                  |
-| `LOG_TIME`             | Enables timestamps in CLI log output.        |
+| Variable               | Purpose                                                                                                                                                                                                                                                                                                     |
+|------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `CLOUDFLARE_API_TOKEN` | <Terminology title="Cloudflare credential authorizing CLI deployments" to="/docs/reference/terminology#api-token">API token</Terminology> for <Terminology title="edge function that serves your redirects" to="/docs/reference/terminology#cloudflare-worker">Cloudflare Workers</Terminology> deployment. |
+| `NODE_ENV`             | Node.js environment setting.                                                                                                                                                                                                                                                                                |
+| `LOG_LEVEL`            | Controls CLI log verbosity.                                                                                                                                                                                                                                                                                 |
+| `LOG_TIME`             | Enables timestamps in CLI log output.                                                                                                                                                                                                                                                                       |

@@ -1,77 +1,71 @@
-import type { LibSchemaConfig } from '../../lib/schema.d.ts';
+import type { Lib_Schema_Config } from '../../lib/schema.d.ts';
 
 /**
- * Worker - Landing - Page - Alert Icon.
+ * Worker - Landing - Page.
  *
  * @since 2.0.0
  */
-export type WorkerLandingPageAlertIcon = string;
+export type Worker_Landing_Page_SharedStyles = string;
+
+export type Worker_Landing_Page_GithubIcon = string;
+
+export type Worker_Landing_Page_LinkIcon = string;
+
+export type Worker_Landing_Page_AlertIcon = string;
 
 /**
- * Worker - Landing - Page - GitHub Icon.
+ * Worker - Landing - Page - Escape Html.
  *
- * @since 2.0.0
+ * @since 2.0.3
  */
-export type WorkerLandingPageGithubIcon = string;
+export type Worker_Landing_Page_EscapeHtml_Input = string;
+
+export type Worker_Landing_Page_EscapeHtml_Returns = string;
 
 /**
  * Worker - Landing - Page - Landing Page.
  *
  * @since 2.0.0
  */
-export type WorkerLandingPageLandingPageConfig = LibSchemaConfig;
+export type Worker_Landing_Page_LandingPage_Config = Lib_Schema_Config;
 
-export type WorkerLandingPageLandingPageReturn = Response;
+export type Worker_Landing_Page_LandingPage_Returns = Response;
 
-export type WorkerLandingPageLandingPageMaskedJson = string;
+export type Worker_Landing_Page_LandingPage_MaskedJson = string;
 
-export type WorkerLandingPageLandingPageDebugHtml = string;
+export type Worker_Landing_Page_LandingPage_DebugHtml = string;
 
-export type WorkerLandingPageLandingPageHtml = string;
-
-/**
- * Worker - Landing - Page - Link Icon.
- *
- * @since 2.0.0
- */
-export type WorkerLandingPageLinkIcon = string;
+export type Worker_Landing_Page_LandingPage_Html = string;
 
 /**
  * Worker - Landing - Page - Mask Config.
  *
  * @since 2.0.0
  */
-export type WorkerLandingPageMaskConfigConfig = LibSchemaConfig;
+export type Worker_Landing_Page_MaskConfig_Config = Lib_Schema_Config;
 
-export type WorkerLandingPageMaskConfigReturn = Record<string, unknown>;
+export type Worker_Landing_Page_MaskConfig_Returns = Record<string, unknown>;
 
 /**
  * Worker - Landing - Page - Mask Value.
  *
  * @since 2.0.0
  */
-export type WorkerLandingPageMaskValueValue = string;
+export type Worker_Landing_Page_MaskValue_Value = string;
 
-export type WorkerLandingPageMaskValueReturn = string;
+export type Worker_Landing_Page_MaskValue_Returns = string;
 
 /**
  * Worker - Landing - Page - Not Found Page.
  *
  * @since 2.0.0
  */
-export type WorkerLandingPageNotFoundPageConfig = LibSchemaConfig;
+export type Worker_Landing_Page_NotFoundPage_Config = Lib_Schema_Config;
 
-export type WorkerLandingPageNotFoundPageReturn = Response;
+export type Worker_Landing_Page_NotFoundPage_Returns = Response;
 
-export type WorkerLandingPageNotFoundPageMaskedJson = string;
+export type Worker_Landing_Page_NotFoundPage_MaskedJson = string;
 
-export type WorkerLandingPageNotFoundPageDebugHtml = string;
+export type Worker_Landing_Page_NotFoundPage_DebugHtml = string;
 
-export type WorkerLandingPageNotFoundPageHtml = string;
-
-/**
- * Worker - Landing - Page - Shared Styles.
- *
- * @since 2.0.0
- */
-export type WorkerLandingPageSharedStyles = string;
+export type Worker_Landing_Page_NotFoundPage_Html = string;

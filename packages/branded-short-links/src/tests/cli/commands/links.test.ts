@@ -1,8 +1,8 @@
 import {
   existsSync, mkdtempSync, rmSync, writeFileSync,
-} from 'fs';
-import { tmpdir } from 'os';
-import { join } from 'path';
+} from 'node:fs';
+import { tmpdir } from 'node:os';
+import { join } from 'node:path';
 
 import {
   afterEach, beforeEach, describe, expect, it,
@@ -15,18 +15,33 @@ import {
 import { configSchema } from '../../../lib/schema.js';
 
 import type {
-  TestsCliCommandsLinksConfig,
-  TestsCliCommandsLinksConfigPath,
-  TestsCliCommandsLinksEmptyConfig,
-  TestsCliCommandsLinksItems,
-  TestsCliCommandsLinksNewLink,
-  TestsCliCommandsLinksTempDir,
-  TestsCliCommandsLinksTempDirPath,
-  TestsCliCommandsLinksUrl,
-  TestsCliCommandsLinksValidConfig,
+  Tests_Cli_Commands_Links_AddLink_AddsALinkItemToTheArray_Items,
+  Tests_Cli_Commands_Links_AddLink_AddsALinkItemToTheArray_NewLink,
+  Tests_Cli_Commands_Links_AddLink_DoesNotAffectExistingLinks_Items,
+  Tests_Cli_Commands_Links_AddLink_DoesNotAffectExistingLinks_NewLink,
+  Tests_Cli_Commands_Links_AddLink_PersistsTheAddedLinkToFile_Config,
+  Tests_Cli_Commands_Links_AddLink_PersistsTheAddedLinkToFile_NewLink,
+  Tests_Cli_Commands_Links_ConfigJson,
+  Tests_Cli_Commands_Links_ConfigPath,
+  Tests_Cli_Commands_Links_EditLink_DoesNotAffectOtherLinks_Items,
+  Tests_Cli_Commands_Links_EditLink_MergesUpdatesIntoTheMatchingLink_Items,
+  Tests_Cli_Commands_Links_GetFallbackUrl_ReturnsTheFallbackURL_Url,
+  Tests_Cli_Commands_Links_ListLinks_ReturnsCorrectNumberOfItems_Items,
+  Tests_Cli_Commands_Links_ListLinks_ReturnsEmptyArrayWhenNoItems_EmptyConfig,
+  Tests_Cli_Commands_Links_ListLinks_ReturnsEmptyArrayWhenNoItems_Items,
+  Tests_Cli_Commands_Links_ListLinks_ReturnsTheItemsArray_Items,
+  Tests_Cli_Commands_Links_OsTmpDir,
+  Tests_Cli_Commands_Links_RemoveLink_PersistsTheRemovalToFile_Config,
+  Tests_Cli_Commands_Links_RemoveLink_RemovesALinkByShortcode_Items,
+  Tests_Cli_Commands_Links_SetFallbackUrl_DoesNotAffectLinkItems_Config,
+  Tests_Cli_Commands_Links_SetFallbackUrl_PersistsTheFallbackURLToFile_Config,
+  Tests_Cli_Commands_Links_SetFallbackUrl_UpdatesTheFallbackURL_Url,
+  Tests_Cli_Commands_Links_TempDir,
+  Tests_Cli_Commands_Links_TempDirPath,
+  Tests_Cli_Commands_Links_ValidConfig,
 } from '../../../types/tests/cli/commands/links.test.d.ts';
 
-const validConfig: TestsCliCommandsLinksValidConfig = {
+const validConfig: Tests_Cli_Commands_Links_ValidConfig = {
   settings: {
     worker_name: 'test-worker',
     base_domain: 'bsl.example.com',
@@ -51,17 +66,17 @@ const validConfig: TestsCliCommandsLinksValidConfig = {
 };
 
 describe('listLinks', () => {
-  let tempDir: TestsCliCommandsLinksTempDir = undefined;
-  let configPath: TestsCliCommandsLinksConfigPath = undefined;
+  let tempDir: Tests_Cli_Commands_Links_TempDir = undefined;
+  let configPath: Tests_Cli_Commands_Links_ConfigPath = undefined;
 
   beforeEach(() => {
-    const osTmpDir: TestsCliCommandsLinksTempDirPath = tmpdir();
-    const tempDirPath: TestsCliCommandsLinksTempDirPath = join(osTmpDir, 'bsl-test-');
+    const osTmpDir: Tests_Cli_Commands_Links_OsTmpDir = tmpdir();
+    const tempDirPath: Tests_Cli_Commands_Links_TempDirPath = join(osTmpDir, 'bsl-test-');
 
     tempDir = mkdtempSync(tempDirPath);
     configPath = join(tempDir, 'config.json');
 
-    const configJson: TestsCliCommandsLinksConfigPath = JSON.stringify(validConfig, null, 2);
+    const configJson: Tests_Cli_Commands_Links_ConfigJson = JSON.stringify(validConfig, null, 2);
 
     writeFileSync(configPath, configJson);
 
@@ -77,7 +92,7 @@ describe('listLinks', () => {
   });
 
   it('returns the items array', () => {
-    const items: TestsCliCommandsLinksItems = listLinks(configPath!);
+    const items: Tests_Cli_Commands_Links_ListLinks_ReturnsTheItemsArray_Items = listLinks(configPath!);
 
     expect(items).toEqual(validConfig['links']['items']);
 
@@ -85,7 +100,7 @@ describe('listLinks', () => {
   });
 
   it('returns correct number of items', () => {
-    const items: TestsCliCommandsLinksItems = listLinks(configPath!);
+    const items: Tests_Cli_Commands_Links_ListLinks_ReturnsCorrectNumberOfItems_Items = listLinks(configPath!);
 
     expect(items).toHaveLength(2);
 
@@ -93,17 +108,19 @@ describe('listLinks', () => {
   });
 
   it('returns empty array when no items', () => {
-    const emptyConfig: TestsCliCommandsLinksEmptyConfig = {
-      ...validConfig, links: {
-        ...validConfig['links'], items: [],
+    const emptyConfig: Tests_Cli_Commands_Links_ListLinks_ReturnsEmptyArrayWhenNoItems_EmptyConfig = {
+      ...validConfig,
+      links: {
+        ...validConfig['links'],
+        items: [],
       },
     };
 
-    const configJson: TestsCliCommandsLinksConfigPath = JSON.stringify(emptyConfig, null, 2);
+    const configJson: Tests_Cli_Commands_Links_ConfigJson = JSON.stringify(emptyConfig, null, 2);
 
     writeFileSync(configPath!, configJson);
 
-    const items: TestsCliCommandsLinksItems = listLinks(configPath!);
+    const items: Tests_Cli_Commands_Links_ListLinks_ReturnsEmptyArrayWhenNoItems_Items = listLinks(configPath!);
 
     expect(items).toEqual([]);
 
@@ -114,17 +131,17 @@ describe('listLinks', () => {
 });
 
 describe('addLink', () => {
-  let tempDir: TestsCliCommandsLinksTempDir = undefined;
-  let configPath: TestsCliCommandsLinksConfigPath = undefined;
+  let tempDir: Tests_Cli_Commands_Links_TempDir = undefined;
+  let configPath: Tests_Cli_Commands_Links_ConfigPath = undefined;
 
   beforeEach(() => {
-    const osTmpDir: TestsCliCommandsLinksTempDirPath = tmpdir();
-    const tempDirPath: TestsCliCommandsLinksTempDirPath = join(osTmpDir, 'bsl-test-');
+    const osTmpDir: Tests_Cli_Commands_Links_OsTmpDir = tmpdir();
+    const tempDirPath: Tests_Cli_Commands_Links_TempDirPath = join(osTmpDir, 'bsl-test-');
 
     tempDir = mkdtempSync(tempDirPath);
     configPath = join(tempDir, 'config.json');
 
-    const configJson: TestsCliCommandsLinksConfigPath = JSON.stringify(validConfig, null, 2);
+    const configJson: Tests_Cli_Commands_Links_ConfigJson = JSON.stringify(validConfig, null, 2);
 
     writeFileSync(configPath, configJson);
 
@@ -140,7 +157,7 @@ describe('addLink', () => {
   });
 
   it('adds a link item to the array', () => {
-    const newLink: TestsCliCommandsLinksNewLink = {
+    const newLink: Tests_Cli_Commands_Links_AddLink_AddsALinkItemToTheArray_NewLink = {
       shortcode: '/yt',
       http_response: 302 as const,
       redirect_url: 'https://youtube.com/example',
@@ -148,7 +165,7 @@ describe('addLink', () => {
 
     addLink(configPath!, newLink);
 
-    const items: TestsCliCommandsLinksItems = listLinks(configPath!);
+    const items: Tests_Cli_Commands_Links_AddLink_AddsALinkItemToTheArray_Items = listLinks(configPath!);
 
     expect(items).toHaveLength(3);
 
@@ -158,7 +175,7 @@ describe('addLink', () => {
   });
 
   it('persists the added link to file', () => {
-    const newLink: TestsCliCommandsLinksNewLink = {
+    const newLink: Tests_Cli_Commands_Links_AddLink_PersistsTheAddedLinkToFile_NewLink = {
       shortcode: '/yt',
       http_response: 302 as const,
       redirect_url: 'https://youtube.com/example',
@@ -166,7 +183,7 @@ describe('addLink', () => {
 
     addLink(configPath!, newLink);
 
-    const config: TestsCliCommandsLinksConfig = configSchema.parse(loadConfig(configPath!));
+    const config: Tests_Cli_Commands_Links_AddLink_PersistsTheAddedLinkToFile_Config = configSchema.parse(loadConfig(configPath!));
 
     expect(config['links']['items']).toHaveLength(3);
 
@@ -174,7 +191,7 @@ describe('addLink', () => {
   });
 
   it('does not affect existing links', () => {
-    const newLink: TestsCliCommandsLinksNewLink = {
+    const newLink: Tests_Cli_Commands_Links_AddLink_DoesNotAffectExistingLinks_NewLink = {
       shortcode: '/yt',
       http_response: 302 as const,
       redirect_url: 'https://youtube.com/example',
@@ -182,7 +199,7 @@ describe('addLink', () => {
 
     addLink(configPath!, newLink);
 
-    const items: TestsCliCommandsLinksItems = listLinks(configPath!);
+    const items: Tests_Cli_Commands_Links_AddLink_DoesNotAffectExistingLinks_Items = listLinks(configPath!);
 
     expect(items[0]).toEqual(validConfig['links']['items'][0]);
 
@@ -195,17 +212,17 @@ describe('addLink', () => {
 });
 
 describe('editLink', () => {
-  let tempDir: TestsCliCommandsLinksTempDir = undefined;
-  let configPath: TestsCliCommandsLinksConfigPath = undefined;
+  let tempDir: Tests_Cli_Commands_Links_TempDir = undefined;
+  let configPath: Tests_Cli_Commands_Links_ConfigPath = undefined;
 
   beforeEach(() => {
-    const osTmpDir: TestsCliCommandsLinksTempDirPath = tmpdir();
-    const tempDirPath: TestsCliCommandsLinksTempDirPath = join(osTmpDir, 'bsl-test-');
+    const osTmpDir: Tests_Cli_Commands_Links_OsTmpDir = tmpdir();
+    const tempDirPath: Tests_Cli_Commands_Links_TempDirPath = join(osTmpDir, 'bsl-test-');
 
     tempDir = mkdtempSync(tempDirPath);
     configPath = join(tempDir, 'config.json');
 
-    const configJson: TestsCliCommandsLinksConfigPath = JSON.stringify(validConfig, null, 2);
+    const configJson: Tests_Cli_Commands_Links_ConfigJson = JSON.stringify(validConfig, null, 2);
 
     writeFileSync(configPath, configJson);
 
@@ -223,7 +240,7 @@ describe('editLink', () => {
   it('merges updates into the matching link', () => {
     editLink(configPath!, '/gh', { redirect_url: 'https://github.com/updated' });
 
-    const items: TestsCliCommandsLinksItems = listLinks(configPath!);
+    const items: Tests_Cli_Commands_Links_EditLink_MergesUpdatesIntoTheMatchingLink_Items = listLinks(configPath!);
 
     expect(items[0]!['redirect_url']).toBe('https://github.com/updated');
 
@@ -243,7 +260,7 @@ describe('editLink', () => {
   it('does not affect other links', () => {
     editLink(configPath!, '/gh', { redirect_url: 'https://github.com/updated' });
 
-    const items: TestsCliCommandsLinksItems = listLinks(configPath!);
+    const items: Tests_Cli_Commands_Links_EditLink_DoesNotAffectOtherLinks_Items = listLinks(configPath!);
 
     expect(items[1]).toEqual(validConfig['links']['items'][1]);
 
@@ -254,17 +271,17 @@ describe('editLink', () => {
 });
 
 describe('removeLink', () => {
-  let tempDir: TestsCliCommandsLinksTempDir = undefined;
-  let configPath: TestsCliCommandsLinksConfigPath = undefined;
+  let tempDir: Tests_Cli_Commands_Links_TempDir = undefined;
+  let configPath: Tests_Cli_Commands_Links_ConfigPath = undefined;
 
   beforeEach(() => {
-    const osTmpDir: TestsCliCommandsLinksTempDirPath = tmpdir();
-    const tempDirPath: TestsCliCommandsLinksTempDirPath = join(osTmpDir, 'bsl-test-');
+    const osTmpDir: Tests_Cli_Commands_Links_OsTmpDir = tmpdir();
+    const tempDirPath: Tests_Cli_Commands_Links_TempDirPath = join(osTmpDir, 'bsl-test-');
 
     tempDir = mkdtempSync(tempDirPath);
     configPath = join(tempDir, 'config.json');
 
-    const configJson: TestsCliCommandsLinksConfigPath = JSON.stringify(validConfig, null, 2);
+    const configJson: Tests_Cli_Commands_Links_ConfigJson = JSON.stringify(validConfig, null, 2);
 
     writeFileSync(configPath, configJson);
 
@@ -282,7 +299,7 @@ describe('removeLink', () => {
   it('removes a link by shortcode', () => {
     removeLink(configPath!, '/gh');
 
-    const items: TestsCliCommandsLinksItems = listLinks(configPath!);
+    const items: Tests_Cli_Commands_Links_RemoveLink_RemovesALinkByShortcode_Items = listLinks(configPath!);
 
     expect(items).toHaveLength(1);
 
@@ -300,7 +317,7 @@ describe('removeLink', () => {
   it('persists the removal to file', () => {
     removeLink(configPath!, '/gh');
 
-    const config: TestsCliCommandsLinksConfig = configSchema.parse(loadConfig(configPath!));
+    const config: Tests_Cli_Commands_Links_RemoveLink_PersistsTheRemovalToFile_Config = configSchema.parse(loadConfig(configPath!));
 
     expect(config['links']['items']).toHaveLength(1);
 
@@ -311,17 +328,17 @@ describe('removeLink', () => {
 });
 
 describe('getFallbackUrl', () => {
-  let tempDir: TestsCliCommandsLinksTempDir = undefined;
-  let configPath: TestsCliCommandsLinksConfigPath = undefined;
+  let tempDir: Tests_Cli_Commands_Links_TempDir = undefined;
+  let configPath: Tests_Cli_Commands_Links_ConfigPath = undefined;
 
   beforeEach(() => {
-    const osTmpDir: TestsCliCommandsLinksTempDirPath = tmpdir();
-    const tempDirPath: TestsCliCommandsLinksTempDirPath = join(osTmpDir, 'bsl-test-');
+    const osTmpDir: Tests_Cli_Commands_Links_OsTmpDir = tmpdir();
+    const tempDirPath: Tests_Cli_Commands_Links_TempDirPath = join(osTmpDir, 'bsl-test-');
 
     tempDir = mkdtempSync(tempDirPath);
     configPath = join(tempDir, 'config.json');
 
-    const configJson: TestsCliCommandsLinksConfigPath = JSON.stringify(validConfig, null, 2);
+    const configJson: Tests_Cli_Commands_Links_ConfigJson = JSON.stringify(validConfig, null, 2);
 
     writeFileSync(configPath, configJson);
 
@@ -337,7 +354,7 @@ describe('getFallbackUrl', () => {
   });
 
   it('returns the fallback URL', () => {
-    const url: TestsCliCommandsLinksUrl = getFallbackUrl(configPath!);
+    const url: Tests_Cli_Commands_Links_GetFallbackUrl_ReturnsTheFallbackURL_Url = getFallbackUrl(configPath!);
 
     expect(url).toBe('https://example.com');
 
@@ -348,17 +365,17 @@ describe('getFallbackUrl', () => {
 });
 
 describe('setFallbackUrl', () => {
-  let tempDir: TestsCliCommandsLinksTempDir = undefined;
-  let configPath: TestsCliCommandsLinksConfigPath = undefined;
+  let tempDir: Tests_Cli_Commands_Links_TempDir = undefined;
+  let configPath: Tests_Cli_Commands_Links_ConfigPath = undefined;
 
   beforeEach(() => {
-    const osTmpDir: TestsCliCommandsLinksTempDirPath = tmpdir();
-    const tempDirPath: TestsCliCommandsLinksTempDirPath = join(osTmpDir, 'bsl-test-');
+    const osTmpDir: Tests_Cli_Commands_Links_OsTmpDir = tmpdir();
+    const tempDirPath: Tests_Cli_Commands_Links_TempDirPath = join(osTmpDir, 'bsl-test-');
 
     tempDir = mkdtempSync(tempDirPath);
     configPath = join(tempDir, 'config.json');
 
-    const configJson: TestsCliCommandsLinksConfigPath = JSON.stringify(validConfig, null, 2);
+    const configJson: Tests_Cli_Commands_Links_ConfigJson = JSON.stringify(validConfig, null, 2);
 
     writeFileSync(configPath, configJson);
 
@@ -376,7 +393,7 @@ describe('setFallbackUrl', () => {
   it('updates the fallback URL', () => {
     setFallbackUrl(configPath!, 'https://new-fallback.com');
 
-    const url: TestsCliCommandsLinksUrl = getFallbackUrl(configPath!);
+    const url: Tests_Cli_Commands_Links_SetFallbackUrl_UpdatesTheFallbackURL_Url = getFallbackUrl(configPath!);
 
     expect(url).toBe('https://new-fallback.com');
 
@@ -386,7 +403,7 @@ describe('setFallbackUrl', () => {
   it('persists the fallback URL to file', () => {
     setFallbackUrl(configPath!, 'https://new-fallback.com');
 
-    const config: TestsCliCommandsLinksConfig = configSchema.parse(loadConfig(configPath!));
+    const config: Tests_Cli_Commands_Links_SetFallbackUrl_PersistsTheFallbackURLToFile_Config = configSchema.parse(loadConfig(configPath!));
 
     expect(config['links']['fallback_url']).toBe('https://new-fallback.com');
 
@@ -396,7 +413,7 @@ describe('setFallbackUrl', () => {
   it('does not affect link items', () => {
     setFallbackUrl(configPath!, 'https://new-fallback.com');
 
-    const config: TestsCliCommandsLinksConfig = configSchema.parse(loadConfig(configPath!));
+    const config: Tests_Cli_Commands_Links_SetFallbackUrl_DoesNotAffectLinkItems_Config = configSchema.parse(loadConfig(configPath!));
 
     expect(config['links']['items']).toEqual(validConfig['links']['items']);
 

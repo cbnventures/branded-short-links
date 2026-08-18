@@ -3,139 +3,139 @@
  *
  * @since 2.0.0
  */
-export type LibSchemaConfigSettings = LibSchemaSettingsConfig;
+export type Lib_Schema_SettingsConfig_WorkerName = string;
 
-export type LibSchemaConfigLinks = LibSchemaLinksConfig;
+export type Lib_Schema_SettingsConfig_BaseDomain = string;
 
-export type LibSchemaConfigTrackers = LibSchemaTrackerConfig[];
+export type Lib_Schema_SettingsConfig_ShowResponseOutput = boolean;
 
-export type LibSchemaConfig = {
-  settings: LibSchemaConfigSettings;
-  links: LibSchemaConfigLinks;
-  trackers: LibSchemaConfigTrackers;
+export type Lib_Schema_SettingsConfig = {
+  worker_name: Lib_Schema_SettingsConfig_WorkerName;
+  base_domain: Lib_Schema_SettingsConfig_BaseDomain;
+  show_response_output: Lib_Schema_SettingsConfig_ShowResponseOutput;
 };
 
-export type LibSchemaSettingsConfigWorkerName = string;
+export type Lib_Schema_LinkItemConfig_Shortcode = string;
 
-export type LibSchemaSettingsConfigBaseDomain = string;
+export type Lib_Schema_LinkItemConfig_HttpResponse = 301 | 302 | 303 | 307 | 308;
 
-export type LibSchemaSettingsConfigShowResponseOutput = boolean;
+export type Lib_Schema_LinkItemConfig_RedirectUrl = string;
 
-export type LibSchemaSettingsConfig = {
-  worker_name: LibSchemaSettingsConfigWorkerName;
-  base_domain: LibSchemaSettingsConfigBaseDomain;
-  show_response_output: LibSchemaSettingsConfigShowResponseOutput;
+export type Lib_Schema_LinkItemConfig = {
+  shortcode: Lib_Schema_LinkItemConfig_Shortcode;
+  http_response: Lib_Schema_LinkItemConfig_HttpResponse;
+  redirect_url: Lib_Schema_LinkItemConfig_RedirectUrl;
 };
 
-export type LibSchemaLinkItemConfigShortcode = string;
+export type Lib_Schema_LinksConfig_FallbackUrl = string | undefined;
 
-export type LibSchemaLinkItemConfigHttpResponse = 301 | 302 | 303 | 307 | 308;
+export type Lib_Schema_LinksConfig_Items = Lib_Schema_LinkItemConfig[];
 
-export type LibSchemaLinkItemConfigRedirectUrl = string;
-
-export type LibSchemaLinkItemConfig = {
-  shortcode: LibSchemaLinkItemConfigShortcode;
-  http_response: LibSchemaLinkItemConfigHttpResponse;
-  redirect_url: LibSchemaLinkItemConfigRedirectUrl;
+export type Lib_Schema_LinksConfig = {
+  fallback_url?: Lib_Schema_LinksConfig_FallbackUrl;
+  items: Lib_Schema_LinksConfig_Items;
 };
 
-export type LibSchemaLinksConfigFallbackUrl = string | undefined;
+export type Lib_Schema_Ga4TrackerConfig_Name = string;
 
-export type LibSchemaLinksConfigItems = LibSchemaLinkItemConfig[];
+export type Lib_Schema_Ga4TrackerConfig_Type = 'ga4';
 
-export type LibSchemaLinksConfig = {
-  fallback_url?: LibSchemaLinksConfigFallbackUrl;
-  items: LibSchemaLinksConfigItems;
+export type Lib_Schema_Ga4TrackerConfig_MeasurementId = string;
+
+export type Lib_Schema_Ga4TrackerConfig_ApiSecret = string;
+
+export type Lib_Schema_Ga4TrackerConfig = {
+  name: Lib_Schema_Ga4TrackerConfig_Name;
+  type: Lib_Schema_Ga4TrackerConfig_Type;
+  measurement_id: Lib_Schema_Ga4TrackerConfig_MeasurementId;
+  api_secret: Lib_Schema_Ga4TrackerConfig_ApiSecret;
 };
 
-export type LibSchemaGa4TrackerConfigName = string;
+export type Lib_Schema_FacebookTrackerConfig_Name = string;
 
-export type LibSchemaGa4TrackerConfigType = 'ga4';
+export type Lib_Schema_FacebookTrackerConfig_Type = 'facebook';
 
-export type LibSchemaGa4TrackerConfigMeasurementId = string;
+export type Lib_Schema_FacebookTrackerConfig_PixelId = string;
 
-export type LibSchemaGa4TrackerConfigApiSecret = string;
-
-export type LibSchemaGa4TrackerConfig = {
-  name: LibSchemaGa4TrackerConfigName;
-  type: LibSchemaGa4TrackerConfigType;
-  measurement_id: LibSchemaGa4TrackerConfigMeasurementId;
-  api_secret: LibSchemaGa4TrackerConfigApiSecret;
+export type Lib_Schema_FacebookTrackerConfig = {
+  name: Lib_Schema_FacebookTrackerConfig_Name;
+  type: Lib_Schema_FacebookTrackerConfig_Type;
+  pixel_id: Lib_Schema_FacebookTrackerConfig_PixelId;
 };
 
-export type LibSchemaFacebookTrackerConfigName = string;
+export type Lib_Schema_NtfyTrackerConfig_Name = string;
 
-export type LibSchemaFacebookTrackerConfigType = 'facebook';
+export type Lib_Schema_NtfyTrackerConfig_Type = 'ntfy';
 
-export type LibSchemaFacebookTrackerConfigPixelId = string;
+export type Lib_Schema_NtfyTrackerConfig_Server = string;
 
-export type LibSchemaFacebookTrackerConfig = {
-  name: LibSchemaFacebookTrackerConfigName;
-  type: LibSchemaFacebookTrackerConfigType;
-  pixel_id: LibSchemaFacebookTrackerConfigPixelId;
+export type Lib_Schema_NtfyTrackerConfig_Topic = string;
+
+export type Lib_Schema_NtfyTrackerConfig_Token = string;
+
+export type Lib_Schema_NtfyTrackerConfig = {
+  name: Lib_Schema_NtfyTrackerConfig_Name;
+  type: Lib_Schema_NtfyTrackerConfig_Type;
+  server: Lib_Schema_NtfyTrackerConfig_Server;
+  topic: Lib_Schema_NtfyTrackerConfig_Topic;
+  token: Lib_Schema_NtfyTrackerConfig_Token;
 };
 
-export type LibSchemaNtfyTrackerConfigName = string;
+export type Lib_Schema_NtfyReverseProxyTrackerConfig_Name = string;
 
-export type LibSchemaNtfyTrackerConfigType = 'ntfy';
+export type Lib_Schema_NtfyReverseProxyTrackerConfig_Type = 'ntfy-reverse-proxy';
 
-export type LibSchemaNtfyTrackerConfigServer = string;
+export type Lib_Schema_NtfyReverseProxyTrackerConfig_Url = string;
 
-export type LibSchemaNtfyTrackerConfigTopic = string;
+export type Lib_Schema_NtfyReverseProxyTrackerConfig_Token = string | undefined;
 
-export type LibSchemaNtfyTrackerConfigToken = string;
-
-export type LibSchemaNtfyTrackerConfig = {
-  name: LibSchemaNtfyTrackerConfigName;
-  type: LibSchemaNtfyTrackerConfigType;
-  server: LibSchemaNtfyTrackerConfigServer;
-  topic: LibSchemaNtfyTrackerConfigTopic;
-  token: LibSchemaNtfyTrackerConfigToken;
+export type Lib_Schema_NtfyReverseProxyTrackerConfig = {
+  name: Lib_Schema_NtfyReverseProxyTrackerConfig_Name;
+  type: Lib_Schema_NtfyReverseProxyTrackerConfig_Type;
+  url: Lib_Schema_NtfyReverseProxyTrackerConfig_Url;
+  token?: Lib_Schema_NtfyReverseProxyTrackerConfig_Token;
 };
 
-export type LibSchemaNtfyReverseProxyTrackerConfigName = string;
+export type Lib_Schema_PosthogTrackerConfig_Name = string;
 
-export type LibSchemaNtfyReverseProxyTrackerConfigType = 'ntfy-reverse-proxy';
+export type Lib_Schema_PosthogTrackerConfig_Type = 'posthog';
 
-export type LibSchemaNtfyReverseProxyTrackerConfigUrl = string;
+export type Lib_Schema_PosthogTrackerConfig_Host = string;
 
-export type LibSchemaNtfyReverseProxyTrackerConfigToken = string | undefined;
+export type Lib_Schema_PosthogTrackerConfig_ApiKey = string;
 
-export type LibSchemaNtfyReverseProxyTrackerConfig = {
-  name: LibSchemaNtfyReverseProxyTrackerConfigName;
-  type: LibSchemaNtfyReverseProxyTrackerConfigType;
-  url: LibSchemaNtfyReverseProxyTrackerConfigUrl;
-  token?: LibSchemaNtfyReverseProxyTrackerConfigToken;
+export type Lib_Schema_PosthogTrackerConfig = {
+  name: Lib_Schema_PosthogTrackerConfig_Name;
+  type: Lib_Schema_PosthogTrackerConfig_Type;
+  host: Lib_Schema_PosthogTrackerConfig_Host;
+  api_key: Lib_Schema_PosthogTrackerConfig_ApiKey;
 };
 
-export type LibSchemaPosthogTrackerConfigName = string;
+export type Lib_Schema_PlainTextTrackerConfig_Name = string;
 
-export type LibSchemaPosthogTrackerConfigType = 'posthog';
+export type Lib_Schema_PlainTextTrackerConfig_Type = 'plain-text';
 
-export type LibSchemaPosthogTrackerConfigHost = string;
+export type Lib_Schema_PlainTextTrackerConfig_Url = string;
 
-export type LibSchemaPosthogTrackerConfigApiKey = string;
+export type Lib_Schema_PlainTextTrackerConfig_Token = string | undefined;
 
-export type LibSchemaPosthogTrackerConfig = {
-  name: LibSchemaPosthogTrackerConfigName;
-  type: LibSchemaPosthogTrackerConfigType;
-  host: LibSchemaPosthogTrackerConfigHost;
-  api_key: LibSchemaPosthogTrackerConfigApiKey;
+export type Lib_Schema_PlainTextTrackerConfig = {
+  name: Lib_Schema_PlainTextTrackerConfig_Name;
+  type: Lib_Schema_PlainTextTrackerConfig_Type;
+  url: Lib_Schema_PlainTextTrackerConfig_Url;
+  token?: Lib_Schema_PlainTextTrackerConfig_Token;
 };
 
-export type LibSchemaPlainTextTrackerConfigName = string;
+export type Lib_Schema_TrackerConfig = Lib_Schema_Ga4TrackerConfig | Lib_Schema_FacebookTrackerConfig | Lib_Schema_NtfyTrackerConfig | Lib_Schema_NtfyReverseProxyTrackerConfig | Lib_Schema_PlainTextTrackerConfig | Lib_Schema_PosthogTrackerConfig;
 
-export type LibSchemaPlainTextTrackerConfigType = 'plain-text';
+export type Lib_Schema_Config_Settings = Lib_Schema_SettingsConfig;
 
-export type LibSchemaPlainTextTrackerConfigUrl = string;
+export type Lib_Schema_Config_Links = Lib_Schema_LinksConfig;
 
-export type LibSchemaPlainTextTrackerConfigToken = string | undefined;
+export type Lib_Schema_Config_Trackers = Lib_Schema_TrackerConfig[];
 
-export type LibSchemaPlainTextTrackerConfig = {
-  name: LibSchemaPlainTextTrackerConfigName;
-  type: LibSchemaPlainTextTrackerConfigType;
-  url: LibSchemaPlainTextTrackerConfigUrl;
-  token?: LibSchemaPlainTextTrackerConfigToken;
+export type Lib_Schema_Config = {
+  settings: Lib_Schema_Config_Settings;
+  links: Lib_Schema_Config_Links;
+  trackers: Lib_Schema_Config_Trackers;
 };
-
-export type LibSchemaTrackerConfig = LibSchemaGa4TrackerConfig | LibSchemaFacebookTrackerConfig | LibSchemaNtfyTrackerConfig | LibSchemaNtfyReverseProxyTrackerConfig | LibSchemaPlainTextTrackerConfig | LibSchemaPosthogTrackerConfig;

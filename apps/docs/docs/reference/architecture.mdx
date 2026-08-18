@@ -1,7 +1,7 @@
 ---
 id: architecture
 title: System Architecture
-description: Understand how Branded Short Links routes requests, fires analytics trackers, and manages configuration.
+description: Route requests at the Cloudflare edge, fire analytics trackers in the background, and manage configuration through a local Node.js CLI.
 sidebar_position: 2
 keywords:
   - branded short links
@@ -12,9 +12,6 @@ keywords:
   - configuration pipeline
   - source structure
   - error handling
-  - landing page
-  - edge runtime
-  - server-side analytics
 tags:
   - architecture
   - reference
@@ -22,7 +19,9 @@ tags:
   - system design
 ---
 
-Understand how Branded Short Links routes requests, fires analytics trackers, and manages configuration across two separate runtimes.
+import { Terminology } from '@cbnventures/docusaurus-preset-nova/blocks';
+
+Branded Short Links splits its work across two runtimes — a <Terminology title="edge function that serves your redirects" to="/docs/reference/terminology#cloudflare-worker">Cloudflare Worker</Terminology> that routes requests and fires analytics <Terminology title="background analytics integration on a link" to="/docs/reference/terminology#tracker">trackers</Terminology> at the edge, and a Node.js CLI that manages configuration locally.
 
 ## System Overview
 
@@ -57,29 +56,29 @@ graph TD
     Shared -.-> Local
 ```
 
-The worker handles incoming HTTP requests at the edge. The CLI manages the configuration file that the worker reads at runtime.
+The <Terminology title="edge function that serves your redirects" to="/docs/reference/terminology#cloudflare-worker">worker</Terminology> handles incoming HTTP requests at the edge. The CLI manages the configuration file that the <Terminology title="edge function that serves your redirects" to="/docs/reference/terminology#cloudflare-worker">worker</Terminology> reads at runtime.
 
 ## Request Flow
 
-When a request arrives at the Cloudflare Worker:
+When a request arrives at the <Terminology title="edge function that serves your redirects" to="/docs/reference/terminology#cloudflare-worker">Cloudflare Worker</Terminology>:
 
-1. **Parse environment** — The worker reads `SETTINGS`, `LINKS`, and `TRACKERS` from Wrangler environment variables (injected as JSON strings during deployment). It validates them against the Zod config schema.
+1. **Parse environment** — The <Terminology title="edge function that serves your redirects" to="/docs/reference/terminology#cloudflare-worker">worker</Terminology> reads `SETTINGS`, `LINKS`, and `TRACKERS` from <Terminology title="Cloudflare's Workers deployment CLI" to="/docs/reference/terminology#wrangler">Wrangler</Terminology> environment variables (injected as JSON strings during deployment). It validates them against the Zod <Terminology title="the config.json deployment settings file" to="/docs/reference/terminology#config">config</Terminology> schema.
 
 2. **Check HTTP method** — Only `GET` and `HEAD` requests are processed. All other methods return `405 Method Not Allowed`.
 
-3. **Match shortcode** — The URL pathname is stripped of its trailing slash and matched against the configured link items.
+3. **Match <Terminology title="path segment that maps to a URL" to="/docs/reference/terminology#shortcode">shortcode</Terminology>** — The URL pathname is stripped of its trailing slash and matched against the configured <Terminology title="single shortcode-to-URL config entry" to="/docs/reference/terminology#link-item">link items</Terminology>.
 
 4. **Route the response:**
 
-| Condition                                      | Response                                                            |
-|------------------------------------------------|---------------------------------------------------------------------|
-| Shortcode matched                              | Fire trackers in background, redirect with configured HTTP status   |
-| No match, fallback configured, root path (`/`) | Redirect to fallback URL origin only (always 301)                   |
-| No match, fallback configured, other path      | Redirect to fallback origin + original path/query/hash (always 301) |
-| No match, no fallback, root path (`/`)         | Serve the branded landing page (200)                                |
-| No match, no fallback, other path              | Serve the 404 not-found page (404)                                  |
+| Condition                                                                                                                                                               | Response                                                                                                                                                                                     |
+|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| <Terminology title="path segment that maps to a URL" to="/docs/reference/terminology#shortcode">Shortcode</Terminology> matched                                         | Fire <Terminology title="background analytics integration on a link" to="/docs/reference/terminology#tracker">trackers</Terminology> in background, redirect with configured HTTP status     |
+| No match, <Terminology title="redirect used when no shortcode matches" to="/docs/reference/terminology#fallback-url">fallback</Terminology> configured, root path (`/`) | Redirect to <Terminology title="redirect used when no shortcode matches" to="/docs/reference/terminology#fallback-url">fallback URL</Terminology> origin only (always 301)                   |
+| No match, <Terminology title="redirect used when no shortcode matches" to="/docs/reference/terminology#fallback-url">fallback</Terminology> configured, other path      | Redirect to <Terminology title="redirect used when no shortcode matches" to="/docs/reference/terminology#fallback-url">fallback</Terminology> origin + original path/query/hash (always 301) |
+| No match, no <Terminology title="redirect used when no shortcode matches" to="/docs/reference/terminology#fallback-url">fallback</Terminology>, root path (`/`)         | Serve the branded <Terminology title="branded page served at the root" to="/docs/reference/terminology#landing-page">landing page</Terminology> (200)                                        |
+| No match, no <Terminology title="redirect used when no shortcode matches" to="/docs/reference/terminology#fallback-url">fallback</Terminology>, other path              | Serve the <Terminology title="page shown when nothing else matches" to="/docs/reference/terminology#404-page">404</Terminology> not-found page (404)                                         |
 
-5. **Log event** — Every request logs a structured JSON payload to `console.info()` with the matched shortcode (or `null`), redirect URL, HTTP response code, and tracker names. You can view these logs in real time with `npm run tail`. Example payload:
+5. **Log event** — Every request logs a structured JSON payload to `console.info()` with the matched <Terminology title="path segment that maps to a URL" to="/docs/reference/terminology#shortcode">shortcode</Terminology> (or `null`), redirect URL, HTTP response code, and <Terminology title="background analytics integration on a link" to="/docs/reference/terminology#tracker">tracker</Terminology> names. You can view these logs in real time with `npm run tail`. Example payload:
 
 ```json
 {
@@ -92,7 +91,7 @@ When a request arrives at the Cloudflare Worker:
 
 ## Tracker Dispatch
 
-Trackers fire in the background so the redirect response is returned immediately:
+<Terminology title="background analytics integration on a link" to="/docs/reference/terminology#tracker">Trackers</Terminology> fire in the background so the redirect response is returned immediately:
 
 ```mermaid
 graph TD
@@ -107,32 +106,32 @@ graph TD
     AllSettled --> PlainText[Plain Text]
 ```
 
-- All trackers fire in parallel via `Promise.allSettled()`.
-- Individual failures don't affect other trackers or the redirect.
-- Each tracker type makes its own HTTP request to the respective service's API endpoint.
+- All <Terminology title="background analytics integration on a link" to="/docs/reference/terminology#tracker">trackers</Terminology> fire in parallel via `Promise.allSettled()`.
+- Individual failures don't affect other <Terminology title="background analytics integration on a link" to="/docs/reference/terminology#tracker">trackers</Terminology> or the redirect.
+- Each <Terminology title="background analytics integration on a link" to="/docs/reference/terminology#tracker">tracker</Terminology> type makes its own HTTP request to the respective service's API endpoint.
 
 ## Landing Page
 
-When a GET request hits the root path (`/`) and no fallback URL is configured, the worker serves a branded HTML page:
+When a GET request hits the root path (`/`) and no <Terminology title="redirect used when no shortcode matches" to="/docs/reference/terminology#fallback-url">fallback URL</Terminology> is configured, the <Terminology title="edge function that serves your redirects" to="/docs/reference/terminology#cloudflare-worker">worker</Terminology> serves a branded HTML page:
 
 - Project name and description.
 - Link to the GitHub repository.
 - Dark mode support via CSS custom properties (`prefers-color-scheme`).
 - Fade-in animation.
 
-When `show_response_output` is `true`, an expandable `<details>` element shows the config with sensitive values masked (`••••••`). The masking function replaces:
+When `show_response_output` is `true`, an expandable `<details>` element shows the <Terminology title="the config.json deployment settings file" to="/docs/reference/terminology#config">config</Terminology> with sensitive values masked (`••••••`). The masking function replaces:
 
-- **Links** — `redirect_url` on every link item.
-- **GA4 trackers** — `measurement_id` and `api_secret`.
-- **Facebook trackers** — `pixel_id`.
-- **ntfy trackers** — `server` and `token`.
-- **Reverse Proxy for ntfy trackers** — `url` and optionally `token`.
-- **PostHog trackers** — `host` and `api_key`.
-- **Plain-text trackers** — `url` and optionally `token`.
+- **Links** — `redirect_url` on every <Terminology title="single shortcode-to-URL config entry" to="/docs/reference/terminology#link-item">link item</Terminology>.
+- **<Terminology title="Google Analytics 4 tracker type" to="/docs/reference/terminology#ga4">GA4</Terminology> <Terminology title="background analytics integration on a link" to="/docs/reference/terminology#tracker">trackers</Terminology>** — `measurement_id` and `api_secret`.
+- **<Terminology title="Meta Pixel PageView tracker type" to="/docs/reference/terminology#facebook">Facebook</Terminology> <Terminology title="background analytics integration on a link" to="/docs/reference/terminology#tracker">trackers</Terminology>** — `pixel_id`.
+- **<Terminology title="push notification tracker type" to="/docs/reference/terminology#ntfy">ntfy</Terminology> <Terminology title="background analytics integration on a link" to="/docs/reference/terminology#tracker">trackers</Terminology>** — `server` and `token`.
+- **<Terminology title="single-URL ntfy notification tracker type" to="/docs/reference/terminology#reverse-proxy-for-ntfy">Reverse Proxy for ntfy</Terminology> <Terminology title="background analytics integration on a link" to="/docs/reference/terminology#tracker">trackers</Terminology>** — `url` and optionally `token`.
+- **<Terminology title="PostHog event capture tracker type" to="/docs/reference/terminology#posthog">PostHog</Terminology> <Terminology title="background analytics integration on a link" to="/docs/reference/terminology#tracker">trackers</Terminology>** — `host` and `api_key`.
+- **<Terminology title="plain-text webhook tracker type" to="/docs/reference/terminology#plain-text">Plain-text</Terminology> <Terminology title="background analytics integration on a link" to="/docs/reference/terminology#tracker">trackers</Terminology>** — `url` and optionally `token`.
 
 Settings (including `worker_name`, `base_domain`) and the `fallback_url` are shown unmasked.
 
-A similar 404 page is served for unmatched paths when no fallback URL is configured.
+A similar <Terminology title="page shown when nothing else matches" to="/docs/reference/terminology#404-page">404 page</Terminology> is served for unmatched paths when no <Terminology title="redirect used when no shortcode matches" to="/docs/reference/terminology#fallback-url">fallback URL</Terminology> is configured.
 
 ## Configuration Pipeline
 
@@ -147,7 +146,9 @@ graph TD
     Step6 --> Step7["7. Print summary"]
 ```
 
-The config file is never deployed directly. The CLI serializes each section as a JSON string into Wrangler environment variables. The worker parses these strings back into objects at runtime.
+The <Terminology title="the config.json deployment settings file" to="/docs/reference/terminology#config">config</Terminology> file is never deployed directly. The CLI serializes each section as a JSON string into <Terminology title="Cloudflare's Workers deployment CLI" to="/docs/reference/terminology#wrangler">Wrangler</Terminology> environment variables.
+
+The <Terminology title="edge function that serves your redirects" to="/docs/reference/terminology#cloudflare-worker">worker</Terminology> parses these strings back into objects at runtime.
 
 ## Source Structure
 
@@ -177,29 +178,29 @@ packages/branded-short-links/src/
 '-- types/                 <-- TypeScript declarations (.d.ts), mirrors src/
 ```
 
-Worker code and CLI code are cleanly separated because they run on different runtimes (Cloudflare Workers vs. Node.js). They share the `lib/` directory for schemas and utilities.
+<Terminology title="edge function that serves your redirects" to="/docs/reference/terminology#cloudflare-worker">Worker</Terminology> code and CLI code are cleanly separated because they run on different runtimes (<Terminology title="edge function that serves your redirects" to="/docs/reference/terminology#cloudflare-worker">Cloudflare Workers</Terminology> vs. Node.js). They share the `lib/` directory for schemas and utilities.
 
 ## Error Strategy
 
-| Layer              | Strategy                                                                                      |
-|--------------------|-----------------------------------------------------------------------------------------------|
-| Worker entry point | Try/catch wraps the entire fetch handler. Returns JSON error response on failure.             |
-| Config parsing     | Zod `safeParse` at request time validates env vars. Returns 500 with error issues on failure. |
-| Shortcode matching | No match falls through to fallback URL, landing page, or 404. Never crashes.                  |
-| Tracker dispatch   | `Promise.allSettled()` catches individual failures silently. Never blocks.                    |
-| CLI commands       | Try/catch at command level. Chalk-formatted errors. Non-zero exit code.                       |
-| Config validation  | Zod schemas catch type mismatches, missing fields, invalid URLs, duplicates.                  |
+| Layer                                                                                                                                             | Strategy                                                                                                                                                                                                                                                                                                                                                                                                                                 |
+|---------------------------------------------------------------------------------------------------------------------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| <Terminology title="edge function that serves your redirects" to="/docs/reference/terminology#cloudflare-worker">Worker</Terminology> entry point | Try/catch wraps the entire fetch handler. Returns JSON error response on failure.                                                                                                                                                                                                                                                                                                                                                        |
+| <Terminology title="the config.json deployment settings file" to="/docs/reference/terminology#config">Config</Terminology> parsing                | Zod `safeParse` at request time validates env vars. Returns 500 with error issues on failure.                                                                                                                                                                                                                                                                                                                                            |
+| <Terminology title="path segment that maps to a URL" to="/docs/reference/terminology#shortcode">Shortcode</Terminology> matching                  | No match falls through to <Terminology title="redirect used when no shortcode matches" to="/docs/reference/terminology#fallback-url">fallback URL</Terminology>, <Terminology title="branded page served at the root" to="/docs/reference/terminology#landing-page">landing page</Terminology>, or <Terminology title="page shown when nothing else matches" to="/docs/reference/terminology#404-page">404</Terminology>. Never crashes. |
+| <Terminology title="background analytics integration on a link" to="/docs/reference/terminology#tracker">Tracker</Terminology> dispatch           | `Promise.allSettled()` catches individual failures silently. Never blocks.                                                                                                                                                                                                                                                                                                                                                               |
+| CLI commands                                                                                                                                      | Try/catch at command level. Chalk-formatted errors. Non-zero exit code.                                                                                                                                                                                                                                                                                                                                                                  |
+| <Terminology title="the config.json deployment settings file" to="/docs/reference/terminology#config">Config</Terminology> validation             | Zod schemas catch type mismatches, missing fields, invalid URLs, duplicates.                                                                                                                                                                                                                                                                                                                                                             |
 
 ## Data Collected Per Request
 
-When trackers fire, they can access these data points from the Cloudflare Workers runtime. Each tracker type selects the subset of data relevant to its API. See [Trackers](/docs/configuration/trackers/) for what each type sends.
+When <Terminology title="background analytics integration on a link" to="/docs/reference/terminology#tracker">trackers</Terminology> fire, they can access these data points from the <Terminology title="edge function that serves your redirects" to="/docs/reference/terminology#cloudflare-worker">Cloudflare Workers</Terminology> runtime. Each <Terminology title="background analytics integration on a link" to="/docs/reference/terminology#tracker">tracker</Terminology> type selects the subset of data relevant to its API. See [Trackers](/docs/configuration/trackers/) for what each type sends.
 
 ### Shortcode Properties
 
-| Variable       | Description                                     |
-|----------------|-------------------------------------------------|
-| `shortcode`    | The matched shortcode path (e.g., `/github`).   |
-| `redirect_url` | The destination URL the shortcode redirects to. |
+| Variable       | Description                                                                                                                                                   |
+|----------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `shortcode`    | The matched <Terminology title="path segment that maps to a URL" to="/docs/reference/terminology#shortcode">shortcode</Terminology> path (e.g., `/github`).   |
+| `redirect_url` | The destination URL the <Terminology title="path segment that maps to a URL" to="/docs/reference/terminology#shortcode">shortcode</Terminology> redirects to. |
 
 ### Request Properties
 
@@ -244,7 +245,7 @@ These properties come from the `request.cf` object populated by Cloudflare's edg
 
 Traditional tag management systems like Google Tag Manager rely on embedding JavaScript in the browser. This doesn't work for URL shorteners because browsers immediately follow the `Location` header on a 3xx redirect response instead of loading the response body, so embedded analytics scripts never execute.
 
-Branded Short Links solves this by firing analytics trackers server-side from the Cloudflare Worker, bypassing the browser entirely. This means:
+Branded Short Links solves this by firing analytics <Terminology title="background analytics integration on a link" to="/docs/reference/terminology#tracker">trackers</Terminology> server-side from the <Terminology title="edge function that serves your redirects" to="/docs/reference/terminology#cloudflare-worker">Cloudflare Worker</Terminology>, bypassing the browser entirely. This means:
 
 - No client-side JavaScript required.
 - No dependency on browser-side tag containers.

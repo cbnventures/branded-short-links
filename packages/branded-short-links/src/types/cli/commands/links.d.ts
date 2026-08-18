@@ -1,8 +1,8 @@
 import type {
-  LibSchemaConfig,
-  LibSchemaLinkItemConfig,
-  LibSchemaLinksConfigFallbackUrl,
-  LibSchemaLinksConfigItems,
+  Lib_Schema_Config,
+  Lib_Schema_LinkItemConfig,
+  Lib_Schema_LinksConfig_FallbackUrl,
+  Lib_Schema_LinksConfig_Items,
 } from '../../lib/schema.d.ts';
 
 /**
@@ -10,77 +10,137 @@ import type {
  *
  * @since 2.0.0
  */
-export type CliCommandsLinksAddLinkConfigPath = string;
+export type Cli_Commands_Links_AddLink_ConfigPath = string;
 
-export type CliCommandsLinksAddLinkItem = LibSchemaLinkItemConfig;
+export type Cli_Commands_Links_AddLink_Item = Lib_Schema_LinkItemConfig;
 
-export type CliCommandsLinksAddLinkReturn = void;
+export type Cli_Commands_Links_AddLink_Returns = void;
 
-export type CliCommandsLinksAddLinkConfig = LibSchemaConfig;
+export type Cli_Commands_Links_AddLink_Config_Settings = Lib_Schema_Config['settings'];
 
-/**
- * CLI - Commands - Links.
- *
- * @since 2.0.0
- */
-export type CliCommandsLinksEditLinkConfigPath = string;
+export type Cli_Commands_Links_AddLink_Config_Links = Lib_Schema_Config['links'];
 
-export type CliCommandsLinksEditLinkShortcode = string;
+export type Cli_Commands_Links_AddLink_Config_Trackers = Lib_Schema_Config['trackers'];
 
-export type CliCommandsLinksEditLinkUpdates = Partial<LibSchemaLinkItemConfig>;
-
-export type CliCommandsLinksEditLinkReturn = void;
-
-export type CliCommandsLinksEditLinkConfig = LibSchemaConfig;
-
-export type CliCommandsLinksEditLinkIndex = number;
+export type Cli_Commands_Links_AddLink_Config = {
+  settings: Cli_Commands_Links_AddLink_Config_Settings;
+  links: Cli_Commands_Links_AddLink_Config_Links;
+  trackers: Cli_Commands_Links_AddLink_Config_Trackers;
+};
 
 /**
  * CLI - Commands - Links.
  *
  * @since 2.0.0
  */
-export type CliCommandsLinksGetFallbackUrlConfigPath = string;
+export type Cli_Commands_Links_EditLink_ConfigPath = string;
 
-export type CliCommandsLinksGetFallbackUrlReturn = LibSchemaLinksConfigFallbackUrl;
+export type Cli_Commands_Links_EditLink_Shortcode = string;
 
-export type CliCommandsLinksGetFallbackUrlConfig = LibSchemaConfig;
+export type Cli_Commands_Links_EditLink_Updates = Partial<Lib_Schema_LinkItemConfig>;
 
-/**
- * CLI - Commands - Links.
- *
- * @since 2.0.0
- */
-export type CliCommandsLinksListLinksConfigPath = string;
+export type Cli_Commands_Links_EditLink_Returns = void;
 
-export type CliCommandsLinksListLinksReturn = LibSchemaLinksConfigItems;
+export type Cli_Commands_Links_EditLink_Config_Settings = Lib_Schema_Config['settings'];
 
-export type CliCommandsLinksListLinksConfig = LibSchemaConfig;
+export type Cli_Commands_Links_EditLink_Config_Links = Lib_Schema_Config['links'];
 
-/**
- * CLI - Commands - Links.
- *
- * @since 2.0.0
- */
-export type CliCommandsLinksRemoveLinkConfigPath = string;
+export type Cli_Commands_Links_EditLink_Config_Trackers = Lib_Schema_Config['trackers'];
 
-export type CliCommandsLinksRemoveLinkShortcode = string;
+export type Cli_Commands_Links_EditLink_Config = {
+  settings: Cli_Commands_Links_EditLink_Config_Settings;
+  links: Cli_Commands_Links_EditLink_Config_Links;
+  trackers: Cli_Commands_Links_EditLink_Config_Trackers;
+};
 
-export type CliCommandsLinksRemoveLinkReturn = void;
-
-export type CliCommandsLinksRemoveLinkConfig = LibSchemaConfig;
-
-export type CliCommandsLinksRemoveLinkFiltered = LibSchemaLinksConfigItems;
+export type Cli_Commands_Links_EditLink_Index = number;
 
 /**
  * CLI - Commands - Links.
  *
  * @since 2.0.0
  */
-export type CliCommandsLinksSetFallbackUrlConfigPath = string;
+export type Cli_Commands_Links_GetFallbackUrl_ConfigPath = string;
 
-export type CliCommandsLinksSetFallbackUrlUrl = LibSchemaLinksConfigFallbackUrl;
+export type Cli_Commands_Links_GetFallbackUrl_Returns = Lib_Schema_LinksConfig_FallbackUrl;
 
-export type CliCommandsLinksSetFallbackUrlReturn = void;
+export type Cli_Commands_Links_GetFallbackUrl_Config_Settings = Lib_Schema_Config['settings'];
 
-export type CliCommandsLinksSetFallbackUrlConfig = LibSchemaConfig;
+export type Cli_Commands_Links_GetFallbackUrl_Config_Links = Lib_Schema_Config['links'];
+
+export type Cli_Commands_Links_GetFallbackUrl_Config_Trackers = Lib_Schema_Config['trackers'];
+
+export type Cli_Commands_Links_GetFallbackUrl_Config = {
+  settings: Cli_Commands_Links_GetFallbackUrl_Config_Settings;
+  links: Cli_Commands_Links_GetFallbackUrl_Config_Links;
+  trackers: Cli_Commands_Links_GetFallbackUrl_Config_Trackers;
+};
+
+/**
+ * CLI - Commands - Links.
+ *
+ * @since 2.0.0
+ */
+export type Cli_Commands_Links_ListLinks_ConfigPath = string;
+
+export type Cli_Commands_Links_ListLinks_Returns = Lib_Schema_LinksConfig_Items;
+
+export type Cli_Commands_Links_ListLinks_Config_Settings = Lib_Schema_Config['settings'];
+
+export type Cli_Commands_Links_ListLinks_Config_Links = Lib_Schema_Config['links'];
+
+export type Cli_Commands_Links_ListLinks_Config_Trackers = Lib_Schema_Config['trackers'];
+
+export type Cli_Commands_Links_ListLinks_Config = {
+  settings: Cli_Commands_Links_ListLinks_Config_Settings;
+  links: Cli_Commands_Links_ListLinks_Config_Links;
+  trackers: Cli_Commands_Links_ListLinks_Config_Trackers;
+};
+
+/**
+ * CLI - Commands - Links.
+ *
+ * @since 2.0.0
+ */
+export type Cli_Commands_Links_RemoveLink_ConfigPath = string;
+
+export type Cli_Commands_Links_RemoveLink_Shortcode = string;
+
+export type Cli_Commands_Links_RemoveLink_Returns = void;
+
+export type Cli_Commands_Links_RemoveLink_Config_Settings = Lib_Schema_Config['settings'];
+
+export type Cli_Commands_Links_RemoveLink_Config_Links = Lib_Schema_Config['links'];
+
+export type Cli_Commands_Links_RemoveLink_Config_Trackers = Lib_Schema_Config['trackers'];
+
+export type Cli_Commands_Links_RemoveLink_Config = {
+  settings: Cli_Commands_Links_RemoveLink_Config_Settings;
+  links: Cli_Commands_Links_RemoveLink_Config_Links;
+  trackers: Cli_Commands_Links_RemoveLink_Config_Trackers;
+};
+
+export type Cli_Commands_Links_RemoveLink_Filtered = Lib_Schema_Config['links']['items'];
+
+/**
+ * CLI - Commands - Links.
+ *
+ * @since 2.0.0
+ */
+export type Cli_Commands_Links_SetFallbackUrl_ConfigPath = string;
+
+export type Cli_Commands_Links_SetFallbackUrl_Url = Lib_Schema_LinksConfig_FallbackUrl;
+
+export type Cli_Commands_Links_SetFallbackUrl_Returns = void;
+
+export type Cli_Commands_Links_SetFallbackUrl_Config_Settings = Lib_Schema_Config['settings'];
+
+export type Cli_Commands_Links_SetFallbackUrl_Config_Links = Lib_Schema_Config['links'];
+
+export type Cli_Commands_Links_SetFallbackUrl_Config_Trackers = Lib_Schema_Config['trackers'];
+
+export type Cli_Commands_Links_SetFallbackUrl_Config = {
+  settings: Cli_Commands_Links_SetFallbackUrl_Config_Settings;
+  links: Cli_Commands_Links_SetFallbackUrl_Config_Links;
+  trackers: Cli_Commands_Links_SetFallbackUrl_Config_Trackers;
+};

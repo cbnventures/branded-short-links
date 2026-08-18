@@ -1,6 +1,6 @@
 #!/usr/bin/env node
-import { copyFileSync, existsSync } from 'fs';
-import { join } from 'path';
+import { copyFileSync, existsSync } from 'node:fs';
+import { join } from 'node:path';
 
 import { Bootstrap, Logger } from '@cbnventures/nova/toolkit';
 import { Command } from 'commander';
@@ -14,24 +14,32 @@ import { validateConfig } from './commands/validate.js';
 import { interactiveMenu } from './menu/interactive.js';
 
 import type {
-  CliConfigDir,
-  CliConfigPath,
-  CliEnvDir,
-  CliGetConfigFilePathReturn,
-  CliIndexProgram,
-  CliMainCatchError,
-  CliMainConfigDirs,
-  CliMainConfigPath,
-  CliMainLinksCommand,
-  CliMainLinksRemoveShortcode,
-  CliMainReturn,
-  CliMainTrackersCommand,
-  CliMainTrackersRemoveName,
-  CliMainValidateResult,
-  CliSamplePath,
+  Cli_Index_EnvDir,
+  Cli_Index_GetConfigFilePath_ConfigDir,
+  Cli_Index_GetConfigFilePath_ConfigPath,
+  Cli_Index_GetConfigFilePath_DefaultDir,
+  Cli_Index_GetConfigFilePath_Returns,
+  Cli_Index_GetConfigFilePath_SamplePath,
+  Cli_Index_Main_ConfigDirs,
+  Cli_Index_Main_ConfigPath,
+  Cli_Index_Main_LinksCommand,
+  Cli_Index_Main_Result,
+  Cli_Index_Main_Returns,
+  Cli_Index_Main_TrackersCommand,
+  Cli_Index_Main_TypedName,
+  Cli_Index_Main_TypedShortcode,
+  Cli_Index_Program,
 } from '../types/cli/index.d.ts';
 
-const envDir: CliEnvDir = Bootstrap.resolveFileDir(APP_NAME, '.env', [
+/**
+ * CLI - Env Dir.
+ *
+ * Directory containing the environment file, resolved by searching
+ * the working directory, project root, and config directory.
+ *
+ * @since 2.0.3
+ */
+const envDir: Cli_Index_EnvDir = Bootstrap.resolveFileDir(APP_NAME, '.env', [
   'cwd',
   'project-root',
   'config-dir',
@@ -47,10 +55,12 @@ if (envDir !== undefined) {
  * Resolves the configuration file path and copies the sample
  * config into place when no config file exists yet.
  *
+ * @returns {Cli_Index_GetConfigFilePath_Returns}
+ *
  * @since 2.0.0
  */
-function getConfigFilePath(): CliGetConfigFilePathReturn {
-  const configDir: CliConfigDir = Bootstrap.resolveFileDir(APP_NAME, 'config.json', [
+function getConfigFilePath(): Cli_Index_GetConfigFilePath_Returns {
+  const configDir: Cli_Index_GetConfigFilePath_ConfigDir = Bootstrap.resolveFileDir(APP_NAME, 'config.json', [
     'cwd',
     'project-root',
     'config-dir',
@@ -60,9 +70,9 @@ function getConfigFilePath(): CliGetConfigFilePathReturn {
     return join(configDir, 'config.json');
   }
 
-  const defaultDir: CliConfigPath = Bootstrap.getConfigDir(APP_NAME);
-  const configPath: CliConfigPath = join(defaultDir, 'config.json');
-  const samplePath: CliSamplePath = join(defaultDir, 'config.sample.json');
+  const defaultDir: Cli_Index_GetConfigFilePath_DefaultDir = Bootstrap.getConfigDir(APP_NAME);
+  const configPath: Cli_Index_GetConfigFilePath_ConfigPath = join(defaultDir, 'config.json');
+  const samplePath: Cli_Index_GetConfigFilePath_SamplePath = join(defaultDir, 'config.sample.json');
 
   if (existsSync(configPath) === false && existsSync(samplePath) === true) {
     copyFileSync(samplePath, configPath);
@@ -79,7 +89,7 @@ function getConfigFilePath(): CliGetConfigFilePathReturn {
  *
  * @since 2.0.0
  */
-const program: CliIndexProgram = new Command();
+const program: Cli_Index_Program = new Command();
 
 program.name('branded-short-links').alias('bsl').description('CLI management tool for Branded Short Links').version('2.0.0');
 
@@ -89,11 +99,13 @@ program.name('branded-short-links').alias('bsl').description('CLI management too
  * Entry point that registers all subcommands and parses arguments.
  * Falls back to the interactive menu when no arguments are provided.
  *
+ * @returns {Cli_Index_Main_Returns}
+ *
  * @since 2.0.0
  */
-async function main(): CliMainReturn {
+async function main(): Cli_Index_Main_Returns {
   if (process.argv['length'] <= 2) {
-    const configDirs: CliMainConfigDirs = Bootstrap.resolveFileDirs(APP_NAME, 'config.json', [
+    const configDirs: Cli_Index_Main_ConfigDirs = Bootstrap.resolveFileDirs(APP_NAME, 'config.json', [
       'cwd',
       'project-root',
       'config-dir',
@@ -104,30 +116,34 @@ async function main(): CliMainReturn {
     return;
   }
 
-  const configPath: CliMainConfigPath = getConfigFilePath();
+  const configPath: Cli_Index_Main_ConfigPath = getConfigFilePath();
 
-  const linksCommand: CliMainLinksCommand = new Command('links').description('Manage links');
+  const linksCommand: Cli_Index_Main_LinksCommand = new Command('links').description('Manage links');
 
   linksCommand
     .command('remove <shortcode>')
     .description('Remove a link by shortcode')
-    .action((shortcode: CliMainLinksRemoveShortcode) => {
-      removeLink(configPath, shortcode);
+    .action((shortcode) => {
+      const typedShortcode: Cli_Index_Main_TypedShortcode = shortcode;
 
-      Logger.info(`Link "${shortcode}" removed.`);
+      removeLink(configPath, typedShortcode);
+
+      Logger.info(`Link "${typedShortcode}" removed.`);
 
       return;
     });
 
-  const trackersCommand: CliMainTrackersCommand = new Command('trackers').description('Manage trackers');
+  const trackersCommand: Cli_Index_Main_TrackersCommand = new Command('trackers').description('Manage trackers');
 
   trackersCommand
     .command('remove <name>')
     .description('Remove a tracker by name')
-    .action((name: CliMainTrackersRemoveName) => {
-      removeTracker(configPath, name);
+    .action((name) => {
+      const typedName: Cli_Index_Main_TypedName = name;
 
-      Logger.info(`Tracker "${name}" removed.`);
+      removeTracker(configPath, typedName);
+
+      Logger.info(`Tracker "${typedName}" removed.`);
 
       return;
     });
@@ -139,7 +155,7 @@ async function main(): CliMainReturn {
     .command('validate')
     .description('Validate config')
     .action(() => {
-      const result: CliMainValidateResult = validateConfig(configPath);
+      const result: Cli_Index_Main_Result = validateConfig(configPath);
 
       if (result['valid'] === true) {
         Logger.info('Config is valid.');
@@ -172,7 +188,7 @@ async function main(): CliMainReturn {
       try {
         await deploy(configPath, false);
       } catch (error) {
-        Logger.error(error instanceof Error ? error['message'] : String(error));
+        Logger.error((error instanceof Error) ? error['message'] : String(error));
 
         process.exitCode = 1;
       }
@@ -185,8 +201,8 @@ async function main(): CliMainReturn {
   return;
 }
 
-main().catch((error: CliMainCatchError) => {
-  Logger.error(error instanceof Error ? error['message'] : String(error));
+main().catch((error) => {
+  Logger.error((error instanceof Error) ? error['message'] : String(error));
 
   process.exitCode = 1;
 

@@ -39,12 +39,16 @@ import {
   RequireJsdocHierarchy,
   RequireJsdocParamAlignment,
   RequireJsdocParamName,
+  RequireJsdocPresence,
   RequireJsdocPrivate,
+  RequireJsdocReturns,
   RequireJsdocSince,
+  RequireJsdocTagOrder,
   RequireKebabCaseFilename,
   RequireMultilineConditionGroups,
   RequireMultilineConditions,
   RequireNamingConvention,
+  RequireNodeProtocol,
   RequirePaddingLines,
   RequireTernaryParens,
   RequireTypeNaming,
@@ -64,7 +68,10 @@ export default [
   ...dxIgnore,
   ...dxCodeStyle,
   ...langTypescript,
-  ...runtimeCloudflareWorkers,
+  ...runtimeCloudflareWorkers.map((config) => ({
+    ...config,
+    files: ['src/worker/**/*.ts'],
+  })),
   ...runtimeNode,
   {
     name: 'custom-ignores',
@@ -143,12 +150,16 @@ export default [
           'require-jsdoc-hierarchy': RequireJsdocHierarchy['rule'],
           'require-jsdoc-param-alignment': RequireJsdocParamAlignment['rule'],
           'require-jsdoc-param-name': RequireJsdocParamName['rule'],
+          'require-jsdoc-presence': RequireJsdocPresence['rule'],
           'require-jsdoc-private': RequireJsdocPrivate['rule'],
+          'require-jsdoc-returns': RequireJsdocReturns['rule'],
           'require-jsdoc-since': RequireJsdocSince['rule'],
+          'require-jsdoc-tag-order': RequireJsdocTagOrder['rule'],
           'require-kebab-case-filename': RequireKebabCaseFilename['rule'],
           'require-multiline-condition-groups': RequireMultilineConditionGroups['rule'],
           'require-multiline-conditions': RequireMultilineConditions['rule'],
           'require-naming-convention': RequireNamingConvention['rule'],
+          'require-node-protocol': RequireNodeProtocol['rule'],
           'require-padding-lines': RequirePaddingLines['rule'],
           'require-ternary-parens': RequireTernaryParens['rule'],
           'require-type-naming': RequireTypeNaming['rule'],
@@ -342,7 +353,7 @@ export default [
         'error',
         {
           ignoreFiles: [],
-          sharedFiles: ['shared.d.ts'],
+          sharedFiles: [],
         },
       ],
 
@@ -416,7 +427,7 @@ export default [
         'error',
         {
           ignoreFiles: [
-            './eslint.config.ts',
+            './eslint.config.mts',
             './vitest.config.ts',
           ],
           maxLines: 3,
@@ -439,7 +450,7 @@ export default [
             'utils',
           ],
           ignoreFiles: [
-            './eslint.config.ts',
+            './eslint.config.mts',
             './vitest.config.ts',
             './vitest.setup.ts',
           ],
@@ -464,8 +475,31 @@ export default [
         },
       ],
 
+      // Require a leading JSDoc block on every documentable symbol.
+      '@cbnventures/nova/require-jsdoc-presence': [
+        'error',
+        {
+          ignoreFiles: [
+            './eslint.config.mts',
+            './vitest.config.ts',
+          ],
+          skipDirectories: [
+            'tests',
+            'types',
+          ],
+        },
+      ],
+
       // Require a @private tag in JSDoc blocks for private class members.
       '@cbnventures/nova/require-jsdoc-private': [
+        'error',
+        {
+          ignoreFiles: [],
+        },
+      ],
+
+      // Require @returns tags to contain only a type in braces.
+      '@cbnventures/nova/require-jsdoc-returns': [
         'error',
         {
           ignoreFiles: [],
@@ -480,13 +514,21 @@ export default [
         },
       ],
 
+      // Require canonical ordering and spacing of JSDoc tags.
+      '@cbnventures/nova/require-jsdoc-tag-order': [
+        'error',
+        {
+          ignoreFiles: [],
+        },
+      ],
+
       // Require kebab-case filenames so naming stays consistent across the project.
       '@cbnventures/nova/require-kebab-case-filename': [
         'error',
         {
           extraExtensions: [],
           ignoreFiles: [
-            './eslint.config.ts',
+            './eslint.config.mts',
             './vitest.config.ts',
             './vitest.setup.ts',
           ],
@@ -511,7 +553,7 @@ export default [
         },
       ],
 
-      // Require PascalCase for classes/types, camelCase for functions/variables, UPPER_SNAKE for constants.
+      // Require PascalCase for classes, UnderscorePascalCase for type aliases, camelCase for functions/variables, UPPER_SNAKE for constants.
       '@cbnventures/nova/require-naming-convention': [
         'error',
         {
@@ -526,10 +568,13 @@ export default [
           interface: 'PascalCase',
           parameter: 'camelCase',
           reactComponent: 'PascalCase',
-          typeAlias: 'PascalCase',
+          typeAlias: 'UnderscorePascalCase',
           variable: 'camelCase',
         },
       ],
+
+      // Require the "node:" protocol when importing Node.js built-in modules.
+      '@cbnventures/nova/require-node-protocol': ['error'],
 
       // Require blank lines between declaration blocks and operations for visual separation.
       '@cbnventures/nova/require-padding-lines': [
@@ -575,6 +620,26 @@ export default [
         {
           ignoreFiles: [],
           requireDefault: true,
+        },
+      ],
+    },
+  },
+  {
+    name: 'nova-rules/mdx',
+    files: ['**/*.mdx'],
+    plugins: {
+      '@cbnventures/nova': {
+        rules: {
+          'no-raw-text-in-code': NoRawTextInCode['rule'],
+        },
+      },
+    },
+    rules: {
+      // Ban raw text outside JSX elements in MDX files so all content is wrapped in proper markup.
+      '@cbnventures/nova/no-raw-text-in-code': [
+        'error',
+        {
+          ignoreFiles: [],
         },
       ],
     },

@@ -1,12 +1,17 @@
 ---
 title: "What's New in v2.0.0: Server-Side Analytics and a New CLI"
-description: "Version 2.0.0 adds server-side analytics tracking — GA4, Meta Pixel, PostHog, ntfy, ntfy-reverse-proxy, and plain-text webhooks — plus an interactive CLI for configuration management."
+description: "Version 2.0.0 adds six server-side analytics trackers and an interactive CLI that replaces manual config editing with guided menus and one-command deployment."
 slug: whats-new-in-v2
 authors:
   - mrjackyliang
+keywords:
+  - branded short links
+  - server-side analytics
+  - interactive cli
+  - ga4
+  - cloudflare workers
 tags:
   - release
-  - short-links
   - analytics
   - server-side-tracking
   - cli
@@ -15,7 +20,7 @@ tags:
 
 Version 1.x of Branded Short Links handled redirects and optionally fired analytics through a Google Tag Manager container — server-side, from the worker itself. That worked, but it meant routing all tracking through GTM and configuring tags, triggers, and variables inside Google's interface.
 
-Version 2.0.0 replaces the GTM integration with direct server-side trackers. Instead of funneling everything through a single GTM container, each tracker fires independently from the worker — GA4, Facebook, PostHog, ntfy, Reverse Proxy for ntfy, or plain-text webhooks — with no middleman.
+Version 2.0.0 replaces the GTM integration with direct server-side trackers. Instead of funneling everything through a single GTM container, each tracker fires independently from the worker — GA4, Meta Pixel, PostHog, ntfy, Reverse Proxy for ntfy, or plain-text webhooks — with no middleman.
 
 {/* truncate */}
 
@@ -48,11 +53,15 @@ That approach had real downsides:
 - **Indirect.** Every analytics request routed through Google's servers first, then to the actual tracker endpoint. That's an extra hop and an extra dependency.
 - **Hard to debug.** When a tracker failed, it wasn't clear whether the issue was in the GTM tag configuration, the container fetch, the HTML parsing, or the tracker endpoint.
 
-Direct trackers eliminate all of this. Each tracker is a single function that sends a request straight to the provider's API. Configuration lives alongside your shortcodes in one project. No scraping, no middleman, no GTM interface to manage.
+Direct trackers eliminate all of this. Each tracker is a single function that sends a request straight to the provider's API.
+
+Configuration lives alongside your shortcodes in one project. No scraping, no middleman, no GTM interface to manage.
 
 ## Interactive CLI
 
-Configuration in v1.x meant editing a `wrangler.toml` file by hand. Version 2.0.0 adds an interactive CLI. Running `npx branded-short-links` with no arguments launches a menu with four sections:
+Configuration in v1.x meant editing a `wrangler.toml` file by hand. Version 2.0.0 adds an interactive CLI.
+
+Running `npx branded-short-links` with no arguments launches a menu with four sections:
 
 - **Manage Links** — Add, edit, and remove shortcodes with redirect codes and destination URLs
 - **Manage Trackers** — Add, edit, and remove analytics trackers with type-specific fields
@@ -75,4 +84,4 @@ Version 2.0.0 includes a branded landing page served when visitors access the ro
 
 Version 2.0.0 uses a new configuration format. The GTM container ID setting has been removed in favor of server-side trackers.
 
-See the [quickstart guide](/docs/getting-started/quick-start) for the new configuration format and deployment steps.
+See the [quickstart guide](/docs/getting-started/quick-start/) for the new configuration format and deployment steps.

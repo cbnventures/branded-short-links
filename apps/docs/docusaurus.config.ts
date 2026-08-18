@@ -1,4 +1,13 @@
+import { NovaIdentity } from '@cbnventures/nova/toolkit';
+
 import type { DocusaurusNovaConfig } from '@cbnventures/docusaurus-preset-nova/types/config';
+
+/**
+ * Identity.
+ *
+ * @since UNRELEASED
+ */
+const identity = new NovaIdentity().forDocs();
 
 /**
  * Docusaurus Configuration.
@@ -7,16 +16,16 @@ import type { DocusaurusNovaConfig } from '@cbnventures/docusaurus-preset-nova/t
  */
 const config: DocusaurusNovaConfig = {
   // Site Metadata.
-  title: 'Branded Short Links',
+  title: identity['title'] ?? '',
   titleDelimiter: ' - ',
-  tagline: 'Branded short links with direct analytics tracking, deployed to the edge',
+  tagline: identity['tagline'],
   favicon: './favicon.ico',
 
   // Deployment.
-  url: 'https://bsl.cbnventures.io',
+  url: identity['url'] ?? '',
   baseUrl: '/',
-  organizationName: 'cbnventures',
-  projectName: 'branded-short-links',
+  organizationName: identity['organizationName'],
+  projectName: identity['projectName'],
   deploymentBranch: undefined,
   githubHost: undefined,
   githubPort: undefined,
@@ -53,7 +62,7 @@ const config: DocusaurusNovaConfig = {
       attributes: {
         rel: 'apple-touch-icon',
         sizes: '180x180',
-        href: '/apple-touch-icon.png',
+        href: `${identity['baseUrl'] ?? '/'}apple-touch-icon.png`,
       },
     },
     {
@@ -62,7 +71,7 @@ const config: DocusaurusNovaConfig = {
         rel: 'icon',
         type: 'image/png',
         sizes: '96x96',
-        href: '/favicon-96x96.png',
+        href: `${identity['baseUrl'] ?? '/'}favicon-96x96.png`,
       },
     },
     {
@@ -70,14 +79,14 @@ const config: DocusaurusNovaConfig = {
       attributes: {
         rel: 'icon',
         type: 'image/svg+xml',
-        href: '/favicon.svg',
+        href: `${identity['baseUrl'] ?? '/'}favicon.svg`,
       },
     },
     {
       tagName: 'link',
       attributes: {
         rel: 'manifest',
-        href: '/site.webmanifest',
+        href: `${identity['baseUrl'] ?? '/'}site.webmanifest`,
       },
     },
   ],
@@ -112,7 +121,7 @@ const config: DocusaurusNovaConfig = {
       maintainCase: false,
     },
     hooks: {
-      onBrokenMarkdownLinks: 'warn',
+      onBrokenMarkdownLinks: 'throw',
       onBrokenMarkdownImages: 'throw',
     },
   },
@@ -127,27 +136,23 @@ const config: DocusaurusNovaConfig = {
       // Preset Overrides (undefined = use preset default).
       overrides: {
         colors: {
-          primary: '#65A30D',
-          accent: '#D97706',
-          neutral: '#44403C',
+          primary: {
+            light: '#65A30D',
+            dark: '#65A30D',
+          },
+          secondary: {
+            light: '#D97706',
+            dark: '#D97706',
+          },
+          text: undefined,
+          border: undefined,
+          warning: undefined,
+          danger: undefined,
         },
         fonts: {
           display: 'Chakra Petch',
           body: 'Instrument Sans',
           code: 'Source Code Pro',
-        },
-        shape: {
-          radius: undefined,
-          density: undefined,
-        },
-        depth: {
-          cards: undefined,
-          codeBlocks: undefined,
-        },
-        motion: {
-          speed: undefined,
-          staggeredReveals: undefined,
-          hoverEffects: undefined,
         },
         navbar: undefined,
         footer: undefined,
@@ -174,7 +179,7 @@ const config: DocusaurusNovaConfig = {
               'rss',
               'atom',
             ],
-            copyright: `Copyright \u00A9 2024-${String(new Date().getFullYear())} CBN Ventures LLC. All Rights Reserved.`,
+            copyright: identity['copyright'],
             limit: 20,
             title: 'Branded Short Links Blog',
             description: 'Attribution insights, campaign forensics, and the patterns hiding in your click streams.',
@@ -224,21 +229,26 @@ const config: DocusaurusNovaConfig = {
   themeConfig: {
     // Site.
     site: {
-      title: 'Branded Short Links',
       logo: {
         alt: 'Branded Short Links',
-        src: '/images/logo.svg',
-        srcDark: undefined,
+        src: {
+          light: '/images/logo.svg',
+          dark: undefined,
+        },
         href: '/',
-        wordmark: undefined,
-        wordmarkDark: undefined,
-        title: 'Branded Short Links',
+        target: undefined,
+        rel: undefined,
+        ariaLabel: undefined,
+        wordmark: {
+          light: undefined,
+          dark: undefined,
+        },
       },
       image: '/thumbnails/brand.png',
       metadata: [
         {
           name: 'description',
-          content: 'Branded short links with direct analytics tracking, deployed to the edge',
+          content: identity['metaDescription'] ?? '',
         },
         {
           name: 'twitter:card',
@@ -255,7 +265,6 @@ const config: DocusaurusNovaConfig = {
 
     // Navbar.
     navbar: {
-      title: 'Branded Short Links',
       hideOnScroll: false,
       items: [
         {
@@ -325,16 +334,28 @@ const config: DocusaurusNovaConfig = {
     },
 
     // Announcement Bar.
-    // announcementBar: {
-    //   id: '',
-    //   content: '',
-    //   backgroundColor: undefined,
-    //   textColor: undefined,
-    //   isCloseable: true,
-    // },
+    announcementBar: undefined,
 
     // Back to Top Button.
     backToTopButton: true,
+
+    // Error Pages - overrides Nova's randomized defaults with consumer copy.
+    // Any unset field falls through to the Nova-flavored randomized pool.
+    errorPages: {
+      notFound: {
+        title: 'Link not found.',
+        description: 'This URL has no destination on record. Head back to the docs.',
+        backHomeLabel: 'Back to the docs',
+        backHomeHref: undefined,
+      },
+      errorPageContent: {
+        title: 'This page took a wrong turn.',
+        retryLabel: 'Reload the page',
+      },
+      error: {
+        retryLabel: 'Retry the redirect',
+      },
+    },
 
     // Footer.
     footer: {
@@ -404,7 +425,7 @@ const config: DocusaurusNovaConfig = {
       },
       socialLinks: [
         {
-          icon: 'mdi:facebook',
+          icon: 'ri:facebook-fill',
           href: 'https://www.facebook.com/cbnventures',
           label: 'Facebook',
         },
@@ -414,32 +435,32 @@ const config: DocusaurusNovaConfig = {
           label: 'X',
         },
         {
-          icon: 'mdi:youtube',
+          icon: 'ri:youtube-fill',
           href: 'https://www.youtube.com/@cbnventures',
           label: 'YouTube',
         },
         {
-          icon: 'mdi:instagram',
+          icon: 'ri:instagram-fill',
           href: 'https://www.instagram.com/cbnventures/',
           label: 'Instagram',
         },
         {
-          icon: 'mdi:github',
+          icon: 'ri:github-fill',
           href: 'https://github.com/cbnventures',
           label: 'GitHub',
         },
         {
-          icon: 'mdi:google-play',
+          icon: 'ri:google-play-fill',
           href: 'https://play.google.com/store/apps/dev?id=6419450160526226105',
           label: 'Google Play',
         },
         {
-          icon: 'mdi:linkedin',
+          icon: 'ri:linkedin-fill',
           href: 'https://www.linkedin.com/company/cbnventures/',
           label: 'LinkedIn',
         },
       ],
-      copyright: `Copyright \u00A9 2024-${String(new Date().getFullYear())} CBN Ventures LLC. All Rights Reserved.`,
+      copyright: identity['copyright'],
       credit: true,
       cta: undefined,
     },

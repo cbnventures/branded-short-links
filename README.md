@@ -7,12 +7,15 @@
 -->
 
 <div align="center">
+<!-- nova-region: header -->
   <a href="https://bsl.cbnventures.io/">
     <picture>
       <img alt="Branded Short Links" src="https://bsl.cbnventures.io/images/logo.svg" height="128">
     </picture>
   </a>
   <h1>Branded Short Links</h1>
+<!-- nova-region-end: header -->
+<!-- nova-region: badges -->
   <a href="https://www.npmjs.com/package/branded-short-links">
     <img alt="npm Package" src="https://img.shields.io/npm/v/branded-short-links?style=for-the-badge&logo=npm&logoColor=%23ffffff&color=%23b25da6">
   </a>
@@ -34,16 +37,22 @@
   <a href="https://www.paypal.com/biz/profile/cbnventures">
     <img alt="Donate via PayPal" src="https://img.shields.io/badge/paypal-donate-gray?style=for-the-badge&logo=paypal&logoColor=%23ffffff&color=%23ce4a4a">
   </a>
+<!-- nova-region-end: badges -->
 </div>
 
+<!-- nova-region: introduction -->
 ## Introduction
 
 Branded short links with server-side tracker integration (GA4 Measurement Protocol, Meta Pixel, PostHog, ntfy, Reverse Proxy for ntfy, plain-text webhooks), powered by Cloudflare Workers. Interactive CLI for configuration, validation, and deployment.
+<!-- nova-region-end: introduction -->
 
+<!-- nova-region: documentation -->
 ## Documentation
 
 To get started, visit [https://bsl.cbnventures.io/](https://bsl.cbnventures.io/) to view the full documentation.
+<!-- nova-region-end: documentation -->
 
+<!-- nova-region: credits -->
 ## Credits and Appreciation
 
 If you find value in the ongoing development of this project and wish to express your appreciation, you have the option to:
@@ -54,3 +63,4 @@ If you find value in the ongoing development of this project and wish to express
 A special thanks to our contributors and supporters:
 
 - [Jacky Liang](https://www.mrjackyliang.com/)
+<!-- nova-region-end: credits -->

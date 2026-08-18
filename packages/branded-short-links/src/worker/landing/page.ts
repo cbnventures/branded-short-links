@@ -1,22 +1,32 @@
+import {
+  htmlAmpersandPattern,
+  htmlDoubleQuotePattern,
+  htmlGreaterThanPattern,
+  htmlLessThanPattern,
+  htmlSingleQuotePattern,
+} from '../../lib/regex.js';
+
 import type {
-  WorkerLandingPageAlertIcon,
-  WorkerLandingPageGithubIcon,
-  WorkerLandingPageLandingPageConfig,
-  WorkerLandingPageLandingPageDebugHtml,
-  WorkerLandingPageLandingPageHtml,
-  WorkerLandingPageLandingPageMaskedJson,
-  WorkerLandingPageLandingPageReturn,
-  WorkerLandingPageLinkIcon,
-  WorkerLandingPageMaskConfigConfig,
-  WorkerLandingPageMaskConfigReturn,
-  WorkerLandingPageMaskValueReturn,
-  WorkerLandingPageMaskValueValue,
-  WorkerLandingPageNotFoundPageConfig,
-  WorkerLandingPageNotFoundPageDebugHtml,
-  WorkerLandingPageNotFoundPageHtml,
-  WorkerLandingPageNotFoundPageMaskedJson,
-  WorkerLandingPageNotFoundPageReturn,
-  WorkerLandingPageSharedStyles,
+  Worker_Landing_Page_AlertIcon,
+  Worker_Landing_Page_EscapeHtml_Input,
+  Worker_Landing_Page_EscapeHtml_Returns,
+  Worker_Landing_Page_GithubIcon,
+  Worker_Landing_Page_LandingPage_Config,
+  Worker_Landing_Page_LandingPage_DebugHtml,
+  Worker_Landing_Page_LandingPage_Html,
+  Worker_Landing_Page_LandingPage_MaskedJson,
+  Worker_Landing_Page_LandingPage_Returns,
+  Worker_Landing_Page_LinkIcon,
+  Worker_Landing_Page_MaskConfig_Config,
+  Worker_Landing_Page_MaskConfig_Returns,
+  Worker_Landing_Page_MaskValue_Returns,
+  Worker_Landing_Page_MaskValue_Value,
+  Worker_Landing_Page_NotFoundPage_Config,
+  Worker_Landing_Page_NotFoundPage_DebugHtml,
+  Worker_Landing_Page_NotFoundPage_Html,
+  Worker_Landing_Page_NotFoundPage_MaskedJson,
+  Worker_Landing_Page_NotFoundPage_Returns,
+  Worker_Landing_Page_SharedStyles,
 } from '../../types/worker/landing/page.d.ts';
 
 /**
@@ -27,7 +37,7 @@ import type {
  *
  * @since 2.0.0
  */
-const sharedStyles: WorkerLandingPageSharedStyles = [
+const sharedStyles: Worker_Landing_Page_SharedStyles = [
   '  <style>',
   '    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }',
   '',
@@ -217,7 +227,7 @@ const sharedStyles: WorkerLandingPageSharedStyles = [
  *
  * @since 2.0.0
  */
-const githubIcon: WorkerLandingPageGithubIcon = '<svg viewBox="0 0 16 16"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27s1.36.09 2 .27c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>';
+const githubIcon: Worker_Landing_Page_GithubIcon = '<svg viewBox="0 0 16 16"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27s1.36.09 2 .27c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>';
 
 /**
  * Worker - Landing - Page - Link Icon.
@@ -227,7 +237,7 @@ const githubIcon: WorkerLandingPageGithubIcon = '<svg viewBox="0 0 16 16"><path 
  *
  * @since 2.0.0
  */
-const linkIcon: WorkerLandingPageLinkIcon = '<svg viewBox="0 0 24 24"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>';
+const linkIcon: Worker_Landing_Page_LinkIcon = '<svg viewBox="0 0 24 24"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>';
 
 /**
  * Worker - Landing - Page - Alert Icon.
@@ -237,7 +247,7 @@ const linkIcon: WorkerLandingPageLinkIcon = '<svg viewBox="0 0 24 24"><path d="M
  *
  * @since 2.0.0
  */
-const alertIcon: WorkerLandingPageAlertIcon = '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>';
+const alertIcon: Worker_Landing_Page_AlertIcon = '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>';
 
 /**
  * Worker - Landing - Page - Mask Value.
@@ -247,7 +257,7 @@ const alertIcon: WorkerLandingPageAlertIcon = '<svg viewBox="0 0 24 24"><circle 
  *
  * @since 2.0.0
  */
-function maskValue(value: WorkerLandingPageMaskValueValue): WorkerLandingPageMaskValueReturn {
+function maskValue(value: Worker_Landing_Page_MaskValue_Value): Worker_Landing_Page_MaskValue_Returns {
   return (value['length'] > 0) ? '\u2022\u2022\u2022\u2022\u2022\u2022' : '';
 }
 
@@ -259,11 +269,11 @@ function maskValue(value: WorkerLandingPageMaskValueValue): WorkerLandingPageMas
  *
  * @since 2.0.0
  */
-function maskConfig(config: WorkerLandingPageMaskConfigConfig): WorkerLandingPageMaskConfigReturn {
+function maskConfig(config: Worker_Landing_Page_MaskConfig_Config): Worker_Landing_Page_MaskConfig_Returns {
   return {
     settings: config['settings'],
     links: {
-      ...(config['links']['fallback_url'] !== undefined ? { fallback_url: config['links']['fallback_url'] } : {}),
+      ...((config['links']['fallback_url'] !== undefined) ? { fallback_url: maskValue(config['links']['fallback_url']) } : {}),
       items: config['links']['items'].map((item) => ({
         ...item,
         redirect_url: maskValue(item['redirect_url']),
@@ -272,37 +282,75 @@ function maskConfig(config: WorkerLandingPageMaskConfigConfig): WorkerLandingPag
     trackers: config['trackers'].map((tracker) => {
       if (tracker['type'] === 'ga4') {
         return {
-          ...tracker, measurement_id: maskValue(tracker['measurement_id']), api_secret: maskValue(tracker['api_secret']),
+          ...tracker,
+          measurement_id: maskValue(tracker['measurement_id']),
+          api_secret: maskValue(tracker['api_secret']),
         };
       }
 
       if (tracker['type'] === 'facebook') {
         return {
-          ...tracker, pixel_id: maskValue(tracker['pixel_id']),
+          ...tracker,
+          pixel_id: maskValue(tracker['pixel_id']),
         };
       }
 
       if (tracker['type'] === 'ntfy') {
         return {
-          ...tracker, server: maskValue(tracker['server']), token: maskValue(tracker['token']),
+          ...tracker,
+          server: maskValue(tracker['server']),
+          token: maskValue(tracker['token']),
         };
       }
 
       if (tracker['type'] === 'posthog') {
         return {
-          ...tracker, host: maskValue(tracker['host']), api_key: maskValue(tracker['api_key']),
+          ...tracker,
+          host: maskValue(tracker['host']),
+          api_key: maskValue(tracker['api_key']),
         };
       }
 
       if (tracker['type'] === 'plain-text') {
         return {
-          ...tracker, url: maskValue(tracker['url']), ...(tracker['token'] !== undefined ? { token: maskValue(tracker['token']) } : {}),
+          ...tracker,
+          url: maskValue(tracker['url']),
+          ...((tracker['token'] !== undefined) ? { token: maskValue(tracker['token']) } : {}),
+        };
+      }
+
+      if (tracker['type'] === 'ntfy-reverse-proxy') {
+        return {
+          ...tracker,
+          url: maskValue(tracker['url']),
+          ...((tracker['token'] !== undefined) ? { token: maskValue(tracker['token']) } : {}),
         };
       }
 
       return tracker;
     }),
   };
+}
+
+/**
+ * Worker - Landing - Page - Escape HTML.
+ *
+ * Replaces HTML-significant characters with their entity equivalents
+ * so arbitrary strings can be safely interpolated into markup.
+ *
+ * @param {Worker_Landing_Page_EscapeHtml_Input} input - Input.
+ *
+ * @returns {Worker_Landing_Page_EscapeHtml_Returns}
+ *
+ * @since 2.0.3
+ */
+function escapeHtml(input: Worker_Landing_Page_EscapeHtml_Input): Worker_Landing_Page_EscapeHtml_Returns {
+  return input
+    .replace(new RegExp(htmlAmpersandPattern, 'g'), '&amp;')
+    .replace(new RegExp(htmlLessThanPattern, 'g'), '&lt;')
+    .replace(new RegExp(htmlGreaterThanPattern, 'g'), '&gt;')
+    .replace(new RegExp(htmlDoubleQuotePattern, 'g'), '&quot;')
+    .replace(new RegExp(htmlSingleQuotePattern, 'g'), '&#39;');
 }
 
 /**
@@ -313,18 +361,18 @@ function maskConfig(config: WorkerLandingPageMaskConfigConfig): WorkerLandingPag
  *
  * @since 2.0.0
  */
-function landingPage(config: WorkerLandingPageLandingPageConfig): WorkerLandingPageLandingPageReturn {
-  const maskedJson: WorkerLandingPageLandingPageMaskedJson = JSON.stringify(maskConfig(config), null, 2);
+function landingPage(config: Worker_Landing_Page_LandingPage_Config): Worker_Landing_Page_LandingPage_Returns {
+  const maskedJson: Worker_Landing_Page_LandingPage_MaskedJson = JSON.stringify(maskConfig(config), null, 2);
 
-  const debugHtml: WorkerLandingPageLandingPageDebugHtml = (config['settings']['show_response_output'] === true) ? [
+  const debugHtml: Worker_Landing_Page_LandingPage_DebugHtml = (config['settings']['show_response_output'] === true) ? [
     '',
     '    <details class="debug">',
     '      <summary class="debug-header">Config</summary>',
-    `      <pre>${maskedJson}</pre>`,
+    `      <pre>${escapeHtml(maskedJson)}</pre>`,
     '    </details>',
   ].join('\n') : '';
 
-  const html: WorkerLandingPageLandingPageHtml = [
+  const html: Worker_Landing_Page_LandingPage_Html = [
     '<!DOCTYPE html>',
     '<html lang="en">',
     '<head>',
@@ -358,18 +406,18 @@ function landingPage(config: WorkerLandingPageLandingPageConfig): WorkerLandingP
  *
  * @since 2.0.0
  */
-function notFoundPage(config: WorkerLandingPageNotFoundPageConfig): WorkerLandingPageNotFoundPageReturn {
-  const maskedJson: WorkerLandingPageNotFoundPageMaskedJson = JSON.stringify(maskConfig(config), null, 2);
+function notFoundPage(config: Worker_Landing_Page_NotFoundPage_Config): Worker_Landing_Page_NotFoundPage_Returns {
+  const maskedJson: Worker_Landing_Page_NotFoundPage_MaskedJson = JSON.stringify(maskConfig(config), null, 2);
 
-  const debugHtml: WorkerLandingPageNotFoundPageDebugHtml = (config['settings']['show_response_output'] === true) ? [
+  const debugHtml: Worker_Landing_Page_NotFoundPage_DebugHtml = (config['settings']['show_response_output'] === true) ? [
     '',
     '    <details class="debug">',
     '      <summary class="debug-header">Config</summary>',
-    `      <pre>${maskedJson}</pre>`,
+    `      <pre>${escapeHtml(maskedJson)}</pre>`,
     '    </details>',
   ].join('\n') : '';
 
-  const html: WorkerLandingPageNotFoundPageHtml = [
+  const html: Worker_Landing_Page_NotFoundPage_Html = [
     '<!DOCTYPE html>',
     '<html lang="en">',
     '<head>',

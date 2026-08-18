@@ -1,74 +1,36 @@
 import type { z } from 'zod';
 
-import type {
-  LibSchemaConfig,
-  LibSchemaLinkItemConfig,
-} from '../lib/schema.d.ts';
+import type { Lib_Schema_Config } from '../lib/schema.d.ts';
 
 /**
  * Worker - Index - Fetch.
  *
  * @since 2.0.0
  */
-export type WorkerIndexFetchRequest = Request;
+export type Worker_Index_Fetch_Request = Request;
 
-export type WorkerIndexFetchEnv = Record<string, string>;
+export type Worker_Index_Fetch_Env = Record<string, string>;
 
-export type WorkerIndexFetchCtx = ExecutionContext;
+export type Worker_Index_Fetch_Ctx = ExecutionContext;
 
-export type WorkerIndexFetchReturn = Promise<Response>;
+export type Worker_Index_Fetch_Returns = Promise<Response>;
 
-export type WorkerIndexFetchSettings = unknown;
+export type Worker_Index_Fetch_Settings = unknown;
 
-export type WorkerIndexFetchLinks = unknown;
+export type Worker_Index_Fetch_Links = unknown;
 
-export type WorkerIndexFetchTrackers = unknown;
+export type Worker_Index_Fetch_Trackers = unknown;
 
-export type WorkerIndexFetchEnvSettingsAsString = string;
+export type Worker_Index_Fetch_EnvSettingsAsString = string;
 
-export type WorkerIndexFetchEnvSettingsAsUnknown = unknown;
+export type Worker_Index_Fetch_EnvSettingsAsUnknown = unknown;
 
-export type WorkerIndexFetchEnvLinksAsString = string;
+export type Worker_Index_Fetch_EnvLinksAsString = string;
 
-export type WorkerIndexFetchEnvLinksAsUnknown = unknown;
+export type Worker_Index_Fetch_EnvLinksAsUnknown = unknown;
 
-export type WorkerIndexFetchEnvTrackersAsString = string;
+export type Worker_Index_Fetch_EnvTrackersAsString = string;
 
-export type WorkerIndexFetchEnvTrackersAsUnknown = unknown;
+export type Worker_Index_Fetch_EnvTrackersAsUnknown = unknown;
 
-export type WorkerIndexFetchResult = z.ZodSafeParseResult<LibSchemaConfig>;
-
-/**
- * Worker - Index - Handle Request.
- *
- * @since 2.0.0
- */
-export type WorkerIndexHandleRequestRequest = Request;
-
-export type WorkerIndexHandleRequestConfig = LibSchemaConfig;
-
-export type WorkerIndexHandleRequestCtx = ExecutionContext;
-
-export type WorkerIndexHandleRequestReturn = Promise<Response>;
-
-export type WorkerIndexHandleRequestRequestUrl = URL;
-
-export type WorkerIndexHandleRequestPathname = string;
-
-export type WorkerIndexHandleRequestShortcode = LibSchemaLinkItemConfig | undefined;
-
-export type WorkerIndexHandleRequestFallbackUrl = URL;
-
-export type WorkerIndexHandleRequestRootResponse = Response;
-
-export type WorkerIndexHandleRequestRootLogPayload = string;
-
-export type WorkerIndexHandleRequestFallbackResponse = Response;
-
-export type WorkerIndexHandleRequestFallbackLogPayload = string;
-
-export type WorkerIndexHandleRequestFireTrackersPromise = Promise<void>;
-
-export type WorkerIndexHandleRequestRedirectResponse = Response;
-
-export type WorkerIndexHandleRequestRedirectLogPayload = string;
+export type Worker_Index_Fetch_Result = z.ZodSafeParseResult<Lib_Schema_Config>;

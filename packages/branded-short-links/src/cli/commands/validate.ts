@@ -2,23 +2,23 @@ import { configSchema } from '../../lib/schema.js';
 import { loadConfig } from './config-io.js';
 
 import type {
-  CliCommandsValidateValidateConfigConfig,
-  CliCommandsValidateValidateConfigConfigPath,
-  CliCommandsValidateValidateConfigErrors,
-  CliCommandsValidateValidateConfigExistingShortcodeCount,
-  CliCommandsValidateValidateConfigExistingTrackerCount,
-  CliCommandsValidateValidateConfigItems,
-  CliCommandsValidateValidateConfigLinks,
-  CliCommandsValidateValidateConfigNewShortcodeCount,
-  CliCommandsValidateValidateConfigNewTrackerCount,
-  CliCommandsValidateValidateConfigParseResult,
-  CliCommandsValidateValidateConfigRaw,
-  CliCommandsValidateValidateConfigReturn,
-  CliCommandsValidateValidateConfigShortcodeCounts,
-  CliCommandsValidateValidateConfigShortcodeEntry,
-  CliCommandsValidateValidateConfigTrackerEntry,
-  CliCommandsValidateValidateConfigTrackerNameCounts,
-  CliCommandsValidateValidateConfigTrackers,
+  Cli_Commands_Validate_ValidateConfig_Config,
+  Cli_Commands_Validate_ValidateConfig_ConfigPath,
+  Cli_Commands_Validate_ValidateConfig_Entry,
+  Cli_Commands_Validate_ValidateConfig_Errors,
+  Cli_Commands_Validate_ValidateConfig_ExistingShortcodeCount,
+  Cli_Commands_Validate_ValidateConfig_ExistingTrackerCount,
+  Cli_Commands_Validate_ValidateConfig_Items,
+  Cli_Commands_Validate_ValidateConfig_Links,
+  Cli_Commands_Validate_ValidateConfig_NewShortcodeCount,
+  Cli_Commands_Validate_ValidateConfig_NewTrackerCount,
+  Cli_Commands_Validate_ValidateConfig_ParseResult,
+  Cli_Commands_Validate_ValidateConfig_Raw,
+  Cli_Commands_Validate_ValidateConfig_Returns,
+  Cli_Commands_Validate_ValidateConfig_Shortcode,
+  Cli_Commands_Validate_ValidateConfig_ShortcodeCounts,
+  Cli_Commands_Validate_ValidateConfig_TrackerNameCounts,
+  Cli_Commands_Validate_ValidateConfig_Trackers,
 } from '../../types/cli/commands/validate.d.ts';
 
 /**
@@ -27,12 +27,16 @@ import type {
  * Parses and validates a configuration file against the schema,
  * then checks for duplicate shortcodes and tracker names.
  *
+ * @param {Cli_Commands_Validate_ValidateConfig_ConfigPath} configPath - Config path.
+ *
+ * @returns {Cli_Commands_Validate_ValidateConfig_Returns}
+ *
  * @since 2.0.0
  */
-function validateConfig(configPath: CliCommandsValidateValidateConfigConfigPath): CliCommandsValidateValidateConfigReturn {
-  const errors: CliCommandsValidateValidateConfigErrors = [];
-  const raw: CliCommandsValidateValidateConfigRaw = loadConfig(configPath);
-  const parseResult: CliCommandsValidateValidateConfigParseResult = configSchema.safeParse(raw);
+function validateConfig(configPath: Cli_Commands_Validate_ValidateConfig_ConfigPath): Cli_Commands_Validate_ValidateConfig_Returns {
+  const errors: Cli_Commands_Validate_ValidateConfig_Errors = [];
+  const raw: Cli_Commands_Validate_ValidateConfig_Raw = loadConfig(configPath);
+  const parseResult: Cli_Commands_Validate_ValidateConfig_ParseResult = configSchema.safeParse(raw);
 
   if (parseResult['success'] === false) {
     for (const issue of parseResult['error']['issues']) {
@@ -40,44 +44,45 @@ function validateConfig(configPath: CliCommandsValidateValidateConfigConfigPath)
     }
 
     return {
-      valid: false, errors,
+      valid: false,
+      errors,
     };
   }
 
-  const config: CliCommandsValidateValidateConfigConfig = parseResult['data'];
-  const shortcodeCounts: CliCommandsValidateValidateConfigShortcodeCounts = new Map<string, number>();
+  const config: Cli_Commands_Validate_ValidateConfig_Config = parseResult['data'];
+  const shortcodeCounts: Cli_Commands_Validate_ValidateConfig_ShortcodeCounts = new Map<string, number>();
 
-  const links: CliCommandsValidateValidateConfigLinks = config['links'];
-  const items: CliCommandsValidateValidateConfigItems = links['items'];
+  const links: Cli_Commands_Validate_ValidateConfig_Links = config['links'];
+  const items: Cli_Commands_Validate_ValidateConfig_Items = links['items'];
 
   for (const item of items) {
-    const existingCount: CliCommandsValidateValidateConfigExistingShortcodeCount = shortcodeCounts.get(item['shortcode']);
-    const newCount: CliCommandsValidateValidateConfigNewShortcodeCount = (existingCount ?? 0) + 1;
+    const existingShortcodeCount: Cli_Commands_Validate_ValidateConfig_ExistingShortcodeCount = shortcodeCounts.get(item['shortcode']);
+    const newShortcodeCount: Cli_Commands_Validate_ValidateConfig_NewShortcodeCount = (existingShortcodeCount ?? 0) + 1;
 
-    shortcodeCounts.set(item['shortcode'], newCount);
+    shortcodeCounts.set(item['shortcode'], newShortcodeCount);
   }
 
   for (const shortcodeEntry of shortcodeCounts) {
-    const shortcode: CliCommandsValidateValidateConfigShortcodeEntry = shortcodeEntry as CliCommandsValidateValidateConfigShortcodeEntry;
+    const shortcode: Cli_Commands_Validate_ValidateConfig_Shortcode = shortcodeEntry as Cli_Commands_Validate_ValidateConfig_Shortcode;
 
     if (shortcode[1] > 1) {
       errors.push(`Duplicate shortcode "${shortcode[0]}" found in links.`);
     }
   }
 
-  const trackerNameCounts: CliCommandsValidateValidateConfigTrackerNameCounts = new Map<string, number>();
+  const trackerNameCounts: Cli_Commands_Validate_ValidateConfig_TrackerNameCounts = new Map<string, number>();
 
-  const trackers: CliCommandsValidateValidateConfigTrackers = config['trackers'];
+  const trackers: Cli_Commands_Validate_ValidateConfig_Trackers = config['trackers'];
 
   for (const tracker of trackers) {
-    const existingCount: CliCommandsValidateValidateConfigExistingTrackerCount = trackerNameCounts.get(tracker['name']);
-    const newCount: CliCommandsValidateValidateConfigNewTrackerCount = (existingCount ?? 0) + 1;
+    const existingTrackerCount: Cli_Commands_Validate_ValidateConfig_ExistingTrackerCount = trackerNameCounts.get(tracker['name']);
+    const newTrackerCount: Cli_Commands_Validate_ValidateConfig_NewTrackerCount = (existingTrackerCount ?? 0) + 1;
 
-    trackerNameCounts.set(tracker['name'], newCount);
+    trackerNameCounts.set(tracker['name'], newTrackerCount);
   }
 
   for (const trackerEntry of trackerNameCounts) {
-    const entry: CliCommandsValidateValidateConfigTrackerEntry = trackerEntry as CliCommandsValidateValidateConfigTrackerEntry;
+    const entry: Cli_Commands_Validate_ValidateConfig_Entry = trackerEntry as Cli_Commands_Validate_ValidateConfig_Entry;
 
     if (entry[1] > 1) {
       errors.push(`Duplicate tracker name "${entry[0]}" found in trackers.`);
@@ -85,7 +90,8 @@ function validateConfig(configPath: CliCommandsValidateValidateConfigConfigPath)
   }
 
   return {
-    valid: errors['length'] === 0, errors,
+    valid: errors['length'] === 0,
+    errors,
   };
 }
 

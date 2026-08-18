@@ -5,21 +5,62 @@ import {
 } from '../../../worker/landing/page.js';
 
 import type {
-  TestsWorkerLandingPageBody,
-  TestsWorkerLandingPageConfig,
-  TestsWorkerLandingPageContentType,
-  TestsWorkerLandingPageDebugConfig,
-  TestsWorkerLandingPageMasked,
-  TestsWorkerLandingPageMaskedLinks,
-  TestsWorkerLandingPageMaskedLinksRecord,
-  TestsWorkerLandingPageMaskedSettings,
-  TestsWorkerLandingPageMaskedTrackers,
-  TestsWorkerLandingPageMaskResult,
-  TestsWorkerLandingPageNoFallbackConfig,
-  TestsWorkerLandingPageResponse,
+  Tests_Worker_Landing_Page_LandingPage_ContainsBrandedShortLinksText_Body,
+  Tests_Worker_Landing_Page_LandingPage_ContainsBrandedShortLinksText_Response,
+  Tests_Worker_Landing_Page_LandingPage_ContainsGitHubLink_Body,
+  Tests_Worker_Landing_Page_LandingPage_ContainsGitHubLink_Response,
+  Tests_Worker_Landing_Page_LandingPage_DoesNotShowConfigInNonDebugMode_Body,
+  Tests_Worker_Landing_Page_LandingPage_DoesNotShowConfigInNonDebugMode_Response,
+  Tests_Worker_Landing_Page_LandingPage_ReturnsHTMLResponseWithCorrectContentType_ContentType,
+  Tests_Worker_Landing_Page_LandingPage_ReturnsHTMLResponseWithCorrectContentType_Response,
+  Tests_Worker_Landing_Page_LandingPage_ShowsMaskedConfigInDebugMode_Body,
+  Tests_Worker_Landing_Page_LandingPage_ShowsMaskedConfigInDebugMode_DebugConfig,
+  Tests_Worker_Landing_Page_LandingPage_ShowsMaskedConfigInDebugMode_Response,
+  Tests_Worker_Landing_Page_MaskConfig_MasksFacebookTrackerSecrets_FacebookConfig,
+  Tests_Worker_Landing_Page_MaskConfig_MasksFacebookTrackerSecrets_Masked,
+  Tests_Worker_Landing_Page_MaskConfig_MasksFacebookTrackerSecrets_Trackers,
+  Tests_Worker_Landing_Page_MaskConfig_MasksGa4TrackerSecrets_Masked,
+  Tests_Worker_Landing_Page_MaskConfig_MasksGa4TrackerSecrets_Trackers,
+  Tests_Worker_Landing_Page_MaskConfig_MasksNtfyReverseProxyTrackerSecrets_Masked,
+  Tests_Worker_Landing_Page_MaskConfig_MasksNtfyReverseProxyTrackerSecrets_NtfyReverseProxyConfig,
+  Tests_Worker_Landing_Page_MaskConfig_MasksNtfyReverseProxyTrackerSecrets_Trackers,
+  Tests_Worker_Landing_Page_MaskConfig_MasksNtfyReverseProxyTrackerSecretsWithoutToken_Masked,
+  Tests_Worker_Landing_Page_MaskConfig_MasksNtfyReverseProxyTrackerSecretsWithoutToken_NtfyReverseProxyNoTokenConfig,
+  Tests_Worker_Landing_Page_MaskConfig_MasksNtfyReverseProxyTrackerSecretsWithoutToken_Trackers,
+  Tests_Worker_Landing_Page_MaskConfig_MasksNtfyTrackerSecrets_Masked,
+  Tests_Worker_Landing_Page_MaskConfig_MasksNtfyTrackerSecrets_NtfyConfig,
+  Tests_Worker_Landing_Page_MaskConfig_MasksNtfyTrackerSecrets_Trackers,
+  Tests_Worker_Landing_Page_MaskConfig_MasksPlainTextTrackerSecrets_Masked,
+  Tests_Worker_Landing_Page_MaskConfig_MasksPlainTextTrackerSecrets_PlainTextConfig,
+  Tests_Worker_Landing_Page_MaskConfig_MasksPlainTextTrackerSecrets_Trackers,
+  Tests_Worker_Landing_Page_MaskConfig_MasksPlainTextTrackerSecretsWithoutToken_Masked,
+  Tests_Worker_Landing_Page_MaskConfig_MasksPlainTextTrackerSecretsWithoutToken_PlainTextNoTokenConfig,
+  Tests_Worker_Landing_Page_MaskConfig_MasksPlainTextTrackerSecretsWithoutToken_Trackers,
+  Tests_Worker_Landing_Page_MaskConfig_MasksPosthogTrackerSecrets_Masked,
+  Tests_Worker_Landing_Page_MaskConfig_MasksPosthogTrackerSecrets_PosthogConfig,
+  Tests_Worker_Landing_Page_MaskConfig_MasksPosthogTrackerSecrets_Trackers,
+  Tests_Worker_Landing_Page_MaskConfig_MasksRedirectUrlInLinkItems_Links,
+  Tests_Worker_Landing_Page_MaskConfig_MasksRedirectUrlInLinkItems_Masked,
+  Tests_Worker_Landing_Page_MaskConfig_OmitsFallbackUrlWhenUndefined_Links,
+  Tests_Worker_Landing_Page_MaskConfig_OmitsFallbackUrlWhenUndefined_Masked,
+  Tests_Worker_Landing_Page_MaskConfig_OmitsFallbackUrlWhenUndefined_NoFallbackConfig,
+  Tests_Worker_Landing_Page_MaskConfig_PreservesFallbackUrlUnmasked_Links,
+  Tests_Worker_Landing_Page_MaskConfig_PreservesFallbackUrlUnmasked_Masked,
+  Tests_Worker_Landing_Page_MaskConfig_PreservesSettingsUnmasked_Masked,
+  Tests_Worker_Landing_Page_MaskConfig_PreservesSettingsUnmasked_Settings,
+  Tests_Worker_Landing_Page_MaskValue_FullyMasksAllValues_MaskedAbc,
+  Tests_Worker_Landing_Page_MaskValue_FullyMasksAllValues_MaskedMeasurementId,
+  Tests_Worker_Landing_Page_MaskValue_FullyMasksAllValues_MaskedSecret,
+  Tests_Worker_Landing_Page_MockConfig,
+  Tests_Worker_Landing_Page_NotFoundPage_Contains404Badge_Body,
+  Tests_Worker_Landing_Page_NotFoundPage_Contains404Badge_Response,
+  Tests_Worker_Landing_Page_NotFoundPage_ContainsShortcodeNotFoundText_Body,
+  Tests_Worker_Landing_Page_NotFoundPage_ContainsShortcodeNotFoundText_Response,
+  Tests_Worker_Landing_Page_NotFoundPage_Returns404WithCorrectContentType_ContentType,
+  Tests_Worker_Landing_Page_NotFoundPage_Returns404WithCorrectContentType_Response,
 } from '../../../types/tests/worker/landing/page.test.d.ts';
 
-const mockConfig: TestsWorkerLandingPageConfig = {
+const mockConfig: Tests_Worker_Landing_Page_MockConfig = {
   settings: {
     worker_name: 'test-worker',
     base_domain: 'bsl.example.com',
@@ -50,11 +91,11 @@ const mockConfig: TestsWorkerLandingPageConfig = {
 
 describe('landingPage', () => {
   it('returns HTML response with correct content type', () => {
-    const response: TestsWorkerLandingPageResponse = landingPage(mockConfig);
+    const response: Tests_Worker_Landing_Page_LandingPage_ReturnsHTMLResponseWithCorrectContentType_Response = landingPage(mockConfig);
 
     expect(response['status']).toBe(200);
 
-    const contentType: TestsWorkerLandingPageContentType = response['headers'].get('Content-Type');
+    const contentType: Tests_Worker_Landing_Page_LandingPage_ReturnsHTMLResponseWithCorrectContentType_ContentType = response['headers'].get('Content-Type');
 
     expect(contentType).toBe('text/html; charset=utf-8');
 
@@ -62,8 +103,8 @@ describe('landingPage', () => {
   });
 
   it('contains "Branded Short Links" text', async () => {
-    const response: TestsWorkerLandingPageResponse = landingPage(mockConfig);
-    const body: TestsWorkerLandingPageBody = await response.text();
+    const response: Tests_Worker_Landing_Page_LandingPage_ContainsBrandedShortLinksText_Response = landingPage(mockConfig);
+    const body: Tests_Worker_Landing_Page_LandingPage_ContainsBrandedShortLinksText_Body = await response.text();
 
     expect(body).toContain('Branded Short Links');
 
@@ -71,8 +112,8 @@ describe('landingPage', () => {
   });
 
   it('contains GitHub link', async () => {
-    const response: TestsWorkerLandingPageResponse = landingPage(mockConfig);
-    const body: TestsWorkerLandingPageBody = await response.text();
+    const response: Tests_Worker_Landing_Page_LandingPage_ContainsGitHubLink_Response = landingPage(mockConfig);
+    const body: Tests_Worker_Landing_Page_LandingPage_ContainsGitHubLink_Body = await response.text();
 
     expect(body).toContain('https://github.com/cbnventures/branded-short-links');
 
@@ -80,15 +121,16 @@ describe('landingPage', () => {
   });
 
   it('shows masked config in debug mode', async () => {
-    const debugConfig: TestsWorkerLandingPageDebugConfig = {
+    const debugConfig: Tests_Worker_Landing_Page_LandingPage_ShowsMaskedConfigInDebugMode_DebugConfig = {
       ...mockConfig,
       settings: {
-        ...mockConfig['settings'], show_response_output: true,
+        ...mockConfig['settings'],
+        show_response_output: true,
       },
     };
 
-    const response: TestsWorkerLandingPageResponse = landingPage(debugConfig);
-    const body: TestsWorkerLandingPageBody = await response.text();
+    const response: Tests_Worker_Landing_Page_LandingPage_ShowsMaskedConfigInDebugMode_Response = landingPage(debugConfig);
+    const body: Tests_Worker_Landing_Page_LandingPage_ShowsMaskedConfigInDebugMode_Body = await response.text();
 
     expect(body).toContain('class="debug"');
 
@@ -102,8 +144,8 @@ describe('landingPage', () => {
   });
 
   it('does not show config in non-debug mode', async () => {
-    const response: TestsWorkerLandingPageResponse = landingPage(mockConfig);
-    const body: TestsWorkerLandingPageBody = await response.text();
+    const response: Tests_Worker_Landing_Page_LandingPage_DoesNotShowConfigInNonDebugMode_Response = landingPage(mockConfig);
+    const body: Tests_Worker_Landing_Page_LandingPage_DoesNotShowConfigInNonDebugMode_Body = await response.text();
 
     expect(body).not.toContain('class="debug"');
 
@@ -117,11 +159,11 @@ describe('landingPage', () => {
 
 describe('notFoundPage', () => {
   it('returns 404 with correct content type', () => {
-    const response: TestsWorkerLandingPageResponse = notFoundPage(mockConfig);
+    const response: Tests_Worker_Landing_Page_NotFoundPage_Returns404WithCorrectContentType_Response = notFoundPage(mockConfig);
 
     expect(response['status']).toBe(404);
 
-    const contentType: TestsWorkerLandingPageContentType = response['headers'].get('Content-Type');
+    const contentType: Tests_Worker_Landing_Page_NotFoundPage_Returns404WithCorrectContentType_ContentType = response['headers'].get('Content-Type');
 
     expect(contentType).toBe('text/html; charset=utf-8');
 
@@ -129,8 +171,8 @@ describe('notFoundPage', () => {
   });
 
   it('contains "Shortcode Not Found" text', async () => {
-    const response: TestsWorkerLandingPageResponse = notFoundPage(mockConfig);
-    const body: TestsWorkerLandingPageBody = await response.text();
+    const response: Tests_Worker_Landing_Page_NotFoundPage_ContainsShortcodeNotFoundText_Response = notFoundPage(mockConfig);
+    const body: Tests_Worker_Landing_Page_NotFoundPage_ContainsShortcodeNotFoundText_Body = await response.text();
 
     expect(body).toContain('Shortcode Not Found');
 
@@ -138,8 +180,8 @@ describe('notFoundPage', () => {
   });
 
   it('contains 404 badge', async () => {
-    const response: TestsWorkerLandingPageResponse = notFoundPage(mockConfig);
-    const body: TestsWorkerLandingPageBody = await response.text();
+    const response: Tests_Worker_Landing_Page_NotFoundPage_Contains404Badge_Response = notFoundPage(mockConfig);
+    const body: Tests_Worker_Landing_Page_NotFoundPage_Contains404Badge_Body = await response.text();
 
     expect(body).toContain('404');
 
@@ -151,15 +193,15 @@ describe('notFoundPage', () => {
 
 describe('maskValue', () => {
   it('fully masks all values', () => {
-    const maskedAbc: TestsWorkerLandingPageMaskResult = maskValue('abc');
+    const maskedAbc: Tests_Worker_Landing_Page_MaskValue_FullyMasksAllValues_MaskedAbc = maskValue('abc');
 
     expect(maskedAbc).toBe('\u2022\u2022\u2022\u2022\u2022\u2022');
 
-    const maskedSecret: TestsWorkerLandingPageMaskResult = maskValue('secret123');
+    const maskedSecret: Tests_Worker_Landing_Page_MaskValue_FullyMasksAllValues_MaskedSecret = maskValue('secret123');
 
     expect(maskedSecret).toBe('\u2022\u2022\u2022\u2022\u2022\u2022');
 
-    const maskedMeasurementId: TestsWorkerLandingPageMaskResult = maskValue('G-XXXXXXXXXX');
+    const maskedMeasurementId: Tests_Worker_Landing_Page_MaskValue_FullyMasksAllValues_MaskedMeasurementId = maskValue('G-XXXXXXXXXX');
 
     expect(maskedMeasurementId).toBe('\u2022\u2022\u2022\u2022\u2022\u2022');
 
@@ -171,8 +213,8 @@ describe('maskValue', () => {
 
 describe('maskConfig', () => {
   it('masks redirect_url in link items', () => {
-    const masked: TestsWorkerLandingPageMasked = maskConfig(mockConfig);
-    const links: TestsWorkerLandingPageMaskedLinks = masked['links'] as TestsWorkerLandingPageMaskedLinks;
+    const masked: Tests_Worker_Landing_Page_MaskConfig_MasksRedirectUrlInLinkItems_Masked = maskConfig(mockConfig);
+    const links: Tests_Worker_Landing_Page_MaskConfig_MasksRedirectUrlInLinkItems_Links = masked['links'] as Tests_Worker_Landing_Page_MaskConfig_MasksRedirectUrlInLinkItems_Links;
 
     expect(links['items'][0]!['redirect_url']).not.toBe('https://github.com/example');
 
@@ -182,8 +224,8 @@ describe('maskConfig', () => {
   });
 
   it('masks ga4 tracker secrets', () => {
-    const masked: TestsWorkerLandingPageMasked = maskConfig(mockConfig);
-    const trackers: TestsWorkerLandingPageMaskedTrackers = masked['trackers'] as TestsWorkerLandingPageMaskedTrackers;
+    const masked: Tests_Worker_Landing_Page_MaskConfig_MasksGa4TrackerSecrets_Masked = maskConfig(mockConfig);
+    const trackers: Tests_Worker_Landing_Page_MaskConfig_MasksGa4TrackerSecrets_Trackers = masked['trackers'] as Tests_Worker_Landing_Page_MaskConfig_MasksGa4TrackerSecrets_Trackers;
 
     expect(trackers[0]!['measurement_id']).not.toBe('G-XXXXXXXXXX');
 
@@ -192,9 +234,145 @@ describe('maskConfig', () => {
     return;
   });
 
+  it('masks facebook tracker secrets', () => {
+    const facebookConfig: Tests_Worker_Landing_Page_MaskConfig_MasksFacebookTrackerSecrets_FacebookConfig = {
+      ...mockConfig,
+      trackers: [{
+        name: 'facebook',
+        type: 'facebook',
+        pixel_id: '1234567890',
+      }],
+    };
+    const masked: Tests_Worker_Landing_Page_MaskConfig_MasksFacebookTrackerSecrets_Masked = maskConfig(facebookConfig);
+    const trackers: Tests_Worker_Landing_Page_MaskConfig_MasksFacebookTrackerSecrets_Trackers = masked['trackers'] as Tests_Worker_Landing_Page_MaskConfig_MasksFacebookTrackerSecrets_Trackers;
+
+    expect(trackers[0]!['pixel_id']).not.toBe('1234567890');
+
+    return;
+  });
+
+  it('masks ntfy tracker secrets', () => {
+    const ntfyConfig: Tests_Worker_Landing_Page_MaskConfig_MasksNtfyTrackerSecrets_NtfyConfig = {
+      ...mockConfig,
+      trackers: [{
+        name: 'ntfy',
+        type: 'ntfy',
+        server: 'https://ntfy.example.com',
+        topic: 'alerts',
+        token: 'tk_abc123',
+      }],
+    };
+    const masked: Tests_Worker_Landing_Page_MaskConfig_MasksNtfyTrackerSecrets_Masked = maskConfig(ntfyConfig);
+    const trackers: Tests_Worker_Landing_Page_MaskConfig_MasksNtfyTrackerSecrets_Trackers = masked['trackers'] as Tests_Worker_Landing_Page_MaskConfig_MasksNtfyTrackerSecrets_Trackers;
+
+    expect(trackers[0]!['server']).not.toBe('https://ntfy.example.com');
+
+    expect(trackers[0]!['token']).not.toBe('tk_abc123');
+
+    return;
+  });
+
+  it('masks ntfy-reverse-proxy tracker secrets', () => {
+    const ntfyReverseProxyConfig: Tests_Worker_Landing_Page_MaskConfig_MasksNtfyReverseProxyTrackerSecrets_NtfyReverseProxyConfig = {
+      ...mockConfig,
+      trackers: [{
+        name: 'ntfy-reverse-proxy',
+        type: 'ntfy-reverse-proxy',
+        url: 'https://ntfy-proxy.example.com',
+        token: 'proxytoken123',
+      }],
+    };
+    const masked: Tests_Worker_Landing_Page_MaskConfig_MasksNtfyReverseProxyTrackerSecrets_Masked = maskConfig(ntfyReverseProxyConfig);
+    const trackers: Tests_Worker_Landing_Page_MaskConfig_MasksNtfyReverseProxyTrackerSecrets_Trackers = masked['trackers'] as Tests_Worker_Landing_Page_MaskConfig_MasksNtfyReverseProxyTrackerSecrets_Trackers;
+
+    expect(trackers[0]!['url']).not.toBe('https://ntfy-proxy.example.com');
+
+    expect(trackers[0]!['token']).not.toBe('proxytoken123');
+
+    return;
+  });
+
+  it('masks ntfy-reverse-proxy tracker secrets without token', () => {
+    const ntfyReverseProxyNoTokenConfig: Tests_Worker_Landing_Page_MaskConfig_MasksNtfyReverseProxyTrackerSecretsWithoutToken_NtfyReverseProxyNoTokenConfig = {
+      ...mockConfig,
+      trackers: [{
+        name: 'ntfy-reverse-proxy',
+        type: 'ntfy-reverse-proxy',
+        url: 'https://ntfy-proxy.example.com',
+      }],
+    };
+    const masked: Tests_Worker_Landing_Page_MaskConfig_MasksNtfyReverseProxyTrackerSecretsWithoutToken_Masked = maskConfig(ntfyReverseProxyNoTokenConfig);
+    const trackers: Tests_Worker_Landing_Page_MaskConfig_MasksNtfyReverseProxyTrackerSecretsWithoutToken_Trackers = masked['trackers'] as Tests_Worker_Landing_Page_MaskConfig_MasksNtfyReverseProxyTrackerSecretsWithoutToken_Trackers;
+
+    expect(trackers[0]!['url']).not.toBe('https://ntfy-proxy.example.com');
+
+    expect('token' in trackers[0]!).toBe(false);
+
+    return;
+  });
+
+  it('masks posthog tracker secrets', () => {
+    const posthogConfig: Tests_Worker_Landing_Page_MaskConfig_MasksPosthogTrackerSecrets_PosthogConfig = {
+      ...mockConfig,
+      trackers: [{
+        name: 'posthog',
+        type: 'posthog',
+        host: 'https://posthog.example.com',
+        api_key: 'phc_abc123',
+      }],
+    };
+    const masked: Tests_Worker_Landing_Page_MaskConfig_MasksPosthogTrackerSecrets_Masked = maskConfig(posthogConfig);
+    const trackers: Tests_Worker_Landing_Page_MaskConfig_MasksPosthogTrackerSecrets_Trackers = masked['trackers'] as Tests_Worker_Landing_Page_MaskConfig_MasksPosthogTrackerSecrets_Trackers;
+
+    expect(trackers[0]!['host']).not.toBe('https://posthog.example.com');
+
+    expect(trackers[0]!['api_key']).not.toBe('phc_abc123');
+
+    return;
+  });
+
+  it('masks plain-text tracker secrets', () => {
+    const plainTextConfig: Tests_Worker_Landing_Page_MaskConfig_MasksPlainTextTrackerSecrets_PlainTextConfig = {
+      ...mockConfig,
+      trackers: [{
+        name: 'plain-text',
+        type: 'plain-text',
+        url: 'https://webhook.example.com',
+        token: 'webhooktoken123',
+      }],
+    };
+    const masked: Tests_Worker_Landing_Page_MaskConfig_MasksPlainTextTrackerSecrets_Masked = maskConfig(plainTextConfig);
+    const trackers: Tests_Worker_Landing_Page_MaskConfig_MasksPlainTextTrackerSecrets_Trackers = masked['trackers'] as Tests_Worker_Landing_Page_MaskConfig_MasksPlainTextTrackerSecrets_Trackers;
+
+    expect(trackers[0]!['url']).not.toBe('https://webhook.example.com');
+
+    expect(trackers[0]!['token']).not.toBe('webhooktoken123');
+
+    return;
+  });
+
+  it('masks plain-text tracker secrets without token', () => {
+    const plainTextNoTokenConfig: Tests_Worker_Landing_Page_MaskConfig_MasksPlainTextTrackerSecretsWithoutToken_PlainTextNoTokenConfig = {
+      ...mockConfig,
+      trackers: [{
+        name: 'plain-text',
+        type: 'plain-text',
+        url: 'https://webhook.example.com',
+      }],
+    };
+    const masked: Tests_Worker_Landing_Page_MaskConfig_MasksPlainTextTrackerSecretsWithoutToken_Masked = maskConfig(plainTextNoTokenConfig);
+    const trackers: Tests_Worker_Landing_Page_MaskConfig_MasksPlainTextTrackerSecretsWithoutToken_Trackers = masked['trackers'] as Tests_Worker_Landing_Page_MaskConfig_MasksPlainTextTrackerSecretsWithoutToken_Trackers;
+
+    expect(trackers[0]!['url']).not.toBe('https://webhook.example.com');
+
+    expect('token' in trackers[0]!).toBe(false);
+
+    return;
+  });
+
   it('preserves settings unmasked', () => {
-    const masked: TestsWorkerLandingPageMasked = maskConfig(mockConfig);
-    const settings: TestsWorkerLandingPageMaskedSettings = masked['settings'] as TestsWorkerLandingPageMaskedSettings;
+    const masked: Tests_Worker_Landing_Page_MaskConfig_PreservesSettingsUnmasked_Masked = maskConfig(mockConfig);
+    const settings: Tests_Worker_Landing_Page_MaskConfig_PreservesSettingsUnmasked_Settings = masked['settings'] as Tests_Worker_Landing_Page_MaskConfig_PreservesSettingsUnmasked_Settings;
 
     expect(settings['base_domain']).toBe('bsl.example.com');
 
@@ -202,21 +380,21 @@ describe('maskConfig', () => {
   });
 
   it('preserves fallback_url unmasked', () => {
-    const masked: TestsWorkerLandingPageMasked = maskConfig(mockConfig);
-    const links: TestsWorkerLandingPageMaskedLinks = masked['links'] as TestsWorkerLandingPageMaskedLinks;
+    const masked: Tests_Worker_Landing_Page_MaskConfig_PreservesFallbackUrlUnmasked_Masked = maskConfig(mockConfig);
+    const links: Tests_Worker_Landing_Page_MaskConfig_PreservesFallbackUrlUnmasked_Links = masked['links'] as Tests_Worker_Landing_Page_MaskConfig_PreservesFallbackUrlUnmasked_Links;
 
-    expect(links['fallback_url']).toBe('https://example.com');
+    expect(links['fallback_url']).toBe('••••••');
 
     return;
   });
 
   it('omits fallback_url when undefined', () => {
-    const noFallbackConfig: TestsWorkerLandingPageNoFallbackConfig = {
+    const noFallbackConfig: Tests_Worker_Landing_Page_MaskConfig_OmitsFallbackUrlWhenUndefined_NoFallbackConfig = {
       ...mockConfig,
       links: { items: mockConfig['links']['items'] },
     };
-    const masked: TestsWorkerLandingPageMasked = maskConfig(noFallbackConfig);
-    const links: TestsWorkerLandingPageMaskedLinksRecord = masked['links'] as TestsWorkerLandingPageMaskedLinksRecord;
+    const masked: Tests_Worker_Landing_Page_MaskConfig_OmitsFallbackUrlWhenUndefined_Masked = maskConfig(noFallbackConfig);
+    const links: Tests_Worker_Landing_Page_MaskConfig_OmitsFallbackUrlWhenUndefined_Links = masked['links'] as Tests_Worker_Landing_Page_MaskConfig_OmitsFallbackUrlWhenUndefined_Links;
 
     expect(links['fallback_url']).toBeUndefined();
 

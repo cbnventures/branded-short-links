@@ -1,0 +1,97 @@
+---
+id: terminology
+title: Terminology
+description: Define shortcode, tracker, landing page, and Cloudflare deployment terms used throughout the Branded Short Links documentation site.
+sidebar_position: 4
+keywords:
+  - branded short links
+  - terminology
+  - glossary
+  - shortcode
+  - tracker
+  - cloudflare workers
+  - config.json
+tags:
+  - terminology
+  - glossary
+  - reference
+  - concepts
+---
+
+Define the domain-specific terms used throughout the Branded Short Links documentation, from shortcode routing to tracker analytics and Cloudflare deployment.
+
+## 404 Page
+
+The page the worker serves when a request matches no shortcode, no fallback URL is set, and the path isn't the root. It replaces a generic error page with a response in the same branded style as the landing page.
+
+## API Token
+
+The Cloudflare credential that authorizes the CLI to deploy the worker, requiring Workers Scripts, Workers Routes, and Email Routing Rules edit permissions. The CLI resolves it from a `.env` file or the `CLOUDFLARE_API_TOKEN` environment variable, prompting for one when none is found.
+
+## Base Domain
+
+The custom domain a set of shortcodes lives on, such as `example.com` or a subdomain like `go.example.com`. Every shortcode resolves as a path underneath it.
+
+## Cloudflare Worker
+
+The edge function that runs on Cloudflare's network, matching each incoming request against a configured shortcode and firing trackers in the background. It returns the redirect, fallback, landing page, or 404 response for the deployed domain.
+
+## Config
+
+The `config.json` file that defines a deployment's settings, links, and trackers in one place. The CLI reads and writes it directly, and it stays out of version control since it can hold live tracker credentials.
+
+## Custom Domain
+
+A Cloudflare Workers route that binds the worker to the full base domain path instead of a wildcard-style route. branded-short-links requires this route type because shortcode matching depends on the complete path from the domain root.
+
+## Facebook
+
+A tracker type that fires a Meta Pixel PageView event through Facebook's server-side noscript endpoint. It only needs a `pixel_id`, so ad attribution works without any client-side script.
+
+## Fallback URL
+
+The redirect destination used when a request doesn't match any configured shortcode. It's optional — without one, unmatched requests see the landing page or a 404 page instead.
+
+## GA4
+
+Google Analytics 4, a tracker type that sends `select_content` events through the Measurement Protocol server-side API. It identifies visits by the `CF-RAY` header, so each redirect counts as a distinct client rather than a returning one.
+
+## Landing Page
+
+The branded HTML page the worker serves for browser GET requests at the root path when no fallback URL is configured. It can optionally display the current config, with sensitive values masked, for debugging.
+
+## Link Item
+
+A single entry in the config that maps one shortcode to a destination URL and an HTTP redirect status. Each item is independent, so trackers and behavior can differ from one shortcode to the next.
+
+## ntfy
+
+A tracker type that sends a push notification with full request and Cloudflare geo details to an ntfy server when a shortcode is visited. It authenticates with a Bearer token and needs a `server` URL and `topic` name.
+
+## Plain Text
+
+A tracker type that posts a plain-text summary of the request and Cloudflare geo details to any webhook endpoint. It carries the same data as the ntfy tracker but without Markdown formatting, so any `text/plain` receiver can consume it.
+
+## PostHog
+
+A tracker type that captures a `User Request Captured` event to a PostHog project, recording the shortcode, redirect URL, and originating request URL. It identifies visits by the `CF-RAY` header first, falling back to the client's IP address.
+
+## Reverse Proxy for ntfy
+
+A tracker type that sends the same Markdown-formatted notification as ntfy, but through a single ntfy-reverse-proxy `url` instead of separate server and topic fields. Its Bearer token is optional rather than required.
+
+## Shortcode
+
+The path segment after the base domain that maps to a destination URL, such as `/github` in `example.com/github`. It must start with a `/` and be at least 2 characters, and a trailing slash is stripped before matching.
+
+## Tracker
+
+An analytics integration attached to a link that fires automatically in the background when its shortcode is visited. Configured trackers all run in parallel, and one tracker's failure never blocks the redirect or the others.
+
+## WAF
+
+Cloudflare's Web Application Firewall, configurable with custom rules that block scanners and high-threat traffic while still letting visitors reach configured shortcodes. It's recommended for deployments that draw unwanted probing traffic after launch.
+
+## Wrangler
+
+Cloudflare's deployment CLI, which the `bsl deploy` command runs against a generated `wrangler.toml` file to publish the worker. The CLI regenerates this file from the current config on every deploy, so manual edits to it don't persist.

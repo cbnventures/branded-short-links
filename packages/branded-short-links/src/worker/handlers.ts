@@ -3,22 +3,22 @@ import { landingPage, notFoundPage } from './landing/page.js';
 import { fireTrackers } from './trackers.js';
 
 import type {
-  WorkerIndexHandleRequestConfig,
-  WorkerIndexHandleRequestCtx,
-  WorkerIndexHandleRequestFallbackLogPayload,
-  WorkerIndexHandleRequestFallbackResponse,
-  WorkerIndexHandleRequestFallbackUrl,
-  WorkerIndexHandleRequestFireTrackersPromise,
-  WorkerIndexHandleRequestPathname,
-  WorkerIndexHandleRequestRedirectLogPayload,
-  WorkerIndexHandleRequestRedirectResponse,
-  WorkerIndexHandleRequestRequest,
-  WorkerIndexHandleRequestRequestUrl,
-  WorkerIndexHandleRequestReturn,
-  WorkerIndexHandleRequestRootLogPayload,
-  WorkerIndexHandleRequestRootResponse,
-  WorkerIndexHandleRequestShortcode,
-} from '../types/worker/index.d.ts';
+  Worker_Handlers_HandleRequest_Config,
+  Worker_Handlers_HandleRequest_Ctx,
+  Worker_Handlers_HandleRequest_FallbackLogPayload,
+  Worker_Handlers_HandleRequest_FallbackResponse,
+  Worker_Handlers_HandleRequest_FallbackUrl,
+  Worker_Handlers_HandleRequest_FireTrackersPromise,
+  Worker_Handlers_HandleRequest_Pathname,
+  Worker_Handlers_HandleRequest_RedirectLogPayload,
+  Worker_Handlers_HandleRequest_RedirectResponse,
+  Worker_Handlers_HandleRequest_Request,
+  Worker_Handlers_HandleRequest_RequestUrl,
+  Worker_Handlers_HandleRequest_Returns,
+  Worker_Handlers_HandleRequest_RootLogPayload,
+  Worker_Handlers_HandleRequest_RootResponse,
+  Worker_Handlers_HandleRequest_Shortcode,
+} from '../types/worker/handlers.d.ts';
 
 /**
  * Worker - Handlers - Handle Request.
@@ -29,15 +29,15 @@ import type {
  * @since 2.0.0
  */
 async function handleRequest(
-  request: WorkerIndexHandleRequestRequest,
-  config: WorkerIndexHandleRequestConfig,
-  ctx: WorkerIndexHandleRequestCtx,
-): WorkerIndexHandleRequestReturn {
-  const requestUrl: WorkerIndexHandleRequestRequestUrl = new URL(request['url']);
+  request: Worker_Handlers_HandleRequest_Request,
+  config: Worker_Handlers_HandleRequest_Config,
+  ctx: Worker_Handlers_HandleRequest_Ctx,
+): Worker_Handlers_HandleRequest_Returns {
+  const requestUrl: Worker_Handlers_HandleRequest_RequestUrl = new URL(request['url']);
 
   // Match shortcode (strip trailing slash).
-  const pathname: WorkerIndexHandleRequestPathname = requestUrl['pathname'].replace(trailingSlashPattern, '') || '/';
-  const shortcode: WorkerIndexHandleRequestShortcode = config['links']['items'].find((item) => pathname === item['shortcode']);
+  const pathname: Worker_Handlers_HandleRequest_Pathname = requestUrl['pathname'].replace(trailingSlashPattern, '') || '/';
+  const shortcode: Worker_Handlers_HandleRequest_Shortcode = config['links']['items'].find((item) => pathname === item['shortcode']);
 
   // GET/HEAD → landing page, not found, fallback, or redirect.
   if (request['method'] === 'GET' || request['method'] === 'HEAD') {
@@ -52,12 +52,12 @@ async function handleRequest(
       }
 
       // Fallback URL configured → redirect.
-      const fallbackUrl: WorkerIndexHandleRequestFallbackUrl = new URL(config['links']['fallback_url']);
+      const fallbackUrl: Worker_Handlers_HandleRequest_FallbackUrl = new URL(config['links']['fallback_url']);
 
       if (pathname === '/' || pathname === '') {
-        const rootResponse: WorkerIndexHandleRequestRootResponse = Response.redirect(fallbackUrl['origin'], 301);
+        const rootResponse: Worker_Handlers_HandleRequest_RootResponse = Response.redirect(fallbackUrl['origin'], 301);
 
-        const rootLogPayload: WorkerIndexHandleRequestRootLogPayload = JSON.stringify({
+        const rootLogPayload: Worker_Handlers_HandleRequest_RootLogPayload = JSON.stringify({
           shortcode: null,
           redirect_url: fallbackUrl['origin'],
           http_response: 301,
@@ -69,12 +69,12 @@ async function handleRequest(
         return rootResponse;
       }
 
-      const fallbackResponse: WorkerIndexHandleRequestFallbackResponse = Response.redirect(
-        `${fallbackUrl['origin']}${requestUrl['pathname']}${requestUrl['search']}${requestUrl['hash']}`,
+      const fallbackResponse: Worker_Handlers_HandleRequest_FallbackResponse = Response.redirect(
+        `${fallbackUrl['origin']}${requestUrl['pathname']}${requestUrl['search']}`,
         301,
       );
 
-      const fallbackLogPayload: WorkerIndexHandleRequestFallbackLogPayload = JSON.stringify({
+      const fallbackLogPayload: Worker_Handlers_HandleRequest_FallbackLogPayload = JSON.stringify({
         shortcode: null,
         redirect_url: config['links']['fallback_url'],
         http_response: 301,
@@ -87,13 +87,13 @@ async function handleRequest(
     }
 
     // Fire trackers in background, redirect immediately.
-    const fireTrackersPromise: WorkerIndexHandleRequestFireTrackersPromise = fireTrackers(config['trackers'], request, shortcode);
+    const fireTrackersPromise: Worker_Handlers_HandleRequest_FireTrackersPromise = fireTrackers(config['trackers'], request, shortcode);
 
     ctx.waitUntil(fireTrackersPromise);
 
-    const redirectResponse: WorkerIndexHandleRequestRedirectResponse = Response.redirect(shortcode['redirect_url'], shortcode['http_response']);
+    const redirectResponse: Worker_Handlers_HandleRequest_RedirectResponse = Response.redirect(shortcode['redirect_url'], shortcode['http_response']);
 
-    const redirectLogPayload: WorkerIndexHandleRequestRedirectLogPayload = JSON.stringify({
+    const redirectLogPayload: Worker_Handlers_HandleRequest_RedirectLogPayload = JSON.stringify({
       shortcode: shortcode['shortcode'],
       redirect_url: shortcode['redirect_url'],
       http_response: shortcode['http_response'],
@@ -107,10 +107,14 @@ async function handleRequest(
 
   // Non-GET/HEAD → 405.
   return new Response(JSON.stringify({
-    status: 'error', message: 'Method not allowed',
+    status: 'error',
+    message: 'Method not allowed',
   }, null, 2), {
     status: 405,
-    headers: { 'Content-Type': 'application/json' },
+    headers: {
+      'Content-Type': 'application/json',
+      'Allow': 'GET, HEAD',
+    },
   });
 }
 

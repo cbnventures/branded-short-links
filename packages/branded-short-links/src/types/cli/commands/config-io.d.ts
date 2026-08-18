@@ -1,54 +1,58 @@
-import type {
-  LibSchemaConfig,
-  LibSchemaLinksConfig,
-  LibSchemaLinksConfigItems,
-  LibSchemaSettingsConfig,
-  LibSchemaTrackerConfig,
-} from '../../lib/schema.d.ts';
+import type { Lib_Schema_Config } from '../../lib/schema.d.ts';
 
 /**
  * CLI - Commands - Config IO.
  *
  * @since 2.0.0
  */
-export type CliCommandsConfigIoLoadConfigConfigPath = string;
+export type Cli_Commands_ConfigIo_LoadConfig_ConfigPath = string;
 
-export type CliCommandsConfigIoLoadConfigReturn = unknown;
+export type Cli_Commands_ConfigIo_LoadConfig_Returns = unknown;
 
-export type CliCommandsConfigIoLoadConfigRawContent = string;
+export type Cli_Commands_ConfigIo_LoadConfig_RawContent = string;
 
-export type CliCommandsConfigIoLoadConfigParsed = unknown;
-
-/**
- * CLI - Commands - Config IO.
- *
- * @since 2.0.0
- */
-export type CliCommandsConfigIoNormalizeConfigConfig = LibSchemaConfig;
-
-export type CliCommandsConfigIoNormalizeConfigReturn = LibSchemaConfig;
-
-export type CliCommandsConfigIoNormalizeConfigLinks = LibSchemaLinksConfig;
-
-export type CliCommandsConfigIoNormalizeConfigTrackers = LibSchemaTrackerConfig[];
-
-export type CliCommandsConfigIoNormalizeConfigSettings = LibSchemaSettingsConfig;
-
-export type CliCommandsConfigIoNormalizeConfigSortedItems = LibSchemaLinksConfigItems;
-
-export type CliCommandsConfigIoNormalizeConfigNormalizedLinks = LibSchemaLinksConfig;
-
-export type CliCommandsConfigIoNormalizeConfigNormalizedTrackers = LibSchemaTrackerConfig[];
+export type Cli_Commands_ConfigIo_LoadConfig_Parsed = unknown;
 
 /**
  * CLI - Commands - Config IO.
  *
  * @since 2.0.0
  */
-export type CliCommandsConfigIoSaveConfigConfigPath = string;
+export type Cli_Commands_ConfigIo_NormalizeConfig_Config = Lib_Schema_Config;
 
-export type CliCommandsConfigIoSaveConfigConfig = LibSchemaConfig;
+export type Cli_Commands_ConfigIo_NormalizeConfig_Returns = Lib_Schema_Config;
 
-export type CliCommandsConfigIoSaveConfigReturn = void;
+export type Cli_Commands_ConfigIo_NormalizeConfig_Links = Lib_Schema_Config['links'];
 
-export type CliCommandsConfigIoSaveConfigNormalizedConfig = LibSchemaConfig;
+export type Cli_Commands_ConfigIo_NormalizeConfig_Trackers = Lib_Schema_Config['trackers'];
+
+export type Cli_Commands_ConfigIo_NormalizeConfig_Settings = Lib_Schema_Config['settings'];
+
+export type Cli_Commands_ConfigIo_NormalizeConfig_SortedItems = Lib_Schema_Config['links']['items'];
+
+export type Cli_Commands_ConfigIo_NormalizeConfig_NormalizedLinks = Lib_Schema_Config['links'];
+
+export type Cli_Commands_ConfigIo_NormalizeConfig_NormalizedTrackers = Lib_Schema_Config['trackers'];
+
+/**
+ * CLI - Commands - Config IO.
+ *
+ * @since 2.0.0
+ */
+export type Cli_Commands_ConfigIo_SaveConfig_ConfigPath = string;
+
+export type Cli_Commands_ConfigIo_SaveConfig_Config = Lib_Schema_Config;
+
+export type Cli_Commands_ConfigIo_SaveConfig_Returns = void;
+
+export type Cli_Commands_ConfigIo_SaveConfig_NormalizedConfig_Settings = Lib_Schema_Config['settings'];
+
+export type Cli_Commands_ConfigIo_SaveConfig_NormalizedConfig_Links = Lib_Schema_Config['links'];
+
+export type Cli_Commands_ConfigIo_SaveConfig_NormalizedConfig_Trackers = Lib_Schema_Config['trackers'];
+
+export type Cli_Commands_ConfigIo_SaveConfig_NormalizedConfig = {
+  settings: Cli_Commands_ConfigIo_SaveConfig_NormalizedConfig_Settings;
+  links: Cli_Commands_ConfigIo_SaveConfig_NormalizedConfig_Links;
+  trackers: Cli_Commands_ConfigIo_SaveConfig_NormalizedConfig_Trackers;
+};

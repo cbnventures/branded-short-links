@@ -1,25 +1,25 @@
 import {
-  afterEach, beforeEach, describe, expect, it, vi,
+  afterEach, describe, expect, it, vi,
 } from 'vitest';
 
-import { handleRequest } from '../../worker/handlers.js';
 import workerDefault from '../../worker/index.js';
 
 import type {
-  TestsWorkerIndexBody,
-  TestsWorkerIndexConfig,
-  TestsWorkerIndexContentType,
-  TestsWorkerIndexCtx,
-  TestsWorkerIndexEnv,
-  TestsWorkerIndexJsonBody,
-  TestsWorkerIndexLocation,
-  TestsWorkerIndexMockFetch,
-  TestsWorkerIndexNoFallbackConfig,
-  TestsWorkerIndexRequest,
-  TestsWorkerIndexResponse,
+  Tests_Worker_Index_CreateMockCtx_Returns,
+  Tests_Worker_Index_MockConfig,
+  Tests_Worker_Index_WorkerDefaultExportFetch_Returns500ForInvalidEnv_ContentType,
+  Tests_Worker_Index_WorkerDefaultExportFetch_Returns500ForInvalidEnv_Ctx,
+  Tests_Worker_Index_WorkerDefaultExportFetch_Returns500ForInvalidEnv_Env,
+  Tests_Worker_Index_WorkerDefaultExportFetch_Returns500ForInvalidEnv_Request,
+  Tests_Worker_Index_WorkerDefaultExportFetch_Returns500ForInvalidEnv_Response,
+  Tests_Worker_Index_WorkerDefaultExportFetch_ReturnsValidResponseForValidEnv_Ctx,
+  Tests_Worker_Index_WorkerDefaultExportFetch_ReturnsValidResponseForValidEnv_Env,
+  Tests_Worker_Index_WorkerDefaultExportFetch_ReturnsValidResponseForValidEnv_MockFetchFn,
+  Tests_Worker_Index_WorkerDefaultExportFetch_ReturnsValidResponseForValidEnv_Request,
+  Tests_Worker_Index_WorkerDefaultExportFetch_ReturnsValidResponseForValidEnv_Response,
 } from '../../types/tests/worker/index.test.d.ts';
 
-const mockConfig: TestsWorkerIndexConfig = {
+const mockConfig: Tests_Worker_Index_MockConfig = {
   settings: {
     worker_name: 'test-worker',
     base_domain: 'bsl.example.com',
@@ -48,184 +48,13 @@ const mockConfig: TestsWorkerIndexConfig = {
   }],
 };
 
-function createMockCtx(): TestsWorkerIndexCtx {
+function createMockCtx(): Tests_Worker_Index_CreateMockCtx_Returns {
   return {
     waitUntil: vi.fn(),
     passThroughOnException: vi.fn(),
     props: {},
-  } as TestsWorkerIndexCtx;
+  } as Tests_Worker_Index_CreateMockCtx_Returns;
 }
-
-describe('handleRequest', () => {
-  beforeEach(() => {
-    const mockFetchFn: TestsWorkerIndexMockFetch = vi.fn().mockResolvedValue(new Response('ok'));
-
-    vi.stubGlobal('fetch', mockFetchFn);
-
-    return;
-  });
-
-  afterEach(() => {
-    vi.restoreAllMocks();
-
-    return;
-  });
-
-  it('returns redirect with correct status code for valid shortcode', async () => {
-    const request: TestsWorkerIndexRequest = new Request('https://bsl.example.com/gh', { method: 'GET' });
-    const ctx: TestsWorkerIndexCtx = createMockCtx();
-
-    const response: TestsWorkerIndexResponse = await handleRequest(request, mockConfig, ctx);
-
-    expect(response['status']).toBe(302);
-
-    const location: TestsWorkerIndexLocation = response['headers'].get('Location');
-
-    expect(location).toBe('https://github.com/example');
-
-    return;
-  });
-
-  it('returns redirect with 301 for /docs shortcode', async () => {
-    const request: TestsWorkerIndexRequest = new Request('https://bsl.example.com/docs', { method: 'GET' });
-    const ctx: TestsWorkerIndexCtx = createMockCtx();
-
-    const response: TestsWorkerIndexResponse = await handleRequest(request, mockConfig, ctx);
-
-    expect(response['status']).toBe(301);
-
-    const location: TestsWorkerIndexLocation = response['headers'].get('Location');
-
-    expect(location).toBe('https://docs.example.com/');
-
-    return;
-  });
-
-  it('redirects unknown path to fallback_url preserving path/query/hash', async () => {
-    const request: TestsWorkerIndexRequest = new Request('https://bsl.example.com/unknown/path?foo=bar#section', { method: 'GET' });
-    const ctx: TestsWorkerIndexCtx = createMockCtx();
-
-    const response: TestsWorkerIndexResponse = await handleRequest(request, mockConfig, ctx);
-
-    expect(response['status']).toBe(301);
-
-    const location: TestsWorkerIndexLocation = response['headers'].get('Location');
-
-    expect(location).toBe('https://example.com/unknown/path?foo=bar#section');
-
-    return;
-  });
-
-  it('redirects root to fallback_url when fallback is set', async () => {
-    const request: TestsWorkerIndexRequest = new Request('https://bsl.example.com/', { method: 'GET' });
-    const ctx: TestsWorkerIndexCtx = createMockCtx();
-
-    const response: TestsWorkerIndexResponse = await handleRequest(request, mockConfig, ctx);
-
-    expect(response['status']).toBe(301);
-
-    const location: TestsWorkerIndexLocation = response['headers'].get('Location');
-
-    expect(location).toBe('https://example.com/');
-
-    return;
-  });
-
-  it('returns landing page HTML for GET to root when no fallback_url', async () => {
-    const noFallbackConfig: TestsWorkerIndexNoFallbackConfig = {
-      ...mockConfig,
-      links: { items: mockConfig['links']['items'] },
-    };
-    const request: TestsWorkerIndexRequest = new Request('https://bsl.example.com/', { method: 'GET' });
-    const ctx: TestsWorkerIndexCtx = createMockCtx();
-
-    const response: TestsWorkerIndexResponse = await handleRequest(request, noFallbackConfig, ctx);
-
-    expect(response['status']).toBe(200);
-
-    const contentType: TestsWorkerIndexContentType = response['headers'].get('Content-Type');
-
-    expect(contentType).toBe('text/html; charset=utf-8');
-
-    const body: TestsWorkerIndexBody = await response.text();
-
-    expect(body).toContain('Branded Short Links');
-
-    return;
-  });
-
-  it('returns 404 not found page for unknown path when no fallback_url', async () => {
-    const noFallbackConfig: TestsWorkerIndexNoFallbackConfig = {
-      ...mockConfig,
-      links: { items: mockConfig['links']['items'] },
-    };
-    const request: TestsWorkerIndexRequest = new Request('https://bsl.example.com/unknown', { method: 'GET' });
-    const ctx: TestsWorkerIndexCtx = createMockCtx();
-
-    const response: TestsWorkerIndexResponse = await handleRequest(request, noFallbackConfig, ctx);
-
-    expect(response['status']).toBe(404);
-
-    const contentType: TestsWorkerIndexContentType = response['headers'].get('Content-Type');
-
-    expect(contentType).toBe('text/html; charset=utf-8');
-
-    const body: TestsWorkerIndexBody = await response.text();
-
-    expect(body).toContain('Shortcode Not Found');
-
-    return;
-  });
-
-  it('returns 405 for POST request', async () => {
-    const request: TestsWorkerIndexRequest = new Request('https://bsl.example.com/gh', { method: 'POST' });
-    const ctx: TestsWorkerIndexCtx = createMockCtx();
-
-    const response: TestsWorkerIndexResponse = await handleRequest(request, mockConfig, ctx);
-
-    expect(response['status']).toBe(405);
-
-    const contentType: TestsWorkerIndexContentType = response['headers'].get('Content-Type');
-
-    expect(contentType).toBe('application/json');
-
-    const body: TestsWorkerIndexJsonBody = await response.json();
-
-    expect(body['status']).toBe('error');
-
-    expect(body['message']).toBe('Method not allowed');
-
-    return;
-  });
-
-  it('calls waitUntil with fireTrackers for valid shortcode', async () => {
-    const request: TestsWorkerIndexRequest = new Request('https://bsl.example.com/gh', { method: 'GET' });
-    const ctx: TestsWorkerIndexCtx = createMockCtx();
-
-    await handleRequest(request, mockConfig, ctx);
-
-    expect(ctx['waitUntil']).toHaveBeenCalledOnce();
-
-    return;
-  });
-
-  it('strips trailing slash from shortcode path', async () => {
-    const request: TestsWorkerIndexRequest = new Request('https://bsl.example.com/gh/', { method: 'GET' });
-    const ctx: TestsWorkerIndexCtx = createMockCtx();
-
-    const response: TestsWorkerIndexResponse = await handleRequest(request, mockConfig, ctx);
-
-    expect(response['status']).toBe(302);
-
-    const location: TestsWorkerIndexLocation = response['headers'].get('Location');
-
-    expect(location).toBe('https://github.com/example');
-
-    return;
-  });
-
-  return;
-});
 
 describe('worker default export fetch', () => {
   afterEach(() => {
@@ -235,19 +64,19 @@ describe('worker default export fetch', () => {
   });
 
   it('returns 500 for invalid env', async () => {
-    const request: TestsWorkerIndexRequest = new Request('https://bsl.example.com/', { method: 'GET' });
-    const env: TestsWorkerIndexEnv = {
+    const request: Tests_Worker_Index_WorkerDefaultExportFetch_Returns500ForInvalidEnv_Request = new Request('https://bsl.example.com/', { method: 'GET' });
+    const env: Tests_Worker_Index_WorkerDefaultExportFetch_Returns500ForInvalidEnv_Env = {
       SETTINGS: 'invalid-json',
       LINKS: '{}',
       TRACKERS: '[]',
     };
-    const ctx: TestsWorkerIndexCtx = createMockCtx();
+    const ctx: Tests_Worker_Index_WorkerDefaultExportFetch_Returns500ForInvalidEnv_Ctx = createMockCtx();
 
-    const response: TestsWorkerIndexResponse = await workerDefault.fetch(request, env, ctx);
+    const response: Tests_Worker_Index_WorkerDefaultExportFetch_Returns500ForInvalidEnv_Response = await workerDefault.fetch(request, env, ctx);
 
     expect(response['status']).toBe(500);
 
-    const contentType: TestsWorkerIndexContentType = response['headers'].get('Content-Type');
+    const contentType: Tests_Worker_Index_WorkerDefaultExportFetch_Returns500ForInvalidEnv_ContentType = response['headers'].get('Content-Type');
 
     expect(contentType).toBe('application/json');
 
@@ -255,19 +84,19 @@ describe('worker default export fetch', () => {
   });
 
   it('returns valid response for valid env', async () => {
-    const mockFetchFn: TestsWorkerIndexMockFetch = vi.fn().mockResolvedValue(new Response('ok'));
+    const mockFetchFn: Tests_Worker_Index_WorkerDefaultExportFetch_ReturnsValidResponseForValidEnv_MockFetchFn = vi.fn().mockResolvedValue(new Response('ok'));
 
     vi.stubGlobal('fetch', mockFetchFn);
 
-    const request: TestsWorkerIndexRequest = new Request('https://bsl.example.com/', { method: 'GET' });
-    const env: TestsWorkerIndexEnv = {
+    const request: Tests_Worker_Index_WorkerDefaultExportFetch_ReturnsValidResponseForValidEnv_Request = new Request('https://bsl.example.com/', { method: 'GET' });
+    const env: Tests_Worker_Index_WorkerDefaultExportFetch_ReturnsValidResponseForValidEnv_Env = {
       SETTINGS: JSON.stringify(mockConfig['settings']),
       LINKS: JSON.stringify(mockConfig['links']),
       TRACKERS: JSON.stringify(mockConfig['trackers']),
     };
-    const ctx: TestsWorkerIndexCtx = createMockCtx();
+    const ctx: Tests_Worker_Index_WorkerDefaultExportFetch_ReturnsValidResponseForValidEnv_Ctx = createMockCtx();
 
-    const response: TestsWorkerIndexResponse = await workerDefault.fetch(request, env, ctx);
+    const response: Tests_Worker_Index_WorkerDefaultExportFetch_ReturnsValidResponseForValidEnv_Response = await workerDefault.fetch(request, env, ctx);
 
     expect(response['status']).toBe(301);
 

@@ -1,16 +1,15 @@
 import type prompts from 'prompts';
 
 import type {
-  LibSchemaLinkItemConfig,
-  LibSchemaLinkItemConfigHttpResponse,
-  LibSchemaLinksConfigFallbackUrl,
-  LibSchemaLinksConfigItems,
-  LibSchemaNtfyReverseProxyTrackerConfig,
-  LibSchemaNtfyTrackerConfig,
-  LibSchemaPlainTextTrackerConfig,
-  LibSchemaPosthogTrackerConfig,
-  LibSchemaSettingsConfig,
-  LibSchemaTrackerConfig,
+  Lib_Schema_Config,
+  Lib_Schema_LinkItemConfig,
+  Lib_Schema_LinkItemConfig_HttpResponse,
+  Lib_Schema_NtfyReverseProxyTrackerConfig,
+  Lib_Schema_NtfyTrackerConfig,
+  Lib_Schema_PlainTextTrackerConfig,
+  Lib_Schema_PosthogTrackerConfig,
+  Lib_Schema_SettingsConfig,
+  Lib_Schema_TrackerConfig,
 } from '../../lib/schema.d.ts';
 
 /**
@@ -18,360 +17,428 @@ import type {
  *
  * @since 2.0.0
  */
-export type CliMenuInteractiveAddTrackerFlowConfigPath = string;
+export type Cli_Menu_Interactive_AddTrackerFlow_ConfigPath = string;
 
-export type CliMenuInteractiveAddTrackerFlowReturn = Promise<void>;
+export type Cli_Menu_Interactive_AddTrackerFlow_Returns = Promise<void>;
 
-export type CliMenuInteractiveAddTrackerFlowTrackerTypeResponse = Record<string, unknown>;
+export type Cli_Menu_Interactive_AddTrackerFlow_TrackerTypeResponse = Record<string, unknown>;
 
-export type CliMenuInteractiveAddTrackerFlowTrackerType = unknown;
+export type Cli_Menu_Interactive_AddTrackerFlow_TrackerType = unknown;
 
-export type CliMenuInteractiveAddTrackerFlowNameResponse = Record<string, unknown>;
+export type Cli_Menu_Interactive_AddTrackerFlow_NameResponse = Record<string, unknown>;
 
-export type CliMenuInteractiveAddTrackerFlowName = unknown;
+export type Cli_Menu_Interactive_AddTrackerFlow_Name = unknown;
 
-export type CliMenuInteractiveAddTrackerFlowFields = Record<string, unknown>;
+export type Cli_Menu_Interactive_AddTrackerFlow_Fields = Record<string, unknown>;
 
-export type CliMenuInteractiveAddTrackerFlowFieldsMeasurementId = unknown;
+export type Cli_Menu_Interactive_AddTrackerFlow_FieldsMeasurementId = unknown;
 
-export type CliMenuInteractiveAddTrackerFlowFieldsApiSecret = unknown;
+export type Cli_Menu_Interactive_AddTrackerFlow_FieldsApiSecret = unknown;
 
-export type CliMenuInteractiveAddTrackerFlowNameAsString = string;
+export type Cli_Menu_Interactive_AddTrackerFlow_NameAsString = string;
 
-export type CliMenuInteractiveAddTrackerFlowFieldsMeasurementIdAsString = string;
+export type Cli_Menu_Interactive_AddTrackerFlow_FieldsMeasurementIdAsString = string;
 
-export type CliMenuInteractiveAddTrackerFlowFieldsApiSecretAsString = string;
+export type Cli_Menu_Interactive_AddTrackerFlow_FieldsApiSecretAsString = string;
 
-export type CliMenuInteractiveAddTrackerFlowPixelIdResponse = Record<string, unknown>;
+export type Cli_Menu_Interactive_AddTrackerFlow_PixelIdResponse = Record<string, unknown>;
 
-export type CliMenuInteractiveAddTrackerFlowPixelId = unknown;
+export type Cli_Menu_Interactive_AddTrackerFlow_PixelId = unknown;
 
-export type CliMenuInteractiveAddTrackerFlowPixelIdAsString = string;
+export type Cli_Menu_Interactive_AddTrackerFlow_PixelIdAsString = string;
 
-export type CliMenuInteractiveAddTrackerFlowParsedUrl = URL;
+export type Cli_Menu_Interactive_AddTrackerFlow_NtfyFields = Record<string, unknown>;
 
-export type CliMenuInteractiveAddTrackerFlowFieldsServer = unknown;
+export type Cli_Menu_Interactive_AddTrackerFlow_NtfyParsedUrl = URL;
 
-export type CliMenuInteractiveAddTrackerFlowFieldsTopic = unknown;
+export type Cli_Menu_Interactive_AddTrackerFlow_FieldsServer = unknown;
 
-export type CliMenuInteractiveAddTrackerFlowFieldsToken = unknown;
+export type Cli_Menu_Interactive_AddTrackerFlow_FieldsTopic = unknown;
 
-export type CliMenuInteractiveAddTrackerFlowFieldsServerAsString = string;
+export type Cli_Menu_Interactive_AddTrackerFlow_FieldsToken = unknown;
 
-export type CliMenuInteractiveAddTrackerFlowFieldsTopicAsString = string;
+export type Cli_Menu_Interactive_AddTrackerFlow_FieldsServerAsString = string;
 
-export type CliMenuInteractiveAddTrackerFlowFieldsTokenAsString = string;
+export type Cli_Menu_Interactive_AddTrackerFlow_FieldsTopicAsString = string;
 
-export type CliMenuInteractiveAddTrackerFlowUrlResponse = Record<string, unknown>;
+export type Cli_Menu_Interactive_AddTrackerFlow_FieldsTokenAsString = string;
 
-export type CliMenuInteractiveAddTrackerFlowUrl = unknown;
+export type Cli_Menu_Interactive_AddTrackerFlow_ProxyUrlResponse = Record<string, unknown>;
 
-export type CliMenuInteractiveAddTrackerFlowTokenResponse = Record<string, unknown>;
+export type Cli_Menu_Interactive_AddTrackerFlow_ProxyParsedUrl = URL;
 
-export type CliMenuInteractiveAddTrackerFlowToken = unknown;
+export type Cli_Menu_Interactive_AddTrackerFlow_ProxyUrl = unknown;
 
-export type CliMenuInteractiveAddTrackerFlowUrlAsString = string;
+export type Cli_Menu_Interactive_AddTrackerFlow_ProxyTokenResponse = Record<string, unknown>;
 
-export type CliMenuInteractiveAddTrackerFlowTokenValue = string | undefined;
+export type Cli_Menu_Interactive_AddTrackerFlow_ProxyToken = unknown;
 
-export type CliMenuInteractiveAddTrackerFlowResolvedToken = string | undefined;
+export type Cli_Menu_Interactive_AddTrackerFlow_ProxyTokenValue = string | undefined;
 
-export type CliMenuInteractiveAddTrackerFlowFieldsHost = unknown;
+export type Cli_Menu_Interactive_AddTrackerFlow_ProxyTokenAsString = string;
 
-export type CliMenuInteractiveAddTrackerFlowFieldsApiKey = unknown;
+export type Cli_Menu_Interactive_AddTrackerFlow_ProxyResolvedToken = string | undefined;
 
-export type CliMenuInteractiveAddTrackerFlowFieldsHostAsString = string;
+export type Cli_Menu_Interactive_AddTrackerFlow_UrlAsString = string;
 
-export type CliMenuInteractiveAddTrackerFlowFieldsApiKeyAsString = string;
+export type Cli_Menu_Interactive_AddTrackerFlow_PlainUrlResponse = Record<string, unknown>;
 
-export type CliMenuInteractiveAddTrackerFlowErrorMessage = string;
+export type Cli_Menu_Interactive_AddTrackerFlow_PlainParsedUrl = URL;
+
+export type Cli_Menu_Interactive_AddTrackerFlow_PlainUrl = unknown;
+
+export type Cli_Menu_Interactive_AddTrackerFlow_PlainTokenResponse = Record<string, unknown>;
+
+export type Cli_Menu_Interactive_AddTrackerFlow_PlainToken = unknown;
+
+export type Cli_Menu_Interactive_AddTrackerFlow_PlainTokenValue = string | undefined;
+
+export type Cli_Menu_Interactive_AddTrackerFlow_PlainTokenAsString = string;
+
+export type Cli_Menu_Interactive_AddTrackerFlow_PlainResolvedToken = string | undefined;
+
+export type Cli_Menu_Interactive_AddTrackerFlow_PosthogFields = Record<string, unknown>;
+
+export type Cli_Menu_Interactive_AddTrackerFlow_PosthogParsedUrl = URL;
+
+export type Cli_Menu_Interactive_AddTrackerFlow_FieldsHost = unknown;
+
+export type Cli_Menu_Interactive_AddTrackerFlow_FieldsApiKey = unknown;
+
+export type Cli_Menu_Interactive_AddTrackerFlow_FieldsHostAsString = string;
+
+export type Cli_Menu_Interactive_AddTrackerFlow_FieldsApiKeyAsString = string;
+
+export type Cli_Menu_Interactive_AddTrackerFlow_ErrorMessage = string;
 
 /**
  * CLI - Menu - Interactive - Edit Tracker Flow.
  *
  * @since 2.0.0
  */
-export type CliMenuInteractiveEditTrackerFlowConfigPath = string;
+export type Cli_Menu_Interactive_EditTrackerFlow_ConfigPath = string;
 
-export type CliMenuInteractiveEditTrackerFlowReturn = Promise<void>;
+export type Cli_Menu_Interactive_EditTrackerFlow_Returns = Promise<void>;
 
-export type CliMenuInteractiveEditTrackerFlowTrackers = LibSchemaTrackerConfig[];
+export type Cli_Menu_Interactive_EditTrackerFlow_Trackers = Lib_Schema_Config['trackers'];
 
-export type CliMenuInteractiveEditTrackerFlowNameResponse = Record<string, unknown>;
+export type Cli_Menu_Interactive_EditTrackerFlow_NameResponse = Record<string, unknown>;
 
-export type CliMenuInteractiveEditTrackerFlowName = unknown;
+export type Cli_Menu_Interactive_EditTrackerFlow_Name = unknown;
 
-export type CliMenuInteractiveEditTrackerFlowCurrent = LibSchemaTrackerConfig | undefined;
+export type Cli_Menu_Interactive_EditTrackerFlow_Current = Lib_Schema_TrackerConfig | undefined;
 
-export type CliMenuInteractiveEditTrackerFlowTypeChangeResponse = Record<string, unknown>;
+export type Cli_Menu_Interactive_EditTrackerFlow_TypeChangeResponse = Record<string, unknown>;
 
-export type CliMenuInteractiveEditTrackerFlowTypeChangeNewType = string | undefined;
+export type Cli_Menu_Interactive_EditTrackerFlow_NewType = string | undefined;
 
-export type CliMenuInteractiveEditTrackerFlowNameAsString = string;
+export type Cli_Menu_Interactive_EditTrackerFlow_TrackerCountBefore = number;
 
-export type CliMenuInteractiveEditTrackerFlowUpdates = Record<string, unknown>;
+export type Cli_Menu_Interactive_EditTrackerFlow_NameAsString = string;
 
-export type CliMenuInteractiveEditTrackerFlowUpdatesMeasurementId = unknown;
+export type Cli_Menu_Interactive_EditTrackerFlow_TrackerCountAfter = number;
 
-export type CliMenuInteractiveEditTrackerFlowUpdatesApiSecret = unknown;
+export type Cli_Menu_Interactive_EditTrackerFlow_Updates = Record<string, unknown>;
 
-export type CliMenuInteractiveEditTrackerFlowUpdatesMeasurementIdAsString = string;
+export type Cli_Menu_Interactive_EditTrackerFlow_UpdatesMeasurementId = unknown;
 
-export type CliMenuInteractiveEditTrackerFlowUpdatesApiSecretAsString = string;
+export type Cli_Menu_Interactive_EditTrackerFlow_UpdatesApiSecret = unknown;
 
-export type CliMenuInteractiveEditTrackerFlowPixelIdResponse = Record<string, unknown>;
+export type Cli_Menu_Interactive_EditTrackerFlow_UpdatesMeasurementIdAsString = string;
 
-export type CliMenuInteractiveEditTrackerFlowPixelId = unknown;
+export type Cli_Menu_Interactive_EditTrackerFlow_UpdatesApiSecretAsString = string;
 
-export type CliMenuInteractiveEditTrackerFlowPixelIdAsString = string;
+export type Cli_Menu_Interactive_EditTrackerFlow_PixelIdResponse = Record<string, unknown>;
 
-export type CliMenuInteractiveEditTrackerFlowParsedUrl = URL;
+export type Cli_Menu_Interactive_EditTrackerFlow_PixelId = unknown;
 
-export type CliMenuInteractiveEditTrackerFlowNtfyUpdates = Record<string, unknown>;
+export type Cli_Menu_Interactive_EditTrackerFlow_PixelIdAsString = string;
 
-export type CliMenuInteractiveEditTrackerFlowNtfyUpdatesServer = unknown;
+export type Cli_Menu_Interactive_EditTrackerFlow_NtfyEditFields = Record<string, unknown>;
 
-export type CliMenuInteractiveEditTrackerFlowNtfyUpdatesTopic = unknown;
+export type Cli_Menu_Interactive_EditTrackerFlow_NtfyParsedUrl = URL;
 
-export type CliMenuInteractiveEditTrackerFlowNtfyUpdatesToken = unknown;
+export type Cli_Menu_Interactive_EditTrackerFlow_NtfyUpdates = Record<string, unknown>;
 
-export type CliMenuInteractiveEditTrackerFlowNtfyUpdatesKeys = string[];
+export type Cli_Menu_Interactive_EditTrackerFlow_NtfyUpdatesServer = unknown;
 
-export type CliMenuInteractiveEditTrackerFlowNtfyUpdatesAsPartial = Partial<LibSchemaNtfyTrackerConfig>;
+export type Cli_Menu_Interactive_EditTrackerFlow_NtfyUpdatesTopic = unknown;
 
-export type CliMenuInteractiveEditTrackerFlowPosthogUpdates = Record<string, unknown>;
+export type Cli_Menu_Interactive_EditTrackerFlow_NtfyUpdatesToken = unknown;
 
-export type CliMenuInteractiveEditTrackerFlowPosthogUpdatesHost = unknown;
+export type Cli_Menu_Interactive_EditTrackerFlow_NtfyUpdatesKeys = string[];
 
-export type CliMenuInteractiveEditTrackerFlowPosthogUpdatesApiKey = unknown;
+export type Cli_Menu_Interactive_EditTrackerFlow_NtfyUpdatesAsPartial = Partial<Lib_Schema_NtfyTrackerConfig>;
 
-export type CliMenuInteractiveEditTrackerFlowPosthogUpdatesKeys = string[];
+export type Cli_Menu_Interactive_EditTrackerFlow_PosthogEditFields = Record<string, unknown>;
 
-export type CliMenuInteractiveEditTrackerFlowPosthogUpdatesAsPartial = Partial<LibSchemaPosthogTrackerConfig>;
+export type Cli_Menu_Interactive_EditTrackerFlow_PosthogParsedUrl = URL;
 
-export type CliMenuInteractiveEditTrackerFlowNtfyReverseProxyUpdatesUrl = unknown;
+export type Cli_Menu_Interactive_EditTrackerFlow_PosthogUpdates = Record<string, unknown>;
 
-export type CliMenuInteractiveEditTrackerFlowNtfyReverseProxyUpdatesToken = unknown;
+export type Cli_Menu_Interactive_EditTrackerFlow_PosthogUpdatesHost = unknown;
 
-export type CliMenuInteractiveEditTrackerFlowNtfyReverseProxyUpdatesUrlAsString = string;
+export type Cli_Menu_Interactive_EditTrackerFlow_PosthogUpdatesApiKey = unknown;
 
-export type CliMenuInteractiveEditTrackerFlowNtfyReverseProxyUpdatesTokenValue = string | undefined;
+export type Cli_Menu_Interactive_EditTrackerFlow_PosthogUpdatesKeys = string[];
 
-export type CliMenuInteractiveEditTrackerFlowNtfyReverseProxyUpdatesResolvedToken = string | undefined;
+export type Cli_Menu_Interactive_EditTrackerFlow_PosthogUpdatesAsPartial = Partial<Lib_Schema_PosthogTrackerConfig>;
 
-export type CliMenuInteractiveEditTrackerFlowNtfyReverseProxyUpdates = Record<string, unknown>;
+export type Cli_Menu_Interactive_EditTrackerFlow_NtfyReverseProxyUrlResponse = Record<string, unknown>;
 
-export type CliMenuInteractiveEditTrackerFlowNtfyReverseProxyUpdatesKeys = string[];
+export type Cli_Menu_Interactive_EditTrackerFlow_ProxyParsedUrl = URL;
 
-export type CliMenuInteractiveEditTrackerFlowNtfyReverseProxyUpdatesAsPartial = Partial<LibSchemaNtfyReverseProxyTrackerConfig>;
+export type Cli_Menu_Interactive_EditTrackerFlow_NtfyReverseProxyUpdatesUrl = unknown;
 
-export type CliMenuInteractiveEditTrackerFlowPlainTextUpdatesUrl = unknown;
+export type Cli_Menu_Interactive_EditTrackerFlow_NtfyReverseProxyTokenResponse = Record<string, unknown>;
 
-export type CliMenuInteractiveEditTrackerFlowPlainTextUpdatesToken = unknown;
+export type Cli_Menu_Interactive_EditTrackerFlow_NtfyReverseProxyUpdatesToken = unknown;
 
-export type CliMenuInteractiveEditTrackerFlowPlainTextUpdatesUrlAsString = string;
+export type Cli_Menu_Interactive_EditTrackerFlow_NtfyReverseProxyUpdatesTokenValue = string | undefined;
 
-export type CliMenuInteractiveEditTrackerFlowPlainTextUpdatesTokenValue = string | undefined;
+export type Cli_Menu_Interactive_EditTrackerFlow_NtfyReverseProxyUpdatesTokenAsString = string;
 
-export type CliMenuInteractiveEditTrackerFlowPlainTextUpdatesResolvedToken = string | undefined;
+export type Cli_Menu_Interactive_EditTrackerFlow_NtfyReverseProxyUpdatesResolvedToken = string | undefined;
 
-export type CliMenuInteractiveEditTrackerFlowPlainTextUpdates = Record<string, unknown>;
+export type Cli_Menu_Interactive_EditTrackerFlow_NtfyReverseProxyUpdates = Record<string, unknown>;
 
-export type CliMenuInteractiveEditTrackerFlowPlainTextUpdatesKeys = string[];
+export type Cli_Menu_Interactive_EditTrackerFlow_NtfyReverseProxyUpdatesKeys = string[];
 
-export type CliMenuInteractiveEditTrackerFlowPlainTextUpdatesAsPartial = Partial<LibSchemaPlainTextTrackerConfig>;
+export type Cli_Menu_Interactive_EditTrackerFlow_NtfyReverseProxyUpdatesAsPartial = Partial<Lib_Schema_NtfyReverseProxyTrackerConfig>;
 
-export type CliMenuInteractiveEditTrackerFlowErrorMessage = string;
+export type Cli_Menu_Interactive_EditTrackerFlow_PlainTextUrlResponse = Record<string, unknown>;
+
+export type Cli_Menu_Interactive_EditTrackerFlow_PlainParsedUrl = URL;
+
+export type Cli_Menu_Interactive_EditTrackerFlow_PlainTextUpdatesUrl = unknown;
+
+export type Cli_Menu_Interactive_EditTrackerFlow_PlainTextTokenResponse = Record<string, unknown>;
+
+export type Cli_Menu_Interactive_EditTrackerFlow_PlainTextUpdatesToken = unknown;
+
+export type Cli_Menu_Interactive_EditTrackerFlow_PlainTextUpdatesTokenValue = string | undefined;
+
+export type Cli_Menu_Interactive_EditTrackerFlow_PlainTextUpdatesTokenAsString = string;
+
+export type Cli_Menu_Interactive_EditTrackerFlow_PlainTextUpdatesResolvedToken = string | undefined;
+
+export type Cli_Menu_Interactive_EditTrackerFlow_PlainTextUpdates = Record<string, unknown>;
+
+export type Cli_Menu_Interactive_EditTrackerFlow_PlainTextUpdatesKeys = string[];
+
+export type Cli_Menu_Interactive_EditTrackerFlow_PlainTextUpdatesAsPartial = Partial<Lib_Schema_PlainTextTrackerConfig>;
+
+export type Cli_Menu_Interactive_EditTrackerFlow_ErrorMessage = string;
 
 /**
  * CLI - Menu - Interactive - Interactive Menu.
  *
  * @since 2.0.0
  */
-export type CliMenuInteractiveInteractiveMenuConfigDirs = string[];
+export type Cli_Menu_Interactive_InteractiveMenu_ConfigDirs = string[];
 
-export type CliMenuInteractiveInteractiveMenuReturn = Promise<void>;
+export type Cli_Menu_Interactive_InteractiveMenu_Returns = Promise<void>;
 
-export type CliMenuInteractiveInteractiveMenuCurrentFilePath = string;
+export type Cli_Menu_Interactive_InteractiveMenu_CurrentFilePath = string;
 
-export type CliMenuInteractiveInteractiveMenuDir = string;
+export type Cli_Menu_Interactive_InteractiveMenu_Dir = string;
 
-export type CliMenuInteractiveInteractiveMenuVersion = string;
+export type Cli_Menu_Interactive_InteractiveMenu_Version = string;
 
-export type CliMenuInteractiveInteractiveMenuPackageJsonPath = string;
+export type Cli_Menu_Interactive_InteractiveMenu_PackageJsonPath = string;
 
-export type CliMenuInteractiveInteractiveMenuPackageJsonRaw = string;
+export type Cli_Menu_Interactive_InteractiveMenu_PackageJsonRaw = string;
 
-export type CliMenuInteractiveInteractiveMenuPackageJsonParsed = Record<string, unknown>;
+export type Cli_Menu_Interactive_InteractiveMenu_PackageJsonParsed = Record<string, unknown>;
 
-export type CliMenuInteractiveInteractiveMenuParent = string;
+export type Cli_Menu_Interactive_InteractiveMenu_Parent = string;
 
-export type CliMenuInteractiveInteractiveMenuHeader = string;
+export type Cli_Menu_Interactive_InteractiveMenu_Header = string;
 
-export type CliMenuInteractiveInteractiveMenuInteractiveConfigPath = string | undefined;
+export type Cli_Menu_Interactive_InteractiveMenu_ConfigPath = string | undefined;
 
-export type CliMenuInteractiveInteractiveMenuConfigDirResponse = prompts.Answers<string>;
+export type Cli_Menu_Interactive_InteractiveMenu_ConfigDirResponse = prompts.Answers<string>;
 
-export type CliMenuInteractiveInteractiveMenuDefaultConfigDir = string;
+export type Cli_Menu_Interactive_InteractiveMenu_DefaultConfigDir = string;
 
-export type CliMenuInteractiveInteractiveMenuRunning = boolean;
+export type Cli_Menu_Interactive_InteractiveMenu_Running = boolean;
 
-export type CliMenuInteractiveInteractiveMenuActionResponse = Record<string, unknown>;
+export type Cli_Menu_Interactive_InteractiveMenu_ActionResponse = Record<string, unknown>;
 
-export type CliMenuInteractiveInteractiveMenuAction = unknown;
+export type Cli_Menu_Interactive_InteractiveMenu_Action = unknown;
 
-export type CliMenuInteractiveInteractiveMenuErrorMessage = string;
+export type Cli_Menu_Interactive_InteractiveMenu_ErrorMessage = string;
 
 /**
  * CLI - Menu - Interactive - Links Menu.
  *
  * @since 2.0.0
  */
-export type CliMenuInteractiveLinksMenuConfigPath = string;
+export type Cli_Menu_Interactive_LinksMenu_ConfigPath = string;
 
-export type CliMenuInteractiveLinksMenuReturn = Promise<void>;
+export type Cli_Menu_Interactive_LinksMenu_Returns = Promise<void>;
 
-export type CliMenuInteractiveLinksMenuInMenu = boolean;
+export type Cli_Menu_Interactive_LinksMenu_InMenu = boolean;
 
-export type CliMenuInteractiveLinksMenuActionResponse = Record<string, unknown>;
+export type Cli_Menu_Interactive_LinksMenu_ActionResponse = Record<string, unknown>;
 
-export type CliMenuInteractiveLinksMenuAction = unknown;
+export type Cli_Menu_Interactive_LinksMenu_Action = unknown;
 
-export type CliMenuInteractiveLinksMenuAnswers = Record<string, unknown>;
+export type Cli_Menu_Interactive_LinksMenu_Answers = Record<string, unknown>;
 
-export type CliMenuInteractiveLinksMenuParsedUrl = URL;
+export type Cli_Menu_Interactive_LinksMenu_ParsedUrl = URL;
 
-export type CliMenuInteractiveLinksMenuAnswersShortcode = unknown;
+export type Cli_Menu_Interactive_LinksMenu_AnswersShortcode = unknown;
 
-export type CliMenuInteractiveLinksMenuAnswersHttpResponse = unknown;
+export type Cli_Menu_Interactive_LinksMenu_AnswersHttpResponse = unknown;
 
-export type CliMenuInteractiveLinksMenuAnswersRedirectUrl = unknown;
+export type Cli_Menu_Interactive_LinksMenu_AnswersRedirectUrl = unknown;
 
-export type CliMenuInteractiveLinksMenuAnswersShortcodeAsString = string;
+export type Cli_Menu_Interactive_LinksMenu_AnswersShortcodeAsString = string;
 
-export type CliMenuInteractiveLinksMenuAnswersHttpResponseAsCode = LibSchemaLinkItemConfigHttpResponse;
+export type Cli_Menu_Interactive_LinksMenu_AnswersHttpResponseAsCode = Lib_Schema_LinkItemConfig_HttpResponse;
 
-export type CliMenuInteractiveLinksMenuAnswersRedirectUrlAsString = string;
+export type Cli_Menu_Interactive_LinksMenu_AnswersRedirectUrlAsString = string;
 
-export type CliMenuInteractiveLinksMenuErrorMessage = string;
+export type Cli_Menu_Interactive_LinksMenu_AddErrorMessage = string;
 
-export type CliMenuInteractiveLinksMenuLinks = LibSchemaLinksConfigItems;
+export type Cli_Menu_Interactive_LinksMenu_Links = Lib_Schema_Config['links']['items'];
 
-export type CliMenuInteractiveLinksMenuShortcodeResponse = Record<string, unknown>;
+export type Cli_Menu_Interactive_LinksMenu_ShortcodeResponse = Record<string, unknown>;
 
-export type CliMenuInteractiveLinksMenuShortcode = unknown;
+export type Cli_Menu_Interactive_LinksMenu_Shortcode = unknown;
 
-export type CliMenuInteractiveLinksMenuCurrent = LibSchemaLinkItemConfig | undefined;
+export type Cli_Menu_Interactive_LinksMenu_Current = Lib_Schema_LinkItemConfig | undefined;
 
-export type CliMenuInteractiveLinksMenuCurrentHttpResponse = unknown;
+export type Cli_Menu_Interactive_LinksMenu_CurrentHttpResponse = unknown;
 
-export type CliMenuInteractiveLinksMenuHttpCodesArray = LibSchemaLinkItemConfigHttpResponse[];
+export type Cli_Menu_Interactive_LinksMenu_HttpCodes = Lib_Schema_Config['links']['items'][number]['http_response'][];
 
-export type CliMenuInteractiveLinksMenuHttpCodeIdx = number;
+export type Cli_Menu_Interactive_LinksMenu_HttpCodeIdx = number;
 
-export type CliMenuInteractiveLinksMenuHttpCodeInitial = number;
+export type Cli_Menu_Interactive_LinksMenu_HttpCodeInitial = number;
 
-export type CliMenuInteractiveLinksMenuCurrentRedirectUrl = unknown;
+export type Cli_Menu_Interactive_LinksMenu_CurrentRedirectUrl = unknown;
 
-export type CliMenuInteractiveLinksMenuUpdates = Record<string, unknown>;
+export type Cli_Menu_Interactive_LinksMenu_Updates = Record<string, unknown>;
 
-export type CliMenuInteractiveLinksMenuUpdatesHttpResponse = unknown;
+export type Cli_Menu_Interactive_LinksMenu_EditParsedUrl = URL;
 
-export type CliMenuInteractiveLinksMenuUpdatesRedirectUrl = unknown;
+export type Cli_Menu_Interactive_LinksMenu_UpdatesHttpResponse = unknown;
 
-export type CliMenuInteractiveLinksMenuEditUpdates = Record<string, unknown>;
+export type Cli_Menu_Interactive_LinksMenu_UpdatesRedirectUrl = unknown;
 
-export type CliMenuInteractiveLinksMenuEditLinkModuleEditLink = (configPath: string, shortcode: string, updates: Partial<LibSchemaLinkItemConfig>) => void;
+export type Cli_Menu_Interactive_LinksMenu_EditUpdates = Record<string, unknown>;
 
-export type CliMenuInteractiveLinksMenuEditLinkModule = {
-  editLink: CliMenuInteractiveLinksMenuEditLinkModuleEditLink;
+export type Cli_Menu_Interactive_LinksMenu_EditLinkModule_EditLink = (configPath: string, shortcode: string, updates: Partial<Lib_Schema_LinkItemConfig>) => void;
+
+export type Cli_Menu_Interactive_LinksMenu_EditLinkModule = {
+  editLink: Cli_Menu_Interactive_LinksMenu_EditLinkModule_EditLink;
 };
 
-export type CliMenuInteractiveLinksMenuShortcodeAsString = string;
+export type Cli_Menu_Interactive_LinksMenu_ShortcodeAsString = string;
 
-export type CliMenuInteractiveLinksMenuEditUpdatesAsPartial = Partial<LibSchemaLinkItemConfig>;
+export type Cli_Menu_Interactive_LinksMenu_EditUpdatesAsPartial = Partial<Lib_Schema_LinkItemConfig>;
 
-export type CliMenuInteractiveLinksMenuConfirmedResponse = Record<string, unknown>;
+export type Cli_Menu_Interactive_LinksMenu_EditErrorMessage = string;
 
-export type CliMenuInteractiveLinksMenuConfirmed = unknown;
+export type Cli_Menu_Interactive_LinksMenu_RemoveLinks = Lib_Schema_Config['links']['items'];
 
-export type CliMenuInteractiveLinksMenuRemoveShortcodeAsString = string;
+export type Cli_Menu_Interactive_LinksMenu_RemoveShortcodeResponse = Record<string, unknown>;
 
-export type CliMenuInteractiveLinksMenuCurrentFallback = LibSchemaLinksConfigFallbackUrl;
+export type Cli_Menu_Interactive_LinksMenu_RemoveShortcode = unknown;
 
-export type CliMenuInteractiveLinksMenuFallbackMessage = string;
+export type Cli_Menu_Interactive_LinksMenu_ConfirmedResponse = Record<string, unknown>;
 
-export type CliMenuInteractiveLinksMenuFallbackChoices = Array<{
+export type Cli_Menu_Interactive_LinksMenu_Confirmed = unknown;
+
+export type Cli_Menu_Interactive_LinksMenu_RemoveShortcodeAsString = string;
+
+export type Cli_Menu_Interactive_LinksMenu_RemoveErrorMessage = string;
+
+export type Cli_Menu_Interactive_LinksMenu_CurrentFallback = Lib_Schema_Config['links']['fallback_url'];
+
+export type Cli_Menu_Interactive_LinksMenu_FallbackMessage = string;
+
+export type Cli_Menu_Interactive_LinksMenu_FallbackChoices = Array<{
   title: string;
   value: string;
 }>;
 
-export type CliMenuInteractiveLinksMenuFallbackActionResponse = Record<string, unknown>;
+export type Cli_Menu_Interactive_LinksMenu_FallbackActionResponse = Record<string, unknown>;
 
-export type CliMenuInteractiveLinksMenuFallbackAction = unknown;
+export type Cli_Menu_Interactive_LinksMenu_FallbackAction = unknown;
 
-export type CliMenuInteractiveLinksMenuUrlResponse = Record<string, unknown>;
+export type Cli_Menu_Interactive_LinksMenu_UrlResponse = Record<string, unknown>;
 
-export type CliMenuInteractiveLinksMenuUrl = unknown;
+export type Cli_Menu_Interactive_LinksMenu_FallbackParsedUrl = URL;
 
-export type CliMenuInteractiveLinksMenuUrlTrimmed = string;
+export type Cli_Menu_Interactive_LinksMenu_Url = unknown;
+
+export type Cli_Menu_Interactive_LinksMenu_UrlAsString = string;
+
+export type Cli_Menu_Interactive_LinksMenu_UrlTrimmed = string;
+
+export type Cli_Menu_Interactive_LinksMenu_FallbackErrorMessage = string;
 
 /**
  * CLI - Menu - Interactive - Settings Flow.
  *
  * @since 2.0.0
  */
-export type CliMenuInteractiveSettingsFlowConfigPath = string;
+export type Cli_Menu_Interactive_SettingsFlow_ConfigPath = string;
 
-export type CliMenuInteractiveSettingsFlowReturn = Promise<void>;
+export type Cli_Menu_Interactive_SettingsFlow_Returns = Promise<void>;
 
-export type CliMenuInteractiveSettingsFlowCurrentSettings = LibSchemaSettingsConfig | undefined;
+export type Cli_Menu_Interactive_SettingsFlow_CurrentSettings = Lib_Schema_SettingsConfig | undefined;
 
-export type CliMenuInteractiveSettingsFlowErrorMessage = string;
+export type Cli_Menu_Interactive_SettingsFlow_ErrorMessage = string;
 
-export type CliMenuInteractiveSettingsFlowWorkerNameResponse = Record<string, unknown>;
+export type Cli_Menu_Interactive_SettingsFlow_WorkerNameResponse = Record<string, unknown>;
 
-export type CliMenuInteractiveSettingsFlowWorkerName = unknown;
+export type Cli_Menu_Interactive_SettingsFlow_WorkerName = unknown;
 
-export type CliMenuInteractiveSettingsFlowBaseDomainResponse = Record<string, unknown>;
+export type Cli_Menu_Interactive_SettingsFlow_BaseDomainResponse = Record<string, unknown>;
 
-export type CliMenuInteractiveSettingsFlowBaseDomain = unknown;
+export type Cli_Menu_Interactive_SettingsFlow_BaseDomain = unknown;
 
-export type CliMenuInteractiveSettingsFlowShowResponseOutputResponse = Record<string, unknown>;
+export type Cli_Menu_Interactive_SettingsFlow_ShowResponseOutputResponse = Record<string, unknown>;
 
-export type CliMenuInteractiveSettingsFlowShowResponseOutput = unknown;
+export type Cli_Menu_Interactive_SettingsFlow_ShowResponseOutput = unknown;
 
-export type CliMenuInteractiveSettingsFlowWorkerNameAsString = string;
+export type Cli_Menu_Interactive_SettingsFlow_WorkerNameAsString = string;
 
-export type CliMenuInteractiveSettingsFlowBaseDomainAsString = string;
+export type Cli_Menu_Interactive_SettingsFlow_BaseDomainAsString = string;
 
-export type CliMenuInteractiveSettingsFlowShowResponseOutputAsBoolean = boolean;
+export type Cli_Menu_Interactive_SettingsFlow_ShowResponseOutputAsBoolean = boolean;
+
+export type Cli_Menu_Interactive_SettingsFlow_UpdateErrorMessage = string;
 
 /**
  * CLI - Menu - Interactive - Trackers Menu.
  *
  * @since 2.0.0
  */
-export type CliMenuInteractiveTrackersMenuConfigPath = string;
+export type Cli_Menu_Interactive_TrackersMenu_ConfigPath = string;
 
-export type CliMenuInteractiveTrackersMenuReturn = Promise<void>;
+export type Cli_Menu_Interactive_TrackersMenu_Returns = Promise<void>;
 
-export type CliMenuInteractiveTrackersMenuInMenu = boolean;
+export type Cli_Menu_Interactive_TrackersMenu_InMenu = boolean;
 
-export type CliMenuInteractiveTrackersMenuActionResponse = Record<string, unknown>;
+export type Cli_Menu_Interactive_TrackersMenu_ActionResponse = Record<string, unknown>;
 
-export type CliMenuInteractiveTrackersMenuAction = unknown;
+export type Cli_Menu_Interactive_TrackersMenu_Action = unknown;
 
-export type CliMenuInteractiveTrackersMenuTrackers = LibSchemaTrackerConfig[];
+export type Cli_Menu_Interactive_TrackersMenu_Trackers = Lib_Schema_Config['trackers'];
 
-export type CliMenuInteractiveTrackersMenuNameResponse = Record<string, unknown>;
+export type Cli_Menu_Interactive_TrackersMenu_NameResponse = Record<string, unknown>;
 
-export type CliMenuInteractiveTrackersMenuName = unknown;
+export type Cli_Menu_Interactive_TrackersMenu_Name = unknown;
 
-export type CliMenuInteractiveTrackersMenuConfirmedResponse = Record<string, unknown>;
+export type Cli_Menu_Interactive_TrackersMenu_ConfirmedResponse = Record<string, unknown>;
 
-export type CliMenuInteractiveTrackersMenuConfirmed = unknown;
+export type Cli_Menu_Interactive_TrackersMenu_Confirmed = unknown;
 
-export type CliMenuInteractiveTrackersMenuNameAsString = string;
+export type Cli_Menu_Interactive_TrackersMenu_NameAsString = string;
 
-export type CliMenuInteractiveTrackersMenuErrorMessage = string;
+export type Cli_Menu_Interactive_TrackersMenu_ErrorMessage = string;

@@ -1,13 +1,17 @@
 import {
   BlogPreview,
+  Canvas,
   Features,
-  Hero,
   InstallStrip,
   Stats,
-} from '@cbnventures/docusaurus-preset-nova/components';
+} from '@cbnventures/docusaurus-preset-nova/blocks';
 
 import Head from '@docusaurus/Head';
+import Link from '@docusaurus/Link';
+import Heading from '@theme/Heading';
 import Layout from '@theme/Layout';
+
+import styles from './index.module.css';
 
 /**
  * Pages - Home.
@@ -21,21 +25,116 @@ import Layout from '@theme/Layout';
  */
 function Home() {
   return (
-    <Layout description="Branded short links with direct analytics tracking, deployed to the edge">
+    <Layout description="Self-hosted, branded short links on Cloudflare Workers with server-side analytics tracking">
       <Head>
         <title>Branded Short Links - Stop Renting Your Redirect</title>
       </Head>
-      <Hero
-        eyebrow="URL Shortener"
-        heading="Your short links have a landlord. Now it doesn't."
-        tagline="Public shorteners own your domain, your analytics, and your links. Branded Short Links runs on your domain and fires trackers server-side — no client-side JavaScript, no ad blockers."
-        ctaLabel="Get Started"
-        ctaLink="/docs/overview/"
-        secondaryCtaLabel="View on GitHub"
-        secondaryCtaLink="https://github.com/cbnventures/branded-short-links"
-      />
+      <Canvas container="full" className={styles['hero']}>
+        <div className={styles['heroInner']}>
+          <div className={styles['heroContent']}>
+            <p className="nova-hero-eyebrow">URL Shortener</p>
+            <Heading as="h1" className={`nova-hero-heading ${styles['heroHeading']}`}>
+              Your short links have a landlord. Now they don&apos;t.
+            </Heading>
+            <p className="nova-hero-tagline">
+              Public shorteners own your domain, your analytics, and your
+              links. Branded Short Links runs on your domain and fires
+              trackers server-side. No client-side JavaScript, no ad blockers.
+            </p>
+            <div className={`nova-hero-actions ${styles['heroActions']}`}>
+              <Link className="nova-cta-primary" to="/docs/overview/">
+                Get Started
+              </Link>
+              <Link
+                className="nova-cta-secondary"
+                to="https://github.com/cbnventures/branded-short-links"
+              >
+                View on GitHub
+              </Link>
+            </div>
+          </div>
+          <div className={styles['waterfallWrap']} aria-hidden="true">
+            <div className={styles['waterfall']}>
+              <div className={styles['waterfallScale']}>
+                <span>0ms</span>
+                <span>25ms</span>
+                <span>50ms</span>
+                <span>75ms</span>
+              </div>
+              <div className={styles['waterfallRow']}>
+                <span className={styles['waterfallLabel']}>DNS</span>
+                <div className={styles['waterfallTrack']}>
+                  <div className={`${styles['waterfallBar']} ${styles['barDns']}`} />
+                </div>
+              </div>
+              <div className={styles['waterfallRow']}>
+                <span className={styles['waterfallLabel']}>Edge Worker</span>
+                <div className={styles['waterfallTrack']}>
+                  <div className={`${styles['waterfallBar']} ${styles['barEdge']}`} />
+                </div>
+              </div>
+              <div className={styles['waterfallRow']}>
+                <span className={styles['waterfallLabel']}>GA4</span>
+                <div className={styles['waterfallTrack']}>
+                  <div className={`${styles['waterfallBar']} ${styles['barGa4']}`} />
+                </div>
+              </div>
+              <div className={styles['waterfallRow']}>
+                <span className={styles['waterfallLabel']}>Meta Pixel</span>
+                <div className={styles['waterfallTrack']}>
+                  <div className={`${styles['waterfallBar']} ${styles['barMeta']}`} />
+                </div>
+              </div>
+              <div className={styles['waterfallRow']}>
+                <span className={styles['waterfallLabel']}>PostHog</span>
+                <div className={styles['waterfallTrack']}>
+                  <div className={`${styles['waterfallBar']} ${styles['barPosthog']}`} />
+                </div>
+              </div>
+              <div className={styles['waterfallRow']}>
+                <span className={styles['waterfallLabel']}>ntfy</span>
+                <div className={styles['waterfallTrack']}>
+                  <div className={`${styles['waterfallBar']} ${styles['barNtfy']}`} />
+                </div>
+              </div>
+              <div className={styles['waterfallRow']}>
+                <span className={`${styles['waterfallLabel']} ${styles['labelSuccess']}`}>
+                  301 Redirect
+                </span>
+                <div className={styles['waterfallTrack']}>
+                  <div className={`${styles['waterfallBar']} ${styles['barRedirect']}`} />
+                </div>
+              </div>
+              <div className={styles['waterfallRow']}>
+                <span className={`${styles['waterfallLabel']} ${styles['labelStruck']}`}>
+                  Client JS
+                </span>
+                <div className={styles['waterfallTrack']}>
+                  <div className={styles['barNone']} />
+                </div>
+              </div>
+              <div className={styles['waterfallSummary']}>
+                <span>
+                  <strong>6</strong>
+                  {' trackers'}
+                </span>
+                <span>
+                  <strong>0</strong>
+                  {' client scripts'}
+                </span>
+                <span>
+                  <strong>{'<50ms'}</strong>
+                  {' total'}
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div className={styles['installWrap']}>
+          <InstallStrip command="npx branded-short-links" copyTarget="block" />
+        </div>
+      </Canvas>
       <main>
-        <InstallStrip command="npx branded-short-links" copyTarget="block" />
         <Features
           items={[
             {
@@ -90,7 +189,7 @@ function Home() {
             },
             {
               value: '0',
-              label: 'External dependencies',
+              label: 'Origin servers',
               color: 'accent',
             },
           ]}

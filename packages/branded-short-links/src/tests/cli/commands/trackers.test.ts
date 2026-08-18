@@ -1,8 +1,8 @@
 import {
   existsSync, mkdtempSync, rmSync, writeFileSync,
-} from 'fs';
-import { tmpdir } from 'os';
-import { join } from 'path';
+} from 'node:fs';
+import { tmpdir } from 'node:os';
+import { join } from 'node:path';
 
 import {
   afterEach, beforeEach, describe, expect, it,
@@ -15,22 +15,33 @@ import {
 import { configSchema } from '../../../lib/schema.js';
 
 import type {
-  TestsCliCommandsTrackersConfig,
-  TestsCliCommandsTrackersConfigPath,
-  TestsCliCommandsTrackersEmptyConfig,
-  TestsCliCommandsTrackersGa4ApiSecret,
-  TestsCliCommandsTrackersGa4Record,
-  TestsCliCommandsTrackersGa4Tracker,
-  TestsCliCommandsTrackersNewNtfyTracker,
-  TestsCliCommandsTrackersNewPosthogTracker,
-  TestsCliCommandsTrackersTempDir,
-  TestsCliCommandsTrackersTempDirPath,
-  TestsCliCommandsTrackersTrackers,
-  TestsCliCommandsTrackersUnknown,
-  TestsCliCommandsTrackersValidConfig,
+  Tests_Cli_Commands_Trackers_AddTracker_AddsATrackerToTheArray_NewTracker,
+  Tests_Cli_Commands_Trackers_AddTracker_AddsATrackerToTheArray_Trackers,
+  Tests_Cli_Commands_Trackers_AddTracker_DoesNotAffectExistingTrackers_NewTracker,
+  Tests_Cli_Commands_Trackers_AddTracker_DoesNotAffectExistingTrackers_Trackers,
+  Tests_Cli_Commands_Trackers_AddTracker_PersistsTheAddedTrackerToFile_Config,
+  Tests_Cli_Commands_Trackers_AddTracker_PersistsTheAddedTrackerToFile_NewTracker,
+  Tests_Cli_Commands_Trackers_ConfigJson,
+  Tests_Cli_Commands_Trackers_ConfigPath,
+  Tests_Cli_Commands_Trackers_EditTracker_DoesNotAffectOtherTrackers_Trackers,
+  Tests_Cli_Commands_Trackers_EditTracker_MergesUpdatesIntoTheMatchingTracker_Ga4,
+  Tests_Cli_Commands_Trackers_EditTracker_MergesUpdatesIntoTheMatchingTracker_Ga4ApiSecret,
+  Tests_Cli_Commands_Trackers_EditTracker_MergesUpdatesIntoTheMatchingTracker_Ga4AsRecord,
+  Tests_Cli_Commands_Trackers_EditTracker_MergesUpdatesIntoTheMatchingTracker_Ga4Unknown,
+  Tests_Cli_Commands_Trackers_EditTracker_MergesUpdatesIntoTheMatchingTracker_Trackers,
+  Tests_Cli_Commands_Trackers_ListTrackers_ReturnsCorrectNumberOfTrackers_Trackers,
+  Tests_Cli_Commands_Trackers_ListTrackers_ReturnsEmptyArrayWhenNoTrackers_EmptyConfig,
+  Tests_Cli_Commands_Trackers_ListTrackers_ReturnsEmptyArrayWhenNoTrackers_Trackers,
+  Tests_Cli_Commands_Trackers_ListTrackers_ReturnsTheTrackersArray_Trackers,
+  Tests_Cli_Commands_Trackers_OsTmpDir,
+  Tests_Cli_Commands_Trackers_RemoveTracker_PersistsTheRemovalToFile_Config,
+  Tests_Cli_Commands_Trackers_RemoveTracker_RemovesATrackerByName_Trackers,
+  Tests_Cli_Commands_Trackers_TempDir,
+  Tests_Cli_Commands_Trackers_TempDirPath,
+  Tests_Cli_Commands_Trackers_ValidConfig,
 } from '../../../types/tests/cli/commands/trackers.test.d.ts';
 
-const validConfig: TestsCliCommandsTrackersValidConfig = {
+const validConfig: Tests_Cli_Commands_Trackers_ValidConfig = {
   links: {
     fallback_url: 'https://example.com',
     items: [],
@@ -56,17 +67,17 @@ const validConfig: TestsCliCommandsTrackersValidConfig = {
 };
 
 describe('listTrackers', () => {
-  let tempDir: TestsCliCommandsTrackersTempDir = undefined;
-  let configPath: TestsCliCommandsTrackersConfigPath = undefined;
+  let tempDir: Tests_Cli_Commands_Trackers_TempDir = undefined;
+  let configPath: Tests_Cli_Commands_Trackers_ConfigPath = undefined;
 
   beforeEach(() => {
-    const osTmpDir: TestsCliCommandsTrackersTempDirPath = tmpdir();
-    const tempDirPath: TestsCliCommandsTrackersTempDirPath = join(osTmpDir, 'bsl-test-');
+    const osTmpDir: Tests_Cli_Commands_Trackers_OsTmpDir = tmpdir();
+    const tempDirPath: Tests_Cli_Commands_Trackers_TempDirPath = join(osTmpDir, 'bsl-test-');
 
     tempDir = mkdtempSync(tempDirPath);
     configPath = join(tempDir, 'config.json');
 
-    const configJson: TestsCliCommandsTrackersConfigPath = JSON.stringify(validConfig, null, 2);
+    const configJson: Tests_Cli_Commands_Trackers_ConfigJson = JSON.stringify(validConfig, null, 2);
 
     writeFileSync(configPath, configJson);
 
@@ -82,7 +93,7 @@ describe('listTrackers', () => {
   });
 
   it('returns the trackers array', () => {
-    const trackers: TestsCliCommandsTrackersTrackers = listTrackers(configPath!);
+    const trackers: Tests_Cli_Commands_Trackers_ListTrackers_ReturnsTheTrackersArray_Trackers = listTrackers(configPath!);
 
     expect(trackers).toEqual(validConfig['trackers']);
 
@@ -90,7 +101,7 @@ describe('listTrackers', () => {
   });
 
   it('returns correct number of trackers', () => {
-    const trackers: TestsCliCommandsTrackersTrackers = listTrackers(configPath!);
+    const trackers: Tests_Cli_Commands_Trackers_ListTrackers_ReturnsCorrectNumberOfTrackers_Trackers = listTrackers(configPath!);
 
     expect(trackers).toHaveLength(2);
 
@@ -98,15 +109,16 @@ describe('listTrackers', () => {
   });
 
   it('returns empty array when no trackers', () => {
-    const emptyConfig: TestsCliCommandsTrackersEmptyConfig = {
-      ...validConfig, trackers: [],
+    const emptyConfig: Tests_Cli_Commands_Trackers_ListTrackers_ReturnsEmptyArrayWhenNoTrackers_EmptyConfig = {
+      ...validConfig,
+      trackers: [],
     };
 
-    const configJson: TestsCliCommandsTrackersConfigPath = JSON.stringify(emptyConfig, null, 2);
+    const configJson: Tests_Cli_Commands_Trackers_ConfigJson = JSON.stringify(emptyConfig, null, 2);
 
     writeFileSync(configPath!, configJson);
 
-    const trackers: TestsCliCommandsTrackersTrackers = listTrackers(configPath!);
+    const trackers: Tests_Cli_Commands_Trackers_ListTrackers_ReturnsEmptyArrayWhenNoTrackers_Trackers = listTrackers(configPath!);
 
     expect(trackers).toEqual([]);
 
@@ -117,17 +129,17 @@ describe('listTrackers', () => {
 });
 
 describe('addTracker', () => {
-  let tempDir: TestsCliCommandsTrackersTempDir = undefined;
-  let configPath: TestsCliCommandsTrackersConfigPath = undefined;
+  let tempDir: Tests_Cli_Commands_Trackers_TempDir = undefined;
+  let configPath: Tests_Cli_Commands_Trackers_ConfigPath = undefined;
 
   beforeEach(() => {
-    const osTmpDir: TestsCliCommandsTrackersTempDirPath = tmpdir();
-    const tempDirPath: TestsCliCommandsTrackersTempDirPath = join(osTmpDir, 'bsl-test-');
+    const osTmpDir: Tests_Cli_Commands_Trackers_OsTmpDir = tmpdir();
+    const tempDirPath: Tests_Cli_Commands_Trackers_TempDirPath = join(osTmpDir, 'bsl-test-');
 
     tempDir = mkdtempSync(tempDirPath);
     configPath = join(tempDir, 'config.json');
 
-    const configJson: TestsCliCommandsTrackersConfigPath = JSON.stringify(validConfig, null, 2);
+    const configJson: Tests_Cli_Commands_Trackers_ConfigJson = JSON.stringify(validConfig, null, 2);
 
     writeFileSync(configPath, configJson);
 
@@ -143,7 +155,7 @@ describe('addTracker', () => {
   });
 
   it('adds a tracker to the array', () => {
-    const newTracker: TestsCliCommandsTrackersNewNtfyTracker = {
+    const newTracker: Tests_Cli_Commands_Trackers_AddTracker_AddsATrackerToTheArray_NewTracker = {
       name: 'ntfy-tracker',
       type: 'ntfy' as const,
       server: 'https://ntfy.example.com',
@@ -153,7 +165,7 @@ describe('addTracker', () => {
 
     addTracker(configPath!, newTracker);
 
-    const trackers: TestsCliCommandsTrackersTrackers = listTrackers(configPath!);
+    const trackers: Tests_Cli_Commands_Trackers_AddTracker_AddsATrackerToTheArray_Trackers = listTrackers(configPath!);
 
     expect(trackers).toHaveLength(3);
 
@@ -163,7 +175,7 @@ describe('addTracker', () => {
   });
 
   it('persists the added tracker to file', () => {
-    const newTracker: TestsCliCommandsTrackersNewPosthogTracker = {
+    const newTracker: Tests_Cli_Commands_Trackers_AddTracker_PersistsTheAddedTrackerToFile_NewTracker = {
       name: 'posthog-tracker',
       type: 'posthog' as const,
       host: 'https://app.posthog.com',
@@ -172,7 +184,7 @@ describe('addTracker', () => {
 
     addTracker(configPath!, newTracker);
 
-    const config: TestsCliCommandsTrackersConfig = configSchema.parse(loadConfig(configPath!));
+    const config: Tests_Cli_Commands_Trackers_AddTracker_PersistsTheAddedTrackerToFile_Config = configSchema.parse(loadConfig(configPath!));
 
     expect(config['trackers']).toHaveLength(3);
 
@@ -180,7 +192,7 @@ describe('addTracker', () => {
   });
 
   it('does not affect existing trackers', () => {
-    const newTracker: TestsCliCommandsTrackersNewNtfyTracker = {
+    const newTracker: Tests_Cli_Commands_Trackers_AddTracker_DoesNotAffectExistingTrackers_NewTracker = {
       name: 'ntfy-tracker',
       type: 'ntfy' as const,
       server: 'https://ntfy.example.com',
@@ -190,7 +202,7 @@ describe('addTracker', () => {
 
     addTracker(configPath!, newTracker);
 
-    const trackers: TestsCliCommandsTrackersTrackers = listTrackers(configPath!);
+    const trackers: Tests_Cli_Commands_Trackers_AddTracker_DoesNotAffectExistingTrackers_Trackers = listTrackers(configPath!);
 
     expect(trackers[0]).toEqual(validConfig['trackers'][0]);
 
@@ -203,17 +215,17 @@ describe('addTracker', () => {
 });
 
 describe('editTracker', () => {
-  let tempDir: TestsCliCommandsTrackersTempDir = undefined;
-  let configPath: TestsCliCommandsTrackersConfigPath = undefined;
+  let tempDir: Tests_Cli_Commands_Trackers_TempDir = undefined;
+  let configPath: Tests_Cli_Commands_Trackers_ConfigPath = undefined;
 
   beforeEach(() => {
-    const osTmpDir: TestsCliCommandsTrackersTempDirPath = tmpdir();
-    const tempDirPath: TestsCliCommandsTrackersTempDirPath = join(osTmpDir, 'bsl-test-');
+    const osTmpDir: Tests_Cli_Commands_Trackers_OsTmpDir = tmpdir();
+    const tempDirPath: Tests_Cli_Commands_Trackers_TempDirPath = join(osTmpDir, 'bsl-test-');
 
     tempDir = mkdtempSync(tempDirPath);
     configPath = join(tempDir, 'config.json');
 
-    const configJson: TestsCliCommandsTrackersConfigPath = JSON.stringify(validConfig, null, 2);
+    const configJson: Tests_Cli_Commands_Trackers_ConfigJson = JSON.stringify(validConfig, null, 2);
 
     writeFileSync(configPath, configJson);
 
@@ -231,14 +243,14 @@ describe('editTracker', () => {
   it('merges updates into the matching tracker', () => {
     editTracker(configPath!, 'ga4-tracker', { api_secret: 'new-secret' });
 
-    const trackers: TestsCliCommandsTrackersTrackers = listTrackers(configPath!);
-    const ga4: TestsCliCommandsTrackersGa4Tracker = trackers.find((tracker) => tracker['name'] === 'ga4-tracker') as TestsCliCommandsTrackersGa4Tracker;
+    const trackers: Tests_Cli_Commands_Trackers_EditTracker_MergesUpdatesIntoTheMatchingTracker_Trackers = listTrackers(configPath!);
+    const ga4: Tests_Cli_Commands_Trackers_EditTracker_MergesUpdatesIntoTheMatchingTracker_Ga4 = trackers.find((tracker) => tracker['name'] === 'ga4-tracker') as Tests_Cli_Commands_Trackers_EditTracker_MergesUpdatesIntoTheMatchingTracker_Ga4;
 
     expect(ga4).toBeDefined();
 
-    const ga4Unknown: TestsCliCommandsTrackersUnknown = ga4;
-    const ga4AsRecord: TestsCliCommandsTrackersGa4Record = ga4Unknown as TestsCliCommandsTrackersGa4Record;
-    const ga4ApiSecret: TestsCliCommandsTrackersGa4ApiSecret = ga4AsRecord['api_secret']!;
+    const ga4Unknown: Tests_Cli_Commands_Trackers_EditTracker_MergesUpdatesIntoTheMatchingTracker_Ga4Unknown = ga4;
+    const ga4AsRecord: Tests_Cli_Commands_Trackers_EditTracker_MergesUpdatesIntoTheMatchingTracker_Ga4AsRecord = ga4Unknown as Tests_Cli_Commands_Trackers_EditTracker_MergesUpdatesIntoTheMatchingTracker_Ga4AsRecord;
+    const ga4ApiSecret: Tests_Cli_Commands_Trackers_EditTracker_MergesUpdatesIntoTheMatchingTracker_Ga4ApiSecret = ga4AsRecord['api_secret']!;
 
     expect(ga4ApiSecret).toBe('new-secret');
 
@@ -254,7 +266,7 @@ describe('editTracker', () => {
   it('does not affect other trackers', () => {
     editTracker(configPath!, 'ga4-tracker', { api_secret: 'new-secret' });
 
-    const trackers: TestsCliCommandsTrackersTrackers = listTrackers(configPath!);
+    const trackers: Tests_Cli_Commands_Trackers_EditTracker_DoesNotAffectOtherTrackers_Trackers = listTrackers(configPath!);
 
     expect(trackers[0]).toEqual(validConfig['trackers'][0]);
 
@@ -265,17 +277,17 @@ describe('editTracker', () => {
 });
 
 describe('removeTracker', () => {
-  let tempDir: TestsCliCommandsTrackersTempDir = undefined;
-  let configPath: TestsCliCommandsTrackersConfigPath = undefined;
+  let tempDir: Tests_Cli_Commands_Trackers_TempDir = undefined;
+  let configPath: Tests_Cli_Commands_Trackers_ConfigPath = undefined;
 
   beforeEach(() => {
-    const osTmpDir: TestsCliCommandsTrackersTempDirPath = tmpdir();
-    const tempDirPath: TestsCliCommandsTrackersTempDirPath = join(osTmpDir, 'bsl-test-');
+    const osTmpDir: Tests_Cli_Commands_Trackers_OsTmpDir = tmpdir();
+    const tempDirPath: Tests_Cli_Commands_Trackers_TempDirPath = join(osTmpDir, 'bsl-test-');
 
     tempDir = mkdtempSync(tempDirPath);
     configPath = join(tempDir, 'config.json');
 
-    const configJson: TestsCliCommandsTrackersConfigPath = JSON.stringify(validConfig, null, 2);
+    const configJson: Tests_Cli_Commands_Trackers_ConfigJson = JSON.stringify(validConfig, null, 2);
 
     writeFileSync(configPath, configJson);
 
@@ -293,7 +305,7 @@ describe('removeTracker', () => {
   it('removes a tracker by name', () => {
     removeTracker(configPath!, 'ga4-tracker');
 
-    const trackers: TestsCliCommandsTrackersTrackers = listTrackers(configPath!);
+    const trackers: Tests_Cli_Commands_Trackers_RemoveTracker_RemovesATrackerByName_Trackers = listTrackers(configPath!);
 
     expect(trackers).toHaveLength(1);
 
@@ -311,7 +323,7 @@ describe('removeTracker', () => {
   it('persists the removal to file', () => {
     removeTracker(configPath!, 'ga4-tracker');
 
-    const config: TestsCliCommandsTrackersConfig = configSchema.parse(loadConfig(configPath!));
+    const config: Tests_Cli_Commands_Trackers_RemoveTracker_PersistsTheRemovalToFile_Config = configSchema.parse(loadConfig(configPath!));
 
     expect(config['trackers']).toHaveLength(1);
 

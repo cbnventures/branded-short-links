@@ -1,21 +1,21 @@
-import { readFileSync, writeFileSync } from 'fs';
+import { readFileSync, writeFileSync } from 'node:fs';
 
 import type {
-  CliCommandsConfigIoLoadConfigConfigPath,
-  CliCommandsConfigIoLoadConfigRawContent,
-  CliCommandsConfigIoLoadConfigReturn,
-  CliCommandsConfigIoNormalizeConfigConfig,
-  CliCommandsConfigIoNormalizeConfigLinks,
-  CliCommandsConfigIoNormalizeConfigNormalizedLinks,
-  CliCommandsConfigIoNormalizeConfigNormalizedTrackers,
-  CliCommandsConfigIoNormalizeConfigReturn,
-  CliCommandsConfigIoNormalizeConfigSettings,
-  CliCommandsConfigIoNormalizeConfigSortedItems,
-  CliCommandsConfigIoNormalizeConfigTrackers,
-  CliCommandsConfigIoSaveConfigConfig,
-  CliCommandsConfigIoSaveConfigConfigPath,
-  CliCommandsConfigIoSaveConfigNormalizedConfig,
-  CliCommandsConfigIoSaveConfigReturn,
+  Cli_Commands_ConfigIo_LoadConfig_ConfigPath,
+  Cli_Commands_ConfigIo_LoadConfig_RawContent,
+  Cli_Commands_ConfigIo_LoadConfig_Returns,
+  Cli_Commands_ConfigIo_NormalizeConfig_Config,
+  Cli_Commands_ConfigIo_NormalizeConfig_Links,
+  Cli_Commands_ConfigIo_NormalizeConfig_NormalizedLinks,
+  Cli_Commands_ConfigIo_NormalizeConfig_NormalizedTrackers,
+  Cli_Commands_ConfigIo_NormalizeConfig_Returns,
+  Cli_Commands_ConfigIo_NormalizeConfig_Settings,
+  Cli_Commands_ConfigIo_NormalizeConfig_SortedItems,
+  Cli_Commands_ConfigIo_NormalizeConfig_Trackers,
+  Cli_Commands_ConfigIo_SaveConfig_Config,
+  Cli_Commands_ConfigIo_SaveConfig_ConfigPath,
+  Cli_Commands_ConfigIo_SaveConfig_NormalizedConfig,
+  Cli_Commands_ConfigIo_SaveConfig_Returns,
 } from '../../types/cli/commands/config-io.d.ts';
 
 /**
@@ -27,8 +27,8 @@ import type {
  *
  * @since 2.0.0
  */
-function loadConfig(configPath: CliCommandsConfigIoLoadConfigConfigPath): CliCommandsConfigIoLoadConfigReturn {
-  const rawContent: CliCommandsConfigIoLoadConfigRawContent = readFileSync(configPath, 'utf-8');
+function loadConfig(configPath: Cli_Commands_ConfigIo_LoadConfig_ConfigPath): Cli_Commands_ConfigIo_LoadConfig_Returns {
+  const rawContent: Cli_Commands_ConfigIo_LoadConfig_RawContent = readFileSync(configPath, 'utf-8');
 
   return JSON.parse(rawContent);
 }
@@ -40,27 +40,27 @@ function loadConfig(configPath: CliCommandsConfigIoLoadConfigConfigPath): CliCom
  * settings), sorts link items and trackers alphabetically, and places the type
  * key before name in each tracker to match the UI prompt sequence.
  *
- * @param {CliCommandsConfigIoNormalizeConfigConfig} config - Config.
+ * @param {Cli_Commands_ConfigIo_NormalizeConfig_Config} config - Config.
  *
- * @returns {CliCommandsConfigIoNormalizeConfigReturn}
+ * @returns {Cli_Commands_ConfigIo_NormalizeConfig_Returns}
  *
  * @since 2.0.0
  */
-function normalizeConfig(config: CliCommandsConfigIoNormalizeConfigConfig): CliCommandsConfigIoNormalizeConfigReturn {
-  const links: CliCommandsConfigIoNormalizeConfigLinks = config['links'];
-  const trackers: CliCommandsConfigIoNormalizeConfigTrackers = config['trackers'];
-  const settings: CliCommandsConfigIoNormalizeConfigSettings = config['settings'];
+function normalizeConfig(config: Cli_Commands_ConfigIo_NormalizeConfig_Config): Cli_Commands_ConfigIo_NormalizeConfig_Returns {
+  const links: Cli_Commands_ConfigIo_NormalizeConfig_Links = config['links'];
+  const trackers: Cli_Commands_ConfigIo_NormalizeConfig_Trackers = config['trackers'];
+  const settings: Cli_Commands_ConfigIo_NormalizeConfig_Settings = config['settings'];
 
-  const sortedItems: CliCommandsConfigIoNormalizeConfigSortedItems = [...links['items']].sort(
+  const sortedItems: Cli_Commands_ConfigIo_NormalizeConfig_SortedItems = [...links['items']].sort(
     (a, b) => a['shortcode'].localeCompare(b['shortcode']),
   );
 
-  const normalizedLinks: CliCommandsConfigIoNormalizeConfigNormalizedLinks = {
+  const normalizedLinks: Cli_Commands_ConfigIo_NormalizeConfig_NormalizedLinks = {
     ...links,
     items: sortedItems,
   };
 
-  const normalizedTrackers: CliCommandsConfigIoNormalizeConfigNormalizedTrackers = [...trackers]
+  const normalizedTrackers: Cli_Commands_ConfigIo_NormalizeConfig_NormalizedTrackers = [...trackers]
     .sort((a, b) => a['name'].localeCompare(b['name']))
     .map((tracker) => {
       return {
@@ -85,15 +85,15 @@ function normalizeConfig(config: CliCommandsConfigIoNormalizeConfigConfig): CliC
  * Serializes the configuration object to JSON and writes
  * it to disk so changes persist between CLI sessions.
  *
- * @param {CliCommandsConfigIoSaveConfigConfigPath} configPath - Config path.
- * @param {CliCommandsConfigIoSaveConfigConfig}     config     - Config.
+ * @param {Cli_Commands_ConfigIo_SaveConfig_ConfigPath} configPath - Config path.
+ * @param {Cli_Commands_ConfigIo_SaveConfig_Config}     config     - Config.
  *
- * @returns {CliCommandsConfigIoSaveConfigReturn}
+ * @returns {Cli_Commands_ConfigIo_SaveConfig_Returns}
  *
  * @since 2.0.0
  */
-function saveConfig(configPath: CliCommandsConfigIoSaveConfigConfigPath, config: CliCommandsConfigIoSaveConfigConfig): CliCommandsConfigIoSaveConfigReturn {
-  const normalizedConfig: CliCommandsConfigIoSaveConfigNormalizedConfig = normalizeConfig(config);
+function saveConfig(configPath: Cli_Commands_ConfigIo_SaveConfig_ConfigPath, config: Cli_Commands_ConfigIo_SaveConfig_Config): Cli_Commands_ConfigIo_SaveConfig_Returns {
+  const normalizedConfig: Cli_Commands_ConfigIo_SaveConfig_NormalizedConfig = normalizeConfig(config);
 
   writeFileSync(configPath, `${JSON.stringify(normalizedConfig, null, 2)}\n`);
 

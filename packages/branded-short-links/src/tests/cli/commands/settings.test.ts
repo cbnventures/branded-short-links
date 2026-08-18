@@ -1,8 +1,8 @@
 import {
   existsSync, mkdtempSync, rmSync, writeFileSync,
-} from 'fs';
-import { tmpdir } from 'os';
-import { join } from 'path';
+} from 'node:fs';
+import { tmpdir } from 'node:os';
+import { join } from 'node:path';
 
 import {
   afterEach, beforeEach, describe, expect, it,
@@ -13,16 +13,22 @@ import { getSettings, updateSettings } from '../../../cli/commands/settings.js';
 import { configSchema } from '../../../lib/schema.js';
 
 import type {
-  TestsCliCommandsSettingsConfig,
-  TestsCliCommandsSettingsConfigContent,
-  TestsCliCommandsSettingsConfigPath,
-  TestsCliCommandsSettingsSettings,
-  TestsCliCommandsSettingsTempDir,
-  TestsCliCommandsSettingsTempDirPath,
-  TestsCliCommandsSettingsValidConfig,
+  Tests_Cli_Commands_Settings_ConfigContent,
+  Tests_Cli_Commands_Settings_ConfigPath,
+  Tests_Cli_Commands_Settings_GetSettings_ReturnsCorrectBaseDomain_Settings,
+  Tests_Cli_Commands_Settings_GetSettings_ReturnsCorrectShowResponseOutput_Settings,
+  Tests_Cli_Commands_Settings_GetSettings_ReturnsTheSettingsObject_Settings,
+  Tests_Cli_Commands_Settings_OsTmpDir,
+  Tests_Cli_Commands_Settings_TempDir,
+  Tests_Cli_Commands_Settings_TempDirPath,
+  Tests_Cli_Commands_Settings_UpdateSettings_DoesNotAffectOtherConfigSections_Config,
+  Tests_Cli_Commands_Settings_UpdateSettings_MergesUpdatesIntoSettings_Settings,
+  Tests_Cli_Commands_Settings_UpdateSettings_PersistsChangesToFile_Config,
+  Tests_Cli_Commands_Settings_UpdateSettings_UpdatesMultipleFieldsAtOnce_Settings,
+  Tests_Cli_Commands_Settings_ValidConfig,
 } from '../../../types/tests/cli/commands/settings.test.d.ts';
 
-const validConfig: TestsCliCommandsSettingsValidConfig = {
+const validConfig: Tests_Cli_Commands_Settings_ValidConfig = {
   settings: {
     worker_name: 'test-worker',
     base_domain: 'bsl.example.com',
@@ -36,17 +42,17 @@ const validConfig: TestsCliCommandsSettingsValidConfig = {
 };
 
 describe('getSettings', () => {
-  let tempDir: TestsCliCommandsSettingsTempDir = undefined;
-  let configPath: TestsCliCommandsSettingsConfigPath = undefined;
+  let tempDir: Tests_Cli_Commands_Settings_TempDir = undefined;
+  let configPath: Tests_Cli_Commands_Settings_ConfigPath = undefined;
 
   beforeEach(() => {
-    const osTmpDir: TestsCliCommandsSettingsTempDirPath = tmpdir();
-    const tempDirPath: TestsCliCommandsSettingsTempDirPath = join(osTmpDir, 'bsl-test-');
+    const osTmpDir: Tests_Cli_Commands_Settings_OsTmpDir = tmpdir();
+    const tempDirPath: Tests_Cli_Commands_Settings_TempDirPath = join(osTmpDir, 'bsl-test-');
 
     tempDir = mkdtempSync(tempDirPath);
     configPath = join(tempDir, 'config.json');
 
-    const configContent: TestsCliCommandsSettingsConfigContent = JSON.stringify(validConfig, null, 2);
+    const configContent: Tests_Cli_Commands_Settings_ConfigContent = JSON.stringify(validConfig, null, 2);
 
     writeFileSync(configPath, configContent);
 
@@ -62,7 +68,7 @@ describe('getSettings', () => {
   });
 
   it('returns the settings object', () => {
-    const settings: TestsCliCommandsSettingsSettings = getSettings(configPath!);
+    const settings: Tests_Cli_Commands_Settings_GetSettings_ReturnsTheSettingsObject_Settings = getSettings(configPath!);
 
     expect(settings).toEqual(validConfig['settings']);
 
@@ -70,7 +76,7 @@ describe('getSettings', () => {
   });
 
   it('returns correct base_domain', () => {
-    const settings: TestsCliCommandsSettingsSettings = getSettings(configPath!);
+    const settings: Tests_Cli_Commands_Settings_GetSettings_ReturnsCorrectBaseDomain_Settings = getSettings(configPath!);
 
     expect(settings['base_domain']).toBe('bsl.example.com');
 
@@ -78,7 +84,7 @@ describe('getSettings', () => {
   });
 
   it('returns correct show_response_output', () => {
-    const settings: TestsCliCommandsSettingsSettings = getSettings(configPath!);
+    const settings: Tests_Cli_Commands_Settings_GetSettings_ReturnsCorrectShowResponseOutput_Settings = getSettings(configPath!);
 
     expect(settings['show_response_output']).toBe(false);
 
@@ -89,17 +95,17 @@ describe('getSettings', () => {
 });
 
 describe('updateSettings', () => {
-  let tempDir: TestsCliCommandsSettingsTempDir = undefined;
-  let configPath: TestsCliCommandsSettingsConfigPath = undefined;
+  let tempDir: Tests_Cli_Commands_Settings_TempDir = undefined;
+  let configPath: Tests_Cli_Commands_Settings_ConfigPath = undefined;
 
   beforeEach(() => {
-    const osTmpDir: TestsCliCommandsSettingsTempDirPath = tmpdir();
-    const tempDirPath: TestsCliCommandsSettingsTempDirPath = join(osTmpDir, 'bsl-test-');
+    const osTmpDir: Tests_Cli_Commands_Settings_OsTmpDir = tmpdir();
+    const tempDirPath: Tests_Cli_Commands_Settings_TempDirPath = join(osTmpDir, 'bsl-test-');
 
     tempDir = mkdtempSync(tempDirPath);
     configPath = join(tempDir, 'config.json');
 
-    const configContent: TestsCliCommandsSettingsConfigContent = JSON.stringify(validConfig, null, 2);
+    const configContent: Tests_Cli_Commands_Settings_ConfigContent = JSON.stringify(validConfig, null, 2);
 
     writeFileSync(configPath, configContent);
 
@@ -117,7 +123,7 @@ describe('updateSettings', () => {
   it('merges updates into settings', () => {
     updateSettings(configPath!, { show_response_output: true });
 
-    const settings: TestsCliCommandsSettingsSettings = getSettings(configPath!);
+    const settings: Tests_Cli_Commands_Settings_UpdateSettings_MergesUpdatesIntoSettings_Settings = getSettings(configPath!);
 
     expect(settings['show_response_output']).toBe(true);
 
@@ -128,10 +134,11 @@ describe('updateSettings', () => {
 
   it('updates multiple fields at once', () => {
     updateSettings(configPath!, {
-      show_response_output: true, base_domain: 'new.example.com',
+      show_response_output: true,
+      base_domain: 'new.example.com',
     });
 
-    const settings: TestsCliCommandsSettingsSettings = getSettings(configPath!);
+    const settings: Tests_Cli_Commands_Settings_UpdateSettings_UpdatesMultipleFieldsAtOnce_Settings = getSettings(configPath!);
 
     expect(settings['show_response_output']).toBe(true);
 
@@ -143,7 +150,7 @@ describe('updateSettings', () => {
   it('persists changes to file', () => {
     updateSettings(configPath!, { base_domain: 'new.example.com' });
 
-    const config: TestsCliCommandsSettingsConfig = configSchema.parse(loadConfig(configPath!));
+    const config: Tests_Cli_Commands_Settings_UpdateSettings_PersistsChangesToFile_Config = configSchema.parse(loadConfig(configPath!));
 
     expect(config['settings']['base_domain']).toBe('new.example.com');
 
@@ -153,7 +160,7 @@ describe('updateSettings', () => {
   it('does not affect other config sections', () => {
     updateSettings(configPath!, { show_response_output: true });
 
-    const config: TestsCliCommandsSettingsConfig = configSchema.parse(loadConfig(configPath!));
+    const config: Tests_Cli_Commands_Settings_UpdateSettings_DoesNotAffectOtherConfigSections_Config = configSchema.parse(loadConfig(configPath!));
 
     expect(config['links']).toEqual(validConfig['links']);
 

@@ -9,12 +9,12 @@ import { defineConfig } from 'vitest/config';
  * @since 0.15.0
  */
 const currentFilePath = fileURLToPath(import.meta.url);
-const currentDirectory = dirname(currentFilePath);
+const rootDirectory = dirname(currentFilePath);
 
 export default defineConfig({
   resolve: {
     alias: {
-      '@site': currentDirectory,
+      '@site': rootDirectory,
     },
   },
   test: {

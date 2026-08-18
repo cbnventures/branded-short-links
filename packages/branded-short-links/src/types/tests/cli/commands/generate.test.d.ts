@@ -1,34 +1,105 @@
-import type { LibSchemaConfig } from '../../../lib/schema.d.ts';
+import type { Lib_Schema_Config } from '../../../lib/schema.d.ts';
 
 /**
- * Tests - CLI - Commands - Generate.
+ * Tests - CLI - Commands - Generate - Generate Wrangler Toml.
  *
  * @since 2.0.0
  */
-export type TestsCliCommandsGenerateTempDir = string | undefined;
+export type Tests_Cli_Commands_Generate_GenerateWranglerToml_TempDir = string | undefined;
 
-export type TestsCliCommandsGenerateConfigPath = string | undefined;
+export type Tests_Cli_Commands_Generate_GenerateWranglerToml_ConfigPath = string | undefined;
 
-export type TestsCliCommandsGenerateOutputPath = string | undefined;
+export type Tests_Cli_Commands_Generate_GenerateWranglerToml_OutputPath = string | undefined;
 
-export type TestsCliCommandsGenerateValidConfig = LibSchemaConfig;
+export type Tests_Cli_Commands_Generate_GenerateWranglerToml_ValidConfig = Lib_Schema_Config & {};
 
-export type TestsCliCommandsGenerateTempDirPrefix = string;
+export type Tests_Cli_Commands_Generate_GenerateWranglerToml_OsTmpDir = string;
 
-export type TestsCliCommandsGenerateTempDirPath = string;
+export type Tests_Cli_Commands_Generate_GenerateWranglerToml_TempDirPath = string;
 
-export type TestsCliCommandsGenerateTempDirExists = boolean;
+export type Tests_Cli_Commands_Generate_GenerateWranglerToml_ConfigContent = string;
 
-export type TestsCliCommandsGenerateConfigContent = string;
+/**
+ * Tests - CLI - Commands - Generate - Generate Wrangler Toml - File Ends With Newline.
+ *
+ * @since 2.0.0
+ */
+export type Tests_Cli_Commands_Generate_GenerateWranglerToml_FileEndsWithNewline_Output = string;
 
-export type TestsCliCommandsGenerateOutput = string;
+export type Tests_Cli_Commands_Generate_GenerateWranglerToml_FileEndsWithNewline_EndsWithNewline = boolean;
 
-export type TestsCliCommandsGenerateInnerJson = string;
+/**
+ * Tests - CLI - Commands - Generate - Generate Wrangler Toml - LINKS Var Is Present As Double JSON Encoded String.
+ *
+ * @since 2.0.0
+ */
+export type Tests_Cli_Commands_Generate_GenerateWranglerToml_LINKSVarIsPresentAsDoubleJSONEncodedString_Output = string;
 
-export type TestsCliCommandsGenerateExpected = string;
+export type Tests_Cli_Commands_Generate_GenerateWranglerToml_LINKSVarIsPresentAsDoubleJSONEncodedString_InnerJson = string;
 
-export type TestsCliCommandsGenerateCustomPath = string;
+export type Tests_Cli_Commands_Generate_GenerateWranglerToml_LINKSVarIsPresentAsDoubleJSONEncodedString_Expected = string;
 
-export type TestsCliCommandsGenerateCustomPathExists = boolean;
+/**
+ * Tests - CLI - Commands - Generate - Generate Wrangler Toml - Output Contains Main Packages Branded Short Links Build Src Worker Index Js.
+ *
+ * @since 2.0.0
+ */
+export type Tests_Cli_Commands_Generate_GenerateWranglerToml_OutputContainsMainPackagesBrandedShortLinksBuildSrcWorkerIndexJs_Output = string;
 
-export type TestsCliCommandsGenerateEndsWithNewline = boolean;
+/**
+ * Tests - CLI - Commands - Generate - Generate Wrangler Toml - Output Contains Name Branded Short Links.
+ *
+ * @since 2.0.0
+ */
+export type Tests_Cli_Commands_Generate_GenerateWranglerToml_OutputContainsNameBrandedShortLinks_Output = string;
+
+/**
+ * Tests - CLI - Commands - Generate - Generate Wrangler Toml - Output Is Written To Specified Path.
+ *
+ * @since 2.0.0
+ */
+export type Tests_Cli_Commands_Generate_GenerateWranglerToml_OutputIsWrittenToSpecifiedPath_CustomPath = string;
+
+export type Tests_Cli_Commands_Generate_GenerateWranglerToml_OutputIsWrittenToSpecifiedPath_CustomPathExists = boolean;
+
+export type Tests_Cli_Commands_Generate_GenerateWranglerToml_OutputIsWrittenToSpecifiedPath_Output = string;
+
+/**
+ * Tests - CLI - Commands - Generate - Generate Wrangler Toml - Routes Include Base Domain But Not Www Base Domain For Subdomain.
+ *
+ * @since 2.0.0
+ */
+export type Tests_Cli_Commands_Generate_GenerateWranglerToml_RoutesIncludeBaseDomainButNotWwwBaseDomainForSubdomain_Output = string;
+
+/**
+ * Tests - CLI - Commands - Generate - Generate Wrangler Toml - Routes Include Www Base Domain For Root Domain.
+ *
+ * @since 2.0.0
+ */
+export type Tests_Cli_Commands_Generate_GenerateWranglerToml_RoutesIncludeWwwBaseDomainForRootDomain_RootDomainConfig = Lib_Schema_Config & {};
+
+export type Tests_Cli_Commands_Generate_GenerateWranglerToml_RoutesIncludeWwwBaseDomainForRootDomain_RootConfigContent = string;
+
+export type Tests_Cli_Commands_Generate_GenerateWranglerToml_RoutesIncludeWwwBaseDomainForRootDomain_Output = string;
+
+/**
+ * Tests - CLI - Commands - Generate - Generate Wrangler Toml - SETTINGS Var Is Present As Double JSON Encoded String.
+ *
+ * @since 2.0.0
+ */
+export type Tests_Cli_Commands_Generate_GenerateWranglerToml_SETTINGSVarIsPresentAsDoubleJSONEncodedString_Output = string;
+
+export type Tests_Cli_Commands_Generate_GenerateWranglerToml_SETTINGSVarIsPresentAsDoubleJSONEncodedString_InnerJson = string;
+
+export type Tests_Cli_Commands_Generate_GenerateWranglerToml_SETTINGSVarIsPresentAsDoubleJSONEncodedString_Expected = string;
+
+/**
+ * Tests - CLI - Commands - Generate - Generate Wrangler Toml - TRACKERS Var Is Present As Double JSON Encoded String.
+ *
+ * @since 2.0.0
+ */
+export type Tests_Cli_Commands_Generate_GenerateWranglerToml_TRACKERSVarIsPresentAsDoubleJSONEncodedString_Output = string;
+
+export type Tests_Cli_Commands_Generate_GenerateWranglerToml_TRACKERSVarIsPresentAsDoubleJSONEncodedString_InnerJson = string;
+
+export type Tests_Cli_Commands_Generate_GenerateWranglerToml_TRACKERSVarIsPresentAsDoubleJSONEncodedString_Expected = string;
