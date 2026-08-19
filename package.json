@@ -16,6 +16,9 @@
     "recipes": "nova utility run-recipes --replace-file",
     "postinstall": "node ./scripts/link-nova.mjs"
   },
+  "allowScripts": {
+    "node-pty@1.1.0": true
+  },
   "workspaces": [
     "./apps/*",
     "./packages/*"
@@ -25,7 +28,7 @@
     "node": "^22 || ^24"
   },
   "devDependencies": {
-    "@cbnventures/nova": "0.24.0",
+    "@cbnventures/nova": "0.25.0",
     "@types/node": "26.2.0",
     "eslint": "9.39.3",
     "jiti": "2.7.0",
@@ -35,8 +38,5 @@
   },
   "overrides": {
     "webpack": ">=5.95.0 <5.106.0"
-  },
-  "allowScripts": {
-    "node-pty@1.1.0": true
   }
 }
