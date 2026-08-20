@@ -1,6 +1,6 @@
 {
   "name": "branded-short-links",
-  "version": "2.0.4",
+  "version": "2.0.5",
   "description": "Self-hosted, branded short links on Cloudflare Workers with server-side analytics tracking",
   "keywords": [
     "url-shortener",
@@ -75,7 +75,7 @@
     "node": "^22 || ^24"
   },
   "dependencies": {
-    "@cbnventures/nova": "0.25.0",
+    "@cbnventures/nova": "0.25.1",
     "chalk": "6.0.0",
     "commander": "15.0.0",
     "prompts": "2.4.2",
