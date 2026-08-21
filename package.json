@@ -28,7 +28,7 @@
     "node": "^22 || ^24"
   },
   "devDependencies": {
-    "@cbnventures/nova": "0.25.1",
+    "@cbnventures/nova": "0.25.2",
     "@types/node": "26.2.0",
     "eslint": "9.39.3",
     "jiti": "2.7.0",

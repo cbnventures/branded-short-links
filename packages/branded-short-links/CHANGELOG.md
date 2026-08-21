@@ -1,5 +1,10 @@
 # branded-short-links
 
+## 2.0.6 - 2026-08-20
+
+### UPDATED
+- Updated @cbnventures/nova to 0.25.2 and @cbnventures/docusaurus-preset-nova to 0.25.2.
+
 ## 2.0.5 - 2026-08-20
 
 ### UPDATED
