@@ -10,27 +10,11 @@ import type {
 } from '../lib/schema.d.ts';
 
 /**
- * Worker - Trackers - Markdown Control Characters Global Pattern.
+ * Worker - Trackers - Line Break Global Pattern.
  *
- * @since 2.0.3
+ * @since 2.0.7
  */
-export type Worker_Trackers_MarkdownControlCharactersGlobalPattern = RegExp;
-
-/**
- * Worker - Trackers - Newline Global Pattern.
- *
- * @since 2.0.3
- */
-export type Worker_Trackers_NewlineGlobalPattern = RegExp;
-
-/**
- * Worker - Trackers - Escape Markdown.
- *
- * @since 2.0.3
- */
-export type Worker_Trackers_EscapeMarkdown_Value = string;
-
-export type Worker_Trackers_EscapeMarkdown_Returns = string;
+export type Worker_Trackers_LineBreakGlobalPattern = RegExp;
 
 /**
  * Worker - Trackers - Fire Facebook.
@@ -172,3 +156,12 @@ export type Worker_Trackers_FireTrackers_Index = number;
 export type Worker_Trackers_FireTrackers_Result = PromiseSettledResult<Response | undefined> | undefined;
 
 export type Worker_Trackers_FireTrackers_Tracker = Lib_Schema_Config_Trackers[number] | undefined;
+
+/**
+ * Worker - Trackers - Normalize Notification Value.
+ *
+ * @since 2.0.7
+ */
+export type Worker_Trackers_NormalizeNotificationValue_Value = string;
+
+export type Worker_Trackers_NormalizeNotificationValue_Returns = string;

@@ -1,5 +1,19 @@
 # branded-short-links
 
+## 2.0.7 - 2026-09-16
+
+### UPDATED
+- Updated developer tooling to Nova 0.27.0, Wrangler 4.131.1, and Workers Types 5.20260911.1 while normalizing generated type output for repository checks.
+- Updated dependencies to latest compatible versions and fixed the ExecutionContext mock type for Vitest 4.1.11 compatibility.
+- Disabled Turbo caching for build and check tasks so repository commands no longer accumulate persistent Turbo cache artifacts.
+- Declared reviewed dependency install scripts as denied while retaining an exact-version approval for node-pty's required native build.
+- Updated node-pty to the official 1.2.0-beta.14 pre-release so clean macOS installs use executable upstream prebuilds.
+
+### FIXED
+- Removed Markdown escaping from request URLs and header values in ntfy notifications so clients without Markdown support no longer display added backslashes, while continuing to flatten carriage returns and newlines to spaces.
+- Fixed installed CLI setup and deployment by packaging a valid starter config, resolving the bundled Worker entry at runtime, reading the installed version, and keeping repository-only linting out of deploys.
+- Fixed interactive CLI integration tests to run in restricted environments and report child-process failures immediately.
+
 ## 2.0.6 - 2026-08-20
 
 ### UPDATED

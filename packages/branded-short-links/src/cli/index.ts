@@ -6,6 +6,7 @@ import { Bootstrap, Logger } from '@cbnventures/nova/toolkit';
 import { Command } from 'commander';
 
 import { APP_NAME } from '../lib/item.js';
+import { getConfigSamplePath, getPackageVersion } from '../lib/package-runtime.js';
 import { deploy } from './commands/deploy.js';
 import { generateWranglerToml } from './commands/generate.js';
 import { removeLink } from './commands/links.js';
@@ -72,9 +73,9 @@ function getConfigFilePath(): Cli_Index_GetConfigFilePath_Returns {
 
   const defaultDir: Cli_Index_GetConfigFilePath_DefaultDir = Bootstrap.getConfigDir(APP_NAME);
   const configPath: Cli_Index_GetConfigFilePath_ConfigPath = join(defaultDir, 'config.json');
-  const samplePath: Cli_Index_GetConfigFilePath_SamplePath = join(defaultDir, 'config.sample.json');
+  const samplePath: Cli_Index_GetConfigFilePath_SamplePath = getConfigSamplePath();
 
-  if (existsSync(configPath) === false && existsSync(samplePath) === true) {
+  if (existsSync(configPath) === false) {
     copyFileSync(samplePath, configPath);
   }
 
@@ -91,7 +92,7 @@ function getConfigFilePath(): Cli_Index_GetConfigFilePath_Returns {
  */
 const program: Cli_Index_Program = new Command();
 
-program.name('branded-short-links').alias('bsl').description('CLI management tool for Branded Short Links').version('2.0.0');
+program.name('branded-short-links').alias('bsl').description('CLI management tool for Branded Short Links').version(getPackageVersion());
 
 /**
  * CLI - Main.
@@ -105,6 +106,8 @@ program.name('branded-short-links').alias('bsl').description('CLI management too
  */
 async function main(): Cli_Index_Main_Returns {
   if (process.argv['length'] <= 2) {
+    getConfigFilePath();
+
     const configDirs: Cli_Index_Main_ConfigDirs = Bootstrap.resolveFileDirs(APP_NAME, 'config.json', [
       'cwd',
       'project-root',

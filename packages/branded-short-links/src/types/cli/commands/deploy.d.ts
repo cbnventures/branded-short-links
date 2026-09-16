@@ -190,17 +190,6 @@ export type Cli_Commands_Deploy_ResolveApiToken_EnvTokenValid = boolean;
  *
  * @since 2.0.0
  */
-export type Cli_Commands_Deploy_RunLint_Returns = void;
-
-export type Cli_Commands_Deploy_RunLint_LintResult = SpawnSyncReturns<string>;
-
-export type Cli_Commands_Deploy_RunLint_LintError = Error;
-
-/**
- * CLI - Commands - Deploy.
- *
- * @since 2.0.0
- */
 export type Cli_Commands_Deploy_SaveEnvToken_Token = string;
 
 export type Cli_Commands_Deploy_SaveEnvToken_Returns = void;

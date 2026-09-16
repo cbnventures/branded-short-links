@@ -70,6 +70,32 @@ function stripGlobalProps() {
 }
 
 /**
+ * Generate Wrangler Types - Strip Trailing Whitespace.
+ *
+ * Removes trailing spaces from Wrangler's generated comments so the committed
+ * declaration remains compatible with repository whitespace checks.
+ *
+ * @returns {void}
+ *
+ * @since 2.0.6
+ */
+function stripTrailingWhitespace() {
+  const content = readFileSync(outputFile, 'utf-8');
+  const stripped = content
+    .split('\n')
+    .map((line) => line.trimEnd())
+    .join('\n');
+
+  if (stripped !== content) {
+    writeFileSync(outputFile, stripped);
+
+    process.stdout.write('generate-wrangler-types: Stripped trailing whitespace.\n');
+  }
+
+  return;
+}
+
+/**
  * Generate Wrangler Types - Generate Wrangler Types.
  *
  * Generates Cloudflare Workers runtime type definitions from wrangler.toml. If
@@ -101,6 +127,7 @@ function generateWranglerTypes() {
   });
 
   stripGlobalProps();
+  stripTrailingWhitespace();
 
   process.stdout.write('generate-wrangler-types: Done.\n');
 

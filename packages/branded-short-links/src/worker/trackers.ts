@@ -1,8 +1,6 @@
-import { markdownControlCharactersPattern, newlinePattern } from '../lib/regex.js';
+import { lineBreakPattern } from '../lib/regex.js';
 
 import type {
-  Worker_Trackers_EscapeMarkdown_Returns,
-  Worker_Trackers_EscapeMarkdown_Value,
   Worker_Trackers_FireFacebook_Returns,
   Worker_Trackers_FireFacebook_Tracker,
   Worker_Trackers_FireGa4_ClientId,
@@ -50,40 +48,31 @@ import type {
   Worker_Trackers_FireTrackers_Shortcode,
   Worker_Trackers_FireTrackers_Tracker,
   Worker_Trackers_FireTrackers_Trackers,
-  Worker_Trackers_MarkdownControlCharactersGlobalPattern,
-  Worker_Trackers_NewlineGlobalPattern,
+  Worker_Trackers_LineBreakGlobalPattern,
+  Worker_Trackers_NormalizeNotificationValue_Returns,
+  Worker_Trackers_NormalizeNotificationValue_Value,
 } from '../types/worker/trackers.d.ts';
 
 /**
- * Worker - Trackers - Markdown Control Characters Global Pattern.
+ * Worker - Trackers - Line Break Global Pattern.
  *
- * Pre-compiled global-flag variant of the Markdown control character
- * pattern so escapeMarkdown avoids constructing it on every call.
+ * Pre-compiled global-flag variant of the line break pattern so
+ * normalizeNotificationValue avoids constructing it on every call.
  *
- * @since 2.0.3
+ * @since 2.0.7
  */
-const markdownControlCharactersGlobalPattern: Worker_Trackers_MarkdownControlCharactersGlobalPattern = new RegExp(markdownControlCharactersPattern, 'g');
+const lineBreakGlobalPattern: Worker_Trackers_LineBreakGlobalPattern = new RegExp(lineBreakPattern, 'g');
 
 /**
- * Worker - Trackers - Newline Global Pattern.
+ * Worker - Trackers - Normalize Notification Value.
  *
- * Pre-compiled global-flag variant of the newline pattern so
- * escapeMarkdown avoids constructing it on every call.
+ * Flattens line breaks so interpolated request values stay on one
+ * notification line while preserving all other characters verbatim.
  *
- * @since 2.0.3
+ * @since 2.0.7
  */
-const newlineGlobalPattern: Worker_Trackers_NewlineGlobalPattern = new RegExp(newlinePattern, 'g');
-
-/**
- * Worker - Trackers - Escape Markdown.
- *
- * Escapes Markdown control characters in a string so it renders
- * as literal text inside Markdown-enabled ntfy notifications.
- *
- * @since 2.0.3
- */
-function escapeMarkdown(value: Worker_Trackers_EscapeMarkdown_Value): Worker_Trackers_EscapeMarkdown_Returns {
-  return value.replace(markdownControlCharactersGlobalPattern, '\\$&').replace(newlineGlobalPattern, ' ');
+function normalizeNotificationValue(value: Worker_Trackers_NormalizeNotificationValue_Value): Worker_Trackers_NormalizeNotificationValue_Returns {
+  return value.replace(lineBreakGlobalPattern, ' ');
 }
 
 /**
@@ -159,7 +148,7 @@ async function fireNtfy(
     `__Shortcode:__ ${shortcode['shortcode']}`,
     `__Redirect To:__ ${shortcode['redirect_url']}`,
     `__Request Method:__ ${request['method']}`,
-    `__Request URL:__ ${escapeMarkdown(request['url'])}`,
+    `__Request URL:__ ${normalizeNotificationValue(request['url'])}`,
     '',
     '\u2601\ufe0f __Cloudflare Properties__',
     `__City:__ ${cf['city'] || 'unknown'}`,
@@ -179,8 +168,8 @@ async function fireNtfy(
     `__CF-IPCountry:__ ${request['headers'].get('cf-ipcountry') || 'unknown'}`,
     `__CF-RAY:__ ${request['headers'].get('cf-ray') || 'unknown'}`,
     `__Host:__ ${request['headers'].get('host') || 'unknown'}`,
-    `__User-Agent:__ ${escapeMarkdown(request['headers'].get('user-agent') || 'unknown')}`,
-    `__X-Real-IP:__ ${escapeMarkdown(request['headers'].get('x-real-ip') || 'unknown')}`,
+    `__User-Agent:__ ${normalizeNotificationValue(request['headers'].get('user-agent') || 'unknown')}`,
+    `__X-Real-IP:__ ${normalizeNotificationValue(request['headers'].get('x-real-ip') || 'unknown')}`,
   ].join('\n');
 
   return fetch(
@@ -237,7 +226,7 @@ async function fireNtfyReverseProxy(
     `__Shortcode:__ ${shortcode['shortcode']}`,
     `__Redirect To:__ ${shortcode['redirect_url']}`,
     `__Request Method:__ ${request['method']}`,
-    `__Request URL:__ ${escapeMarkdown(request['url'])}`,
+    `__Request URL:__ ${normalizeNotificationValue(request['url'])}`,
     '',
     '\u2601\ufe0f __Cloudflare Properties__',
     `__City:__ ${cf['city'] || 'unknown'}`,
@@ -257,8 +246,8 @@ async function fireNtfyReverseProxy(
     `__CF-IPCountry:__ ${request['headers'].get('cf-ipcountry') || 'unknown'}`,
     `__CF-RAY:__ ${request['headers'].get('cf-ray') || 'unknown'}`,
     `__Host:__ ${request['headers'].get('host') || 'unknown'}`,
-    `__User-Agent:__ ${escapeMarkdown(request['headers'].get('user-agent') || 'unknown')}`,
-    `__X-Real-IP:__ ${escapeMarkdown(request['headers'].get('x-real-ip') || 'unknown')}`,
+    `__User-Agent:__ ${normalizeNotificationValue(request['headers'].get('user-agent') || 'unknown')}`,
+    `__X-Real-IP:__ ${normalizeNotificationValue(request['headers'].get('x-real-ip') || 'unknown')}`,
   ].join('\n');
 
   return fetch(tracker['url'], {
@@ -430,6 +419,6 @@ async function fireTrackers(
 }
 
 export {
-  escapeMarkdown,
   fireTrackers,
+  normalizeNotificationValue,
 };

@@ -5,6 +5,7 @@ import {
 import { handleRequest } from '../../worker/handlers.js';
 
 import type {
+  Tests_Worker_Handlers_CreateMockCtx_Opaque,
   Tests_Worker_Handlers_CreateMockCtx_Returns,
   Tests_Worker_Handlers_HandleRequest_CallsWaitUntilWithFireTrackersForValidShortcode_Ctx,
   Tests_Worker_Handlers_HandleRequest_CallsWaitUntilWithFireTrackersForValidShortcode_Request,
@@ -83,7 +84,8 @@ function createMockCtx(): Tests_Worker_Handlers_CreateMockCtx_Returns {
     waitUntil: vi.fn(),
     passThroughOnException: vi.fn(),
     props: {},
-  } as Tests_Worker_Handlers_CreateMockCtx_Returns;
+    tracing: { enterSpan: vi.fn() },
+  } as Tests_Worker_Handlers_CreateMockCtx_Opaque as Tests_Worker_Handlers_CreateMockCtx_Returns;
 }
 
 describe('handleRequest', () => {

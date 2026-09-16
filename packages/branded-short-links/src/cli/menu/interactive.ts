@@ -1,11 +1,10 @@
-import { existsSync, readFileSync } from 'node:fs';
-import { dirname, join } from 'node:path';
-import { fileURLToPath } from 'node:url';
+import { join } from 'node:path';
 
 import { Bootstrap, CLIHeader, Logger } from '@cbnventures/nova/toolkit';
 import chalk from 'chalk';
 import prompts from 'prompts';
 
+import { getPackageVersion } from '../../lib/package-runtime.js';
 import { deploy } from '../commands/deploy.js';
 import {
   addLink,
@@ -133,15 +132,9 @@ import type {
   Cli_Menu_Interactive_InteractiveMenu_ConfigDirResponse,
   Cli_Menu_Interactive_InteractiveMenu_ConfigDirs,
   Cli_Menu_Interactive_InteractiveMenu_ConfigPath,
-  Cli_Menu_Interactive_InteractiveMenu_CurrentFilePath,
   Cli_Menu_Interactive_InteractiveMenu_DefaultConfigDir,
-  Cli_Menu_Interactive_InteractiveMenu_Dir,
   Cli_Menu_Interactive_InteractiveMenu_ErrorMessage,
   Cli_Menu_Interactive_InteractiveMenu_Header,
-  Cli_Menu_Interactive_InteractiveMenu_PackageJsonParsed,
-  Cli_Menu_Interactive_InteractiveMenu_PackageJsonPath,
-  Cli_Menu_Interactive_InteractiveMenu_PackageJsonRaw,
-  Cli_Menu_Interactive_InteractiveMenu_Parent,
   Cli_Menu_Interactive_InteractiveMenu_Returns,
   Cli_Menu_Interactive_InteractiveMenu_Running,
   Cli_Menu_Interactive_InteractiveMenu_Version,
@@ -235,27 +228,7 @@ import type {
  * @since 2.0.0
  */
 async function interactiveMenu(configDirs: Cli_Menu_Interactive_InteractiveMenu_ConfigDirs): Cli_Menu_Interactive_InteractiveMenu_Returns {
-  const currentFilePath: Cli_Menu_Interactive_InteractiveMenu_CurrentFilePath = fileURLToPath(import.meta.url);
-
-  let dir: Cli_Menu_Interactive_InteractiveMenu_Dir = dirname(currentFilePath);
-  let version: Cli_Menu_Interactive_InteractiveMenu_Version = '0.0.0';
-
-  while (dir !== dirname(dir)) {
-    const packageJsonPath: Cli_Menu_Interactive_InteractiveMenu_PackageJsonPath = join(dir, 'package.json');
-
-    if (existsSync(packageJsonPath) === true) {
-      const packageJsonRaw: Cli_Menu_Interactive_InteractiveMenu_PackageJsonRaw = readFileSync(packageJsonPath, 'utf-8');
-      const packageJsonParsed: Cli_Menu_Interactive_InteractiveMenu_PackageJsonParsed = JSON.parse(packageJsonRaw) as Cli_Menu_Interactive_InteractiveMenu_PackageJsonParsed;
-
-      version = packageJsonParsed['version'] as Cli_Menu_Interactive_InteractiveMenu_Version;
-
-      break;
-    }
-
-    const parent: Cli_Menu_Interactive_InteractiveMenu_Parent = dirname(dir);
-
-    dir = parent;
-  }
+  const version: Cli_Menu_Interactive_InteractiveMenu_Version = getPackageVersion();
 
   const header: Cli_Menu_Interactive_InteractiveMenu_Header = CLIHeader.render([
     chalk.redBright(`Branded Short Links v${version}`),

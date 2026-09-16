@@ -22,7 +22,7 @@ tags:
 
 import { Terminology } from '@cbnventures/docusaurus-preset-nova/blocks';
 
-Deploy your branded short links to <Terminology title="edge function that serves your redirects" to="/docs/reference/terminology#cloudflare-worker">Cloudflare Workers</Terminology> with a single command that handles validation, configuration generation, linting, and deployment.
+Deploy your branded short links to <Terminology title="edge function that serves your redirects" to="/docs/reference/terminology#cloudflare-worker">Cloudflare Workers</Terminology> with a single command that handles validation, configuration generation, and deployment.
 
 ```mermaid
 graph TD
@@ -36,13 +36,10 @@ graph TD
     Perms --> PermsOk{Permissions OK?}
     PermsOk --> PermsNo(["Missing scopes"]):::muted --> PermsFail[List missing, pause]
     PermsOk --> Step4(["OK"]):::muted --> Generate["4. Generate wrangler.toml"]
-    Generate --> Step5["5. Run lint"]
-    Step5 --> LintOk{Lint passed?}
-    LintOk --> LintNo(["Errors"]):::muted --> LintFail[Stop deployment]
-    LintOk --> Step6(["Passed"]):::muted --> Deploy["6. Deploy worker"]
+    Generate --> Deploy["5. Deploy worker"]
     Deploy --> DeployOk{Deploy succeeded?}
     DeployOk --> DeployNo(["Failed"]):::muted --> DeployFail[Throw error]
-    DeployOk --> Step7(["Succeeded"]):::muted --> Summary["7. Print summary"]
+    DeployOk --> Step6(["Succeeded"]):::muted --> Summary["6. Print summary"]
 ```
 
 ## Prerequisites
@@ -130,15 +127,11 @@ Creates a `wrangler.toml` file with:
 - <Terminology title="the config.json deployment settings file" to="/docs/reference/terminology#config">Config</Terminology> sections (`SETTINGS`, `LINKS`, `TRACKERS`) serialized as JSON string environment variables.
 - Main entry point pointing to the built <Terminology title="edge function that serves your redirects" to="/docs/reference/terminology#cloudflare-worker">worker</Terminology> script.
 
-### 5. Run Lint
-
-Runs ESLint against the `./src` directory. Any lint error stops the deployment.
-
-### 6. Deploy Worker
+### 5. Deploy Worker
 
 Runs `wrangler deploy --config wrangler.toml` with the account ID derived from the permission verification step. The <Terminology title="Cloudflare's Workers deployment CLI" to="/docs/reference/terminology#wrangler">Wrangler</Terminology> CLI handles uploading the <Terminology title="edge function that serves your redirects" to="/docs/reference/terminology#cloudflare-worker">worker</Terminology> bundle to Cloudflare.
 
-### 7. Print Summary
+### 6. Print Summary
 
 Displays a summary of all configured short links with their <Terminology title="path segment that maps to a URL" to="/docs/reference/terminology#shortcode">shortcodes</Terminology>, redirect URLs, HTTP response codes, and attached <Terminology title="background analytics integration on a link" to="/docs/reference/terminology#tracker">tracker</Terminology> names.
 

@@ -1,8 +1,11 @@
 import { mkdirSync, writeFileSync } from 'node:fs';
-import { dirname, resolve } from 'node:path';
+import {
+  dirname, relative, resolve, sep,
+} from 'node:path';
 
 import { Bootstrap } from '@cbnventures/nova/toolkit';
 
+import { getWorkerEntryPath } from '../../lib/package-runtime.js';
 import { configSchema } from '../../lib/schema.js';
 import { loadConfig } from './config-io.js';
 
@@ -22,6 +25,10 @@ import type {
   Cli_Commands_Generate_GenerateWranglerToml_SettingsAsString,
   Cli_Commands_Generate_GenerateWranglerToml_Trackers,
   Cli_Commands_Generate_GenerateWranglerToml_TrackersAsString,
+  Cli_Commands_Generate_GenerateWranglerToml_WorkerEntryConfigPath,
+  Cli_Commands_Generate_GenerateWranglerToml_WorkerEntryPath,
+  Cli_Commands_Generate_GenerateWranglerToml_WorkerEntryRelativePath,
+  Cli_Commands_Generate_GenerateWranglerToml_WorkerEntryToml,
   Cli_Commands_Generate_ProjectRoot,
 } from '../../types/cli/commands/generate.d.ts';
 
@@ -65,6 +72,11 @@ function generateWranglerToml(configPath: Cli_Commands_Generate_GenerateWrangler
   const links: Cli_Commands_Generate_GenerateWranglerToml_Links = config['links'];
   const trackers: Cli_Commands_Generate_GenerateWranglerToml_Trackers = config['trackers'];
   const compatibilityDate: Cli_Commands_Generate_GenerateWranglerToml_CompatibilityDate = new Date().toISOString().slice(0, 10);
+  const outputDir: Cli_Commands_Generate_GenerateWranglerToml_OutputDir = dirname(outputPath);
+  const workerEntryPath: Cli_Commands_Generate_GenerateWranglerToml_WorkerEntryPath = getWorkerEntryPath();
+  const workerEntryRelativePath: Cli_Commands_Generate_GenerateWranglerToml_WorkerEntryRelativePath = relative(outputDir, workerEntryPath);
+  const workerEntryConfigPath: Cli_Commands_Generate_GenerateWranglerToml_WorkerEntryConfigPath = workerEntryRelativePath.split(sep).join('/');
+  const workerEntryToml: Cli_Commands_Generate_GenerateWranglerToml_WorkerEntryToml = JSON.stringify(workerEntryConfigPath);
 
   const settingsAsString: Cli_Commands_Generate_GenerateWranglerToml_SettingsAsString = JSON.stringify(settings);
   const linksAsString: Cli_Commands_Generate_GenerateWranglerToml_LinksAsString = JSON.stringify(links);
@@ -72,7 +84,7 @@ function generateWranglerToml(configPath: Cli_Commands_Generate_GenerateWrangler
 
   const lines: Cli_Commands_Generate_GenerateWranglerToml_Lines = [
     `name = "${settings['worker_name']}"`,
-    'main = "packages/branded-short-links/build/src/worker/index.js"',
+    `main = ${workerEntryToml}`,
     `compatibility_date = "${compatibilityDate}"`,
     ...((accountId !== undefined) ? [`account_id = "${accountId}"`] : []),
     '',
@@ -92,8 +104,6 @@ function generateWranglerToml(configPath: Cli_Commands_Generate_GenerateWrangler
     `LINKS = ${JSON.stringify(linksAsString)}`,
     `TRACKERS = ${JSON.stringify(trackersAsString)}`,
   ];
-
-  const outputDir: Cli_Commands_Generate_GenerateWranglerToml_OutputDir = dirname(outputPath);
 
   mkdirSync(outputDir, { recursive: true });
   writeFileSync(outputPath, `${lines.join('\n')}\n`);

@@ -12,42 +12,6 @@ export type Tests_Worker_Trackers_MockShortcode = Lib_Schema_Config['links']['it
 export type Tests_Worker_Trackers_MockRequest = Request;
 
 /**
- * Tests - Worker - Trackers - Escape Markdown - Escapes Markdown Control Characters.
- *
- * @since 2.0.3
- */
-export type Tests_Worker_Trackers_EscapeMarkdown_EscapesMarkdownControlCharacters_Input = string;
-
-export type Tests_Worker_Trackers_EscapeMarkdown_EscapesMarkdownControlCharacters_Result = string;
-
-/**
- * Tests - Worker - Trackers - Escape Markdown - Leaves Plain Text Unchanged.
- *
- * @since 2.0.3
- */
-export type Tests_Worker_Trackers_EscapeMarkdown_LeavesPlainTextUnchanged_Input = string;
-
-export type Tests_Worker_Trackers_EscapeMarkdown_LeavesPlainTextUnchanged_Result = string;
-
-/**
- * Tests - Worker - Trackers - Escape Markdown - Neutralizes A Clickable Link Injection.
- *
- * @since 2.0.3
- */
-export type Tests_Worker_Trackers_EscapeMarkdown_NeutralizesAClickableLinkInjection_Input = string;
-
-export type Tests_Worker_Trackers_EscapeMarkdown_NeutralizesAClickableLinkInjection_Result = string;
-
-/**
- * Tests - Worker - Trackers - Escape Markdown - Replaces Newlines With Spaces.
- *
- * @since 2.0.3
- */
-export type Tests_Worker_Trackers_EscapeMarkdown_ReplacesNewlinesWithSpaces_Input = string;
-
-export type Tests_Worker_Trackers_EscapeMarkdown_ReplacesNewlinesWithSpaces_Result = string;
-
-/**
  * Tests - Worker - Trackers - Fire Trackers.
  *
  * @since 2.0.0
@@ -204,3 +168,39 @@ export type Tests_Worker_Trackers_FireTrackers_PercentEncodesAnAmpersandInTheGA4
 export type Tests_Worker_Trackers_FireTrackers_PercentEncodesAnAmpersandInTheGA4MeasurementID_Trackers = Lib_Schema_Config['trackers'];
 
 export type Tests_Worker_Trackers_FireTrackers_PercentEncodesAnAmpersandInTheGA4MeasurementID_Url = string;
+
+/**
+ * Tests - Worker - Trackers - Normalize Notification Value - Preserves Literal Backslashes.
+ *
+ * @since 2.0.7
+ */
+export type Tests_Worker_Trackers_NormalizeNotificationValue_PreservesLiteralBackslashes_Input = string;
+
+export type Tests_Worker_Trackers_NormalizeNotificationValue_PreservesLiteralBackslashes_Result = string;
+
+/**
+ * Tests - Worker - Trackers - Normalize Notification Value - Preserves Markdown Punctuation.
+ *
+ * @since 2.0.7
+ */
+export type Tests_Worker_Trackers_NormalizeNotificationValue_PreservesMarkdownPunctuation_Input = string;
+
+export type Tests_Worker_Trackers_NormalizeNotificationValue_PreservesMarkdownPunctuation_Result = string;
+
+/**
+ * Tests - Worker - Trackers - Normalize Notification Value - Preserves Normal Notification Text.
+ *
+ * @since 2.0.7
+ */
+export type Tests_Worker_Trackers_NormalizeNotificationValue_PreservesNormalNotificationText_Input = string;
+
+export type Tests_Worker_Trackers_NormalizeNotificationValue_PreservesNormalNotificationText_Result = string;
+
+/**
+ * Tests - Worker - Trackers - Normalize Notification Value - Replaces Carriage Returns And Newlines With Spaces.
+ *
+ * @since 2.0.7
+ */
+export type Tests_Worker_Trackers_NormalizeNotificationValue_ReplacesCarriageReturnsAndNewlinesWithSpaces_Input = string;
+
+export type Tests_Worker_Trackers_NormalizeNotificationValue_ReplacesCarriageReturnsAndNewlinesWithSpaces_Result = string;

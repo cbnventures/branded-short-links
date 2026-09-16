@@ -42,6 +42,16 @@ export type Cli_Commands_Generate_GenerateWranglerToml_Trackers = Lib_Schema_Con
 
 export type Cli_Commands_Generate_GenerateWranglerToml_CompatibilityDate = string;
 
+export type Cli_Commands_Generate_GenerateWranglerToml_OutputDir = string;
+
+export type Cli_Commands_Generate_GenerateWranglerToml_WorkerEntryPath = string;
+
+export type Cli_Commands_Generate_GenerateWranglerToml_WorkerEntryRelativePath = string;
+
+export type Cli_Commands_Generate_GenerateWranglerToml_WorkerEntryConfigPath = string;
+
+export type Cli_Commands_Generate_GenerateWranglerToml_WorkerEntryToml = string;
+
 export type Cli_Commands_Generate_GenerateWranglerToml_SettingsAsString = string;
 
 export type Cli_Commands_Generate_GenerateWranglerToml_LinksAsString = string;
@@ -49,5 +59,3 @@ export type Cli_Commands_Generate_GenerateWranglerToml_LinksAsString = string;
 export type Cli_Commands_Generate_GenerateWranglerToml_TrackersAsString = string;
 
 export type Cli_Commands_Generate_GenerateWranglerToml_Lines = string[];
-
-export type Cli_Commands_Generate_GenerateWranglerToml_OutputDir = string;

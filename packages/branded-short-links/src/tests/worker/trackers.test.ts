@@ -2,17 +2,9 @@ import {
   afterEach, beforeEach, describe, expect, it, vi,
 } from 'vitest';
 
-import { escapeMarkdown, fireTrackers } from '../../worker/trackers.js';
+import { fireTrackers, normalizeNotificationValue } from '../../worker/trackers.js';
 
 import type {
-  Tests_Worker_Trackers_EscapeMarkdown_EscapesMarkdownControlCharacters_Input,
-  Tests_Worker_Trackers_EscapeMarkdown_EscapesMarkdownControlCharacters_Result,
-  Tests_Worker_Trackers_EscapeMarkdown_LeavesPlainTextUnchanged_Input,
-  Tests_Worker_Trackers_EscapeMarkdown_LeavesPlainTextUnchanged_Result,
-  Tests_Worker_Trackers_EscapeMarkdown_NeutralizesAClickableLinkInjection_Input,
-  Tests_Worker_Trackers_EscapeMarkdown_NeutralizesAClickableLinkInjection_Result,
-  Tests_Worker_Trackers_EscapeMarkdown_ReplacesNewlinesWithSpaces_Input,
-  Tests_Worker_Trackers_EscapeMarkdown_ReplacesNewlinesWithSpaces_Result,
   Tests_Worker_Trackers_FireTrackers_CatchesTrackerErrorsWithoutCrashing_ResolveExpect,
   Tests_Worker_Trackers_FireTrackers_CatchesTrackerErrorsWithoutCrashing_Trackers,
   Tests_Worker_Trackers_FireTrackers_DoesNotCallFetchWhenTrackersArrayIsEmpty_Trackers,
@@ -59,6 +51,14 @@ import type {
   Tests_Worker_Trackers_FireTrackers_PercentEncodesAnAmpersandInTheGA4MeasurementID_Url,
   Tests_Worker_Trackers_MockRequest,
   Tests_Worker_Trackers_MockShortcode,
+  Tests_Worker_Trackers_NormalizeNotificationValue_PreservesLiteralBackslashes_Input,
+  Tests_Worker_Trackers_NormalizeNotificationValue_PreservesLiteralBackslashes_Result,
+  Tests_Worker_Trackers_NormalizeNotificationValue_PreservesMarkdownPunctuation_Input,
+  Tests_Worker_Trackers_NormalizeNotificationValue_PreservesMarkdownPunctuation_Result,
+  Tests_Worker_Trackers_NormalizeNotificationValue_PreservesNormalNotificationText_Input,
+  Tests_Worker_Trackers_NormalizeNotificationValue_PreservesNormalNotificationText_Result,
+  Tests_Worker_Trackers_NormalizeNotificationValue_ReplacesCarriageReturnsAndNewlinesWithSpaces_Input,
+  Tests_Worker_Trackers_NormalizeNotificationValue_ReplacesCarriageReturnsAndNewlinesWithSpaces_Result,
 } from '../../types/tests/worker/trackers.test.d.ts';
 
 const mockShortcode: Tests_Worker_Trackers_MockShortcode = {
@@ -67,66 +67,58 @@ const mockShortcode: Tests_Worker_Trackers_MockShortcode = {
   redirect_url: 'https://github.com/example',
 };
 
-const mockRequest: Tests_Worker_Trackers_MockRequest = new Request('https://bsl.example.com/gh', {
+const mockRequest: Tests_Worker_Trackers_MockRequest = new Request('https://bsl.example.com/gh?source=ios_(app)', {
   method: 'GET',
   headers: {
     'cf-ray': 'abc123',
     'cf-connecting-ip': '1.2.3.4',
+    'user-agent': 'Mozilla/5.0 (iPhone; CPU iPhone OS 18_6 like Mac OS X) Mobile\\Safari',
+    'x-real-ip': '2001:db8::1',
   },
 });
 
-describe('escapeMarkdown', () => {
-  it('leaves plain text unchanged', () => {
-    const input: Tests_Worker_Trackers_EscapeMarkdown_LeavesPlainTextUnchanged_Input = 'Mozilla/5.0 Chrome/120.0';
-    const result: Tests_Worker_Trackers_EscapeMarkdown_LeavesPlainTextUnchanged_Result = escapeMarkdown(input);
+describe('normalizeNotificationValue', () => {
+  it('preserves normal notification text', () => {
+    const input: Tests_Worker_Trackers_NormalizeNotificationValue_PreservesNormalNotificationText_Input = 'Mozilla/5.0 (iPhone; CPU iPhone OS 18_6 like Mac OS X)';
+    const result: Tests_Worker_Trackers_NormalizeNotificationValue_PreservesNormalNotificationText_Result = normalizeNotificationValue(input);
 
-    expect(result).toBe('Mozilla/5.0 Chrome/120.0');
-
-    return;
-  });
-
-  it('escapes Markdown control characters', () => {
-    const input: Tests_Worker_Trackers_EscapeMarkdown_EscapesMarkdownControlCharacters_Input = '**bold** _italic_ `code`';
-
-    const result: Tests_Worker_Trackers_EscapeMarkdown_EscapesMarkdownControlCharacters_Result = escapeMarkdown(input);
-
-    expect(result).not.toContain('**');
-
-    expect(result).toContain('\\*');
-
-    expect(result).toContain('\\`');
+    expect(result).toBe(input);
 
     return;
   });
 
-  it('neutralizes a clickable link injection', () => {
-    const input: Tests_Worker_Trackers_EscapeMarkdown_NeutralizesAClickableLinkInjection_Input = '[Click here](https://evil.com)';
+  it('preserves Markdown punctuation', () => {
+    const input: Tests_Worker_Trackers_NormalizeNotificationValue_PreservesMarkdownPunctuation_Input = '![tracking pixel](https://example.com/pixel.png) [sign in](https://example.com) **bold**';
+    const result: Tests_Worker_Trackers_NormalizeNotificationValue_PreservesMarkdownPunctuation_Result = normalizeNotificationValue(input);
 
-    const result: Tests_Worker_Trackers_EscapeMarkdown_NeutralizesAClickableLinkInjection_Result = escapeMarkdown(input);
-
-    expect(result).toContain('\\[');
-
-    expect(result).toContain('\\]');
-
-    expect(result).toContain('\\(');
-
-    expect(result).toContain('\\)');
+    expect(result).toBe(input);
 
     return;
   });
 
-  it('replaces newlines with spaces', () => {
-    const input: Tests_Worker_Trackers_EscapeMarkdown_ReplacesNewlinesWithSpaces_Input = [
-      'line one',
+  it('preserves literal backslashes', () => {
+    const input: Tests_Worker_Trackers_NormalizeNotificationValue_PreservesLiteralBackslashes_Input = 'C:\\Program Files\\Browser';
+    const result: Tests_Worker_Trackers_NormalizeNotificationValue_PreservesLiteralBackslashes_Result = normalizeNotificationValue(input);
+
+    expect(result).toBe(input);
+
+    return;
+  });
+
+  it('replaces carriage returns and newlines with spaces', () => {
+    const input: Tests_Worker_Trackers_NormalizeNotificationValue_ReplacesCarriageReturnsAndNewlinesWithSpaces_Input = [
+      'line one\r',
       'line two',
-      'line three',
+      'line three\rline four',
     ].join('\n');
 
-    const result: Tests_Worker_Trackers_EscapeMarkdown_ReplacesNewlinesWithSpaces_Result = escapeMarkdown(input);
+    const result: Tests_Worker_Trackers_NormalizeNotificationValue_ReplacesCarriageReturnsAndNewlinesWithSpaces_Result = normalizeNotificationValue(input);
 
     expect(result).not.toContain('\n');
 
-    expect(result).toBe('line one line two line three');
+    expect(result).not.toContain('\r');
+
+    expect(result).toBe('line one line two line three line four');
 
     return;
   });
@@ -311,6 +303,12 @@ describe('fireTrackers', () => {
 
     expect(message).toContain('https://github.com/example');
 
+    expect(message).toContain('__Request URL:__ https://bsl.example.com/gh?source=ios_(app)');
+
+    expect(message).toContain('__User-Agent:__ Mozilla/5.0 (iPhone; CPU iPhone OS 18_6 like Mac OS X) Mobile\\Safari');
+
+    expect(message).toContain('__X-Real-IP:__ 2001:db8::1');
+
     return;
   });
 
@@ -388,6 +386,12 @@ describe('fireTrackers', () => {
     expect(body).toContain('/gh');
 
     expect(body).toContain('https://github.com/example');
+
+    expect(body).toContain('__Request URL:__ https://bsl.example.com/gh?source=ios_(app)');
+
+    expect(body).toContain('__User-Agent:__ Mozilla/5.0 (iPhone; CPU iPhone OS 18_6 like Mac OS X) Mobile\\Safari');
+
+    expect(body).toContain('__X-Real-IP:__ 2001:db8::1');
 
     return;
   });

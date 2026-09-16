@@ -57,13 +57,15 @@ The CLI checks these locations in order: current working directory, project root
 
 The CLI resolves the Cloudflare zone by trying progressively shorter domain segments. If your `base_domain` is a subdomain (e.g., `go.example.com`), make sure the <Terminology title="Cloudflare credential authorizing CLI deployments" to="/docs/reference/terminology#api-token">token</Terminology> has access to the parent zone (`example.com`).
 
-### Lint fails during deploy
+### Repository checks fail
 
-The deploy pipeline runs ESLint against `./src`. Any error blocks the deployment. Fix lint issues before redeploying:
+When working from a repository clone, run the complete quality checks before building or deploying:
 
 ```bash
-npm run check:lint
+npm run check
 ```
+
+The installed deploy command operates on the package's compiled <Terminology title="edge function that serves your redirects" to="/docs/reference/terminology#cloudflare-worker">Worker</Terminology> and doesn't run repository source linting.
 
 ### wrangler deploy fails
 

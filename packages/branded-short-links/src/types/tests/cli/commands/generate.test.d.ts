@@ -40,13 +40,6 @@ export type Tests_Cli_Commands_Generate_GenerateWranglerToml_LINKSVarIsPresentAs
 export type Tests_Cli_Commands_Generate_GenerateWranglerToml_LINKSVarIsPresentAsDoubleJSONEncodedString_Expected = string;
 
 /**
- * Tests - CLI - Commands - Generate - Generate Wrangler Toml - Output Contains Main Packages Branded Short Links Build Src Worker Index Js.
- *
- * @since 2.0.0
- */
-export type Tests_Cli_Commands_Generate_GenerateWranglerToml_OutputContainsMainPackagesBrandedShortLinksBuildSrcWorkerIndexJs_Output = string;
-
-/**
  * Tests - CLI - Commands - Generate - Generate Wrangler Toml - Output Contains Name Branded Short Links.
  *
  * @since 2.0.0
@@ -63,6 +56,19 @@ export type Tests_Cli_Commands_Generate_GenerateWranglerToml_OutputIsWrittenToSp
 export type Tests_Cli_Commands_Generate_GenerateWranglerToml_OutputIsWrittenToSpecifiedPath_CustomPathExists = boolean;
 
 export type Tests_Cli_Commands_Generate_GenerateWranglerToml_OutputIsWrittenToSpecifiedPath_Output = string;
+
+/**
+ * Tests - CLI - Commands - Generate - Generate Wrangler Toml - Output References Existing Worker Entry.
+ *
+ * @since 2.0.7
+ */
+export type Tests_Cli_Commands_Generate_GenerateWranglerToml_OutputReferencesExistingWorkerEntry_Output = string;
+
+export type Tests_Cli_Commands_Generate_GenerateWranglerToml_OutputReferencesExistingWorkerEntry_OutputDir = string;
+
+export type Tests_Cli_Commands_Generate_GenerateWranglerToml_OutputReferencesExistingWorkerEntry_WorkerEntryPath = string;
+
+export type Tests_Cli_Commands_Generate_GenerateWranglerToml_OutputReferencesExistingWorkerEntry_WorkerEntryRelativePath = string;
 
 /**
  * Tests - CLI - Commands - Generate - Generate Wrangler Toml - Routes Include Base Domain But Not Www Base Domain For Subdomain.

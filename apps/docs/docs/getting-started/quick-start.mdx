@@ -41,6 +41,8 @@ npx branded-short-links
 
 Both `branded-short-links` and `bsl` are registered as CLI aliases — they do the same thing.
 
+The first command that needs configuration copies the starter template included with the npm package to your platform config directory. Global and `npx` installs don't require a repository clone or a separately downloaded `config.sample.json`.
+
 ## First-Time Setup
 
 ### 1. Launch the Interactive Menu
@@ -92,7 +94,7 @@ Run the deploy command from the interactive menu or directly:
 bsl deploy
 ```
 
-The deploy process validates your <Terminology title="the config.json deployment settings file" to="/docs/reference/terminology#config">config</Terminology>, verifies Cloudflare API permissions, generates `wrangler.toml`, lints the source, and deploys the <Terminology title="edge function that serves your redirects" to="/docs/reference/terminology#cloudflare-worker">worker</Terminology>. See [Deployment](/docs/deployment/cloudflare/) for the full walkthrough.
+The deploy process validates your <Terminology title="the config.json deployment settings file" to="/docs/reference/terminology#config">config</Terminology>, verifies Cloudflare API permissions, generates `wrangler.toml`, and deploys the <Terminology title="edge function that serves your redirects" to="/docs/reference/terminology#cloudflare-worker">worker</Terminology>. See [Deployment](/docs/deployment/cloudflare/) for the full walkthrough.
 
 ## What Happens Next
 

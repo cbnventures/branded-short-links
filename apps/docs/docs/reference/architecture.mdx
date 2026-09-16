@@ -141,9 +141,8 @@ graph TD
     Step1 --> Step2["2. Validate config (Zod)"]
     Step2 --> Step3["3. Verify permissions"]
     Step3 --> Step4["4. Generate wrangler.toml"]
-    Step4 --> Step5["5. Run lint"]
-    Step5 --> Step6["6. Deploy worker"]
-    Step6 --> Step7["7. Print summary"]
+    Step4 --> Step5["5. Deploy worker"]
+    Step5 --> Step6["6. Print summary"]
 ```
 
 The <Terminology title="the config.json deployment settings file" to="/docs/reference/terminology#config">config</Terminology> file is never deployed directly. The CLI serializes each section as a JSON string into <Terminology title="Cloudflare's Workers deployment CLI" to="/docs/reference/terminology#wrangler">Wrangler</Terminology> environment variables.

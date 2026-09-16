@@ -14,12 +14,5 @@
       }
     ]
   },
-  "trackers": [
-    {
-      "name": "my-ga4",
-      "type": "ga4",
-      "measurement_id": "",
-      "api_secret": ""
-    }
-  ]
+  "trackers": []
 }

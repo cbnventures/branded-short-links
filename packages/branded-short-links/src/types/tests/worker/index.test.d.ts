@@ -26,6 +26,8 @@ export type Tests_Worker_Index_MockConfig = {
  */
 export type Tests_Worker_Index_CreateMockCtx_Returns = ExecutionContext;
 
+export type Tests_Worker_Index_CreateMockCtx_Opaque = unknown;
+
 /**
  * Tests - Worker - Index - Worker Default Export Fetch - Returns 500 For Invalid Env.
  *

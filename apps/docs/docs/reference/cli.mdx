@@ -88,6 +88,7 @@ bsl generate
 Outputs a <Terminology title="Cloudflare's Workers deployment CLI" to="/docs/reference/terminology#wrangler">Wrangler</Terminology> configuration file with:
 
 - <Terminology title="edge function that serves your redirects" to="/docs/reference/terminology#cloudflare-worker">Worker</Terminology> name and compatibility date (set to current date).
+- Main entry pointing to the <Terminology title="edge function that serves your redirects" to="/docs/reference/terminology#cloudflare-worker">Worker</Terminology> included with the installed package.
 - <Terminology title="Workers route bound to the full path" to="/docs/reference/terminology#custom-domain">Custom domain</Terminology> routes for the <Terminology title="domain your shortcodes live on" to="/docs/reference/terminology#base-domain">base domain</Terminology> (and `www.` variant for two-part domains).
 - Stringified `SETTINGS`, `LINKS`, and `TRACKERS` as <Terminology title="edge function that serves your redirects" to="/docs/reference/terminology#cloudflare-worker">Worker</Terminology> environment variables.
 
@@ -109,9 +110,8 @@ The deploy process runs these steps in order:
 2. **Validate <Terminology title="the config.json deployment settings file" to="/docs/reference/terminology#config">config</Terminology>** — Runs schema and duplicate checks.
 3. **Verify permissions** — Checks the <Terminology title="Cloudflare credential authorizing CLI deployments" to="/docs/reference/terminology#api-token">API token</Terminology> has Workers Scripts, Workers Routes, and Email Routing Rules permissions.
 4. **Generate `wrangler.toml`** — Writes the deployment configuration with account ID, routes, and serialized <Terminology title="the config.json deployment settings file" to="/docs/reference/terminology#config">config</Terminology> vars.
-5. **Run lint** — Runs ESLint against `./src`. Any error stops the deployment.
-6. **Deploy <Terminology title="edge function that serves your redirects" to="/docs/reference/terminology#cloudflare-worker">worker</Terminology>** — Runs `wrangler deploy` with the generated <Terminology title="the config.json deployment settings file" to="/docs/reference/terminology#config">config</Terminology>.
-7. **Print summary** — Displays all configured <Terminology title="path segment that maps to a URL" to="/docs/reference/terminology#shortcode">shortcodes</Terminology> with URLs, redirect codes, and active <Terminology title="background analytics integration on a link" to="/docs/reference/terminology#tracker">trackers</Terminology>.
+5. **Deploy <Terminology title="edge function that serves your redirects" to="/docs/reference/terminology#cloudflare-worker">worker</Terminology>** — Runs `wrangler deploy` with the generated <Terminology title="the config.json deployment settings file" to="/docs/reference/terminology#config">config</Terminology>.
+6. **Print summary** — Displays all configured <Terminology title="path segment that maps to a URL" to="/docs/reference/terminology#shortcode">shortcodes</Terminology> with URLs, redirect codes, and active <Terminology title="background analytics integration on a link" to="/docs/reference/terminology#tracker">trackers</Terminology>.
 
 See [Deployment](/docs/deployment/cloudflare/) for the full walkthrough.
 

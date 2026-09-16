@@ -206,6 +206,10 @@ Send Markdown-formatted push notifications through an [ntfy-reverse-proxy](https
 
 The payload format is identical to the <Terminology title="push notification tracker type" to="/docs/reference/terminology#ntfy">ntfy</Terminology> <Terminology title="background analytics integration on a link" to="/docs/reference/terminology#tracker">tracker</Terminology>, making it compatible with <Terminology title="push notification tracker type" to="/docs/reference/terminology#ntfy">ntfy</Terminology>'s Markdown rendering. The difference is configuration: a single `url` pointing to your [ntfy-reverse-proxy](https://github.com/cbnventures/ntfy-reverse-proxy) endpoint instead of separate `server` and `topic` fields, and the authentication token is optional.
 
+:::warning Untrusted Request Content
+Both ntfy tracker types include the request URL, `User-Agent`, and `X-Real-IP` values without Markdown escaping. Markdown-capable clients may render visitor-supplied formatting, links, or remote images, so it is recommended to treat rendered notifications as untrusted content.
+:::
+
 ---
 
 ### PostHog

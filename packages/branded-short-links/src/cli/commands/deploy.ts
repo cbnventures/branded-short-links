@@ -63,9 +63,6 @@ import type {
   Cli_Commands_Deploy_ResolveApiToken_EnvTokenValid,
   Cli_Commands_Deploy_ResolveApiToken_Interactive,
   Cli_Commands_Deploy_ResolveApiToken_Returns,
-  Cli_Commands_Deploy_RunLint_LintError,
-  Cli_Commands_Deploy_RunLint_LintResult,
-  Cli_Commands_Deploy_RunLint_Returns,
   Cli_Commands_Deploy_SaveEnvToken_Appended,
   Cli_Commands_Deploy_SaveEnvToken_AppendedLines,
   Cli_Commands_Deploy_SaveEnvToken_Content,
@@ -200,24 +197,17 @@ async function deploy(configPath: Cli_Commands_Deploy_Deploy_ConfigPath, interac
 
   Logger.info('wrangler.toml generated.');
 
-  /* Step 5: Lint. */
-  Logger.info('Running lint...');
-
-  runLint();
-
-  Logger.info('Lint passed.');
-
-  /* Step 6: Deploy worker. */
+  /* Step 5: Deploy worker. */
   Logger.info('Deploying worker...');
 
   deployWorker();
 
   Logger.info('Worker deployed.');
 
-  /* Step 7: Print links summary. */
+  /* Step 6: Print links summary. */
   printLinksSummary(configPath);
 
-  /* Step 8: Done. */
+  /* Step 7: Done. */
   Logger.info('Deploy complete.');
 
   return;
@@ -507,34 +497,6 @@ async function resolveApiToken(interactive: Cli_Commands_Deploy_ResolveApiToken_
   }
 
   return promptForApiToken();
-}
-
-/**
- * CLI - Commands - Deploy - Run Lint.
- *
- * Executes the project linter via a spawned process and
- * throws if any lint violations are detected.
- *
- * @returns {Cli_Commands_Deploy_RunLint_Returns}
- *
- * @since 2.0.0
- */
-function runLint(): Cli_Commands_Deploy_RunLint_Returns {
-  const lintResult: Cli_Commands_Deploy_RunLint_LintResult = spawnSync('npx', [
-    'eslint',
-    './src',
-  ], {
-    encoding: 'utf-8',
-    stdio: 'inherit',
-  });
-
-  if (lintResult['status'] !== 0) {
-    const lintError: Cli_Commands_Deploy_RunLint_LintError = new Error('Lint failed.');
-
-    throw lintError;
-  }
-
-  return;
 }
 
 /**

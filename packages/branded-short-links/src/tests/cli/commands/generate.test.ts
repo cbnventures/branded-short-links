@@ -2,13 +2,16 @@ import {
   existsSync, mkdtempSync, readFileSync, rmSync, writeFileSync,
 } from 'node:fs';
 import { tmpdir } from 'node:os';
-import { join } from 'node:path';
+import {
+  dirname, join, relative, sep,
+} from 'node:path';
 
 import {
   afterEach, beforeEach, describe, expect, it,
 } from 'vitest';
 
 import { generateWranglerToml } from '../../../cli/commands/generate.js';
+import { getWorkerEntryPath } from '../../../lib/package-runtime.js';
 
 import type {
   Tests_Cli_Commands_Generate_GenerateWranglerToml_ConfigContent,
@@ -19,12 +22,15 @@ import type {
   Tests_Cli_Commands_Generate_GenerateWranglerToml_LINKSVarIsPresentAsDoubleJSONEncodedString_InnerJson,
   Tests_Cli_Commands_Generate_GenerateWranglerToml_LINKSVarIsPresentAsDoubleJSONEncodedString_Output,
   Tests_Cli_Commands_Generate_GenerateWranglerToml_OsTmpDir,
-  Tests_Cli_Commands_Generate_GenerateWranglerToml_OutputContainsMainPackagesBrandedShortLinksBuildSrcWorkerIndexJs_Output,
   Tests_Cli_Commands_Generate_GenerateWranglerToml_OutputContainsNameBrandedShortLinks_Output,
   Tests_Cli_Commands_Generate_GenerateWranglerToml_OutputIsWrittenToSpecifiedPath_CustomPath,
   Tests_Cli_Commands_Generate_GenerateWranglerToml_OutputIsWrittenToSpecifiedPath_CustomPathExists,
   Tests_Cli_Commands_Generate_GenerateWranglerToml_OutputIsWrittenToSpecifiedPath_Output,
   Tests_Cli_Commands_Generate_GenerateWranglerToml_OutputPath,
+  Tests_Cli_Commands_Generate_GenerateWranglerToml_OutputReferencesExistingWorkerEntry_Output,
+  Tests_Cli_Commands_Generate_GenerateWranglerToml_OutputReferencesExistingWorkerEntry_OutputDir,
+  Tests_Cli_Commands_Generate_GenerateWranglerToml_OutputReferencesExistingWorkerEntry_WorkerEntryPath,
+  Tests_Cli_Commands_Generate_GenerateWranglerToml_OutputReferencesExistingWorkerEntry_WorkerEntryRelativePath,
   Tests_Cli_Commands_Generate_GenerateWranglerToml_RoutesIncludeBaseDomainButNotWwwBaseDomainForSubdomain_Output,
   Tests_Cli_Commands_Generate_GenerateWranglerToml_RoutesIncludeWwwBaseDomainForRootDomain_Output,
   Tests_Cli_Commands_Generate_GenerateWranglerToml_RoutesIncludeWwwBaseDomainForRootDomain_RootConfigContent,
@@ -100,12 +106,17 @@ describe('generateWranglerToml', () => {
     return;
   });
 
-  it('output contains main = "packages/branded-short-links/build/src/worker/index.js"', () => {
+  it('output references existing Worker entry', () => {
     generateWranglerToml(configPath!, outputPath);
 
-    const output: Tests_Cli_Commands_Generate_GenerateWranglerToml_OutputContainsMainPackagesBrandedShortLinksBuildSrcWorkerIndexJs_Output = readFileSync(outputPath!, 'utf-8');
+    const output: Tests_Cli_Commands_Generate_GenerateWranglerToml_OutputReferencesExistingWorkerEntry_Output = readFileSync(outputPath!, 'utf-8');
+    const outputDir: Tests_Cli_Commands_Generate_GenerateWranglerToml_OutputReferencesExistingWorkerEntry_OutputDir = dirname(outputPath!);
+    const workerEntryPath: Tests_Cli_Commands_Generate_GenerateWranglerToml_OutputReferencesExistingWorkerEntry_WorkerEntryPath = getWorkerEntryPath();
+    const workerEntryRelativePath: Tests_Cli_Commands_Generate_GenerateWranglerToml_OutputReferencesExistingWorkerEntry_WorkerEntryRelativePath = relative(outputDir, workerEntryPath).split(sep).join('/');
 
-    expect(output).toContain('main = "packages/branded-short-links/build/src/worker/index.js"');
+    expect(output).toContain(`main = ${JSON.stringify(workerEntryRelativePath)}`);
+
+    expect(existsSync(workerEntryPath)).toBe(true);
 
     return;
   });

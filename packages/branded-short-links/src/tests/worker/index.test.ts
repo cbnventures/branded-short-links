@@ -5,6 +5,7 @@ import {
 import workerDefault from '../../worker/index.js';
 
 import type {
+  Tests_Worker_Index_CreateMockCtx_Opaque,
   Tests_Worker_Index_CreateMockCtx_Returns,
   Tests_Worker_Index_MockConfig,
   Tests_Worker_Index_WorkerDefaultExportFetch_Returns500ForInvalidEnv_ContentType,
@@ -53,7 +54,8 @@ function createMockCtx(): Tests_Worker_Index_CreateMockCtx_Returns {
     waitUntil: vi.fn(),
     passThroughOnException: vi.fn(),
     props: {},
-  } as Tests_Worker_Index_CreateMockCtx_Returns;
+    tracing: { enterSpan: vi.fn() },
+  } as Tests_Worker_Index_CreateMockCtx_Opaque as Tests_Worker_Index_CreateMockCtx_Returns;
 }
 
 describe('worker default export fetch', () => {

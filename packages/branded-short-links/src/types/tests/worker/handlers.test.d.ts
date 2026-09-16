@@ -26,6 +26,8 @@ export type Tests_Worker_Handlers_MockConfig = {
  */
 export type Tests_Worker_Handlers_CreateMockCtx_Returns = ExecutionContext;
 
+export type Tests_Worker_Handlers_CreateMockCtx_Opaque = unknown;
+
 /**
  * Tests - Worker - Handlers - Handle Request.
  *

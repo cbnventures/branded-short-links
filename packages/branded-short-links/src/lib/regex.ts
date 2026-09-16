@@ -10,24 +10,14 @@
 const envLinePattern = /^([A-Z0-9_]+)=(?:"([^"\n]*)"|'([^'\n]*)'|([^"'\n]*))$/;
 
 /**
- * Lib - Regex - Markdown Control Characters Pattern.
+ * Lib - Regex - Line Break Pattern.
  *
- * Matches Markdown control characters that could be used to inject
- * formatting or links when interpolated into Markdown-enabled content.
+ * Matches carriage-return and newline sequences so they can be replaced
+ * with spaces in values interpolated into single-line notification fields.
  *
- * @since 2.0.3
+ * @since 2.0.7
  */
-const markdownControlCharactersPattern = /[<[\](){}*_~`#|>!\\]/;
-
-/**
- * Lib - Regex - Newline Pattern.
- *
- * Matches newline characters so they can be replaced with spaces
- * in untrusted input interpolated into single-line Markdown fields.
- *
- * @since 2.0.3
- */
-const newlinePattern = /\n/;
+const lineBreakPattern = /\r\n?|\n/;
 
 /**
  * Lib - Regex - Trailing Slash Pattern.
@@ -96,7 +86,6 @@ export {
   htmlGreaterThanPattern,
   htmlLessThanPattern,
   htmlSingleQuotePattern,
-  markdownControlCharactersPattern,
-  newlinePattern,
+  lineBreakPattern,
   trailingSlashPattern,
 };
