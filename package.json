@@ -44,8 +44,10 @@
   "engines": {
     "node": "^22 || ^24"
   },
+  "dependencies": {
+    "@cbnventures/nova": "0.27.2"
+  },
   "devDependencies": {
-    "@cbnventures/nova": "0.27.0",
     "@types/node": "24.9.1",
     "eslint": "9.39.5",
     "jiti": "2.7.0",

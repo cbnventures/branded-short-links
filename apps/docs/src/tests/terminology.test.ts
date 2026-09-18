@@ -14,7 +14,7 @@ import * as vitest from 'vitest';
  * under "docs/reference" instead — the path and route below are overridden
  * to match, since the published kit's defaults assume the "quickstart" layout.
  *
- * @since UNRELEASED
+ * @since 0.0.0
  */
 registerTerminologySuite({
   vitest,

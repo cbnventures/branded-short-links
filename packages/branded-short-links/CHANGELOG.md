@@ -1,5 +1,10 @@
 # branded-short-links
 
+## 2.0.8 - 2026-09-18
+
+### UPDATED
+- Updated Nova to 0.27.2 across the project, CLI package, and docs, and the Docusaurus preset to 0.27.2 in docs.
+
 ## 2.0.7 - 2026-09-16
 
 ### UPDATED

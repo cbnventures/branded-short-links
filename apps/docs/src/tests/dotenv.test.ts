@@ -14,7 +14,7 @@ import * as vitest from 'vitest';
  * The `.env` files live at this site's workspace root, so `rootDir` resolves up
  * from this test file instead of relying on Vitest's working directory.
  *
- * @since UNRELEASED
+ * @since 0.0.0
  */
 registerDotenvSuite({
   vitest,
