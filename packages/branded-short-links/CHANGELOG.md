@@ -1,5 +1,10 @@
 # branded-short-links
 
+## 2.0.9 - 2026-09-23
+
+### UPDATED
+- Updated Nova to 0.27.3 across the project, CLI package, and docs, updated the Docusaurus preset to 0.27.3 in docs, and granted the generated inactive-thread workflow write access to pull requests.
+
 ## 2.0.8 - 2026-09-18
 
 ### UPDATED
