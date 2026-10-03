@@ -1,5 +1,11 @@
 # branded-short-links
 
+## 2.0.10 - 2026-10-03
+
+### UPDATED
+- Updated Nova to 0.28.0 across the project, CLI package, and docs, plus the Docusaurus preset to 0.28.0 in docs, including the runtime-only Vitest resolution fix.
+- Assigned explicit child environments to development, production, build, and deployment script groups.
+
 ## 2.0.9 - 2026-09-23
 
 ### UPDATED
