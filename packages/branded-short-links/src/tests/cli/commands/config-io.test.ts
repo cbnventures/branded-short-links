@@ -41,6 +41,12 @@ const validConfig: Tests_Cli_Commands_ConfigIo_ValidConfig = {
     }],
   },
   trackers: [],
+  app_access: {
+    users: [{
+      username: 'test-user',
+      access_key: 'artist-cactus-forest-magnet-river',
+    }],
+  },
   settings: {
     worker_name: 'test-worker',
     base_domain: 'bsl.example.com',

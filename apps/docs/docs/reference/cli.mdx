@@ -1,7 +1,7 @@
 ---
 id: cli
 title: CLI Reference
-description: Manage links, trackers, settings, and deployments through the branded-short-links command-line interface with interactive menus and direct commands.
+description: Manage links, trackers, private app access, settings, and deployments through the branded-short-links command-line interface with interactive menus and direct commands.
 sidebar_position: 1
 keywords:
   - branded short links
@@ -10,6 +10,7 @@ keywords:
   - validate
   - generate
   - deploy
+  - access key
   - interactive menu
   - npm scripts
 tags:
@@ -21,7 +22,7 @@ tags:
 
 import { Terminology } from '@cbnventures/docusaurus-preset-nova/blocks';
 
-Manage links, <Terminology title="background analytics integration on a link" to="/docs/reference/terminology#tracker">trackers</Terminology>, settings, and deployments through the `branded-short-links` command-line interface.
+Manage links, <Terminology title="background analytics integration on a link" to="/docs/reference/terminology#tracker">trackers</Terminology>, private app access, settings, and deployments through the `branded-short-links` command-line interface.
 
 ## Usage
 
@@ -61,6 +62,41 @@ When launching the interactive menu, the CLI checks for `config.json` in the cur
 
 ## Commands
 
+### `bsl access add <username>`
+
+Add a private app user and generate an <Terminology title="deployer-managed credential for the private app API" to="/docs/reference/terminology#access-key">access key</Terminology>. The username is trimmed and converted to lowercase.
+
+```bash
+# Five words; easiest to enter manually
+bsl access add jacky
+
+# Five compact four-character chunks
+bsl access add jacky --format compact
+
+# Long copy-and-paste key
+bsl access add jacky --format random
+```
+
+The default format is `memorable`. The CLI writes the username and generated key to `config.json` and prints the credential for immediate use.
+
+### `bsl access rotate <username>`
+
+Replace an existing user's key. Choose `memorable`, `compact`, or `random`; the default is `memorable`.
+
+```bash
+bsl access rotate jacky --format random
+```
+
+The old key stops working after the updated config is redeployed.
+
+### `bsl access remove <username>`
+
+Remove a private app user. Removing the last user also removes the optional `app_access` section, so the private endpoint is omitted from the generated Worker variables.
+
+```bash
+bsl access remove jacky
+```
+
 ### `bsl validate`
 
 Validate the configuration file against the schema and check for duplicates.
@@ -74,6 +110,7 @@ Checks performed:
 - Schema validation (field types, required fields, URL formats).
 - Duplicate <Terminology title="path segment that maps to a URL" to="/docs/reference/terminology#shortcode">shortcode</Terminology> detection.
 - Duplicate <Terminology title="background analytics integration on a link" to="/docs/reference/terminology#tracker">tracker</Terminology> name detection.
+- Duplicate private app username detection and reserved endpoint protection.
 
 Prints "Config is valid." on success, or lists all validation errors.
 
@@ -90,7 +127,7 @@ Outputs a <Terminology title="Cloudflare's Workers deployment CLI" to="/docs/ref
 - <Terminology title="edge function that serves your redirects" to="/docs/reference/terminology#cloudflare-worker">Worker</Terminology> name and compatibility date (set to current date).
 - Main entry pointing to the <Terminology title="edge function that serves your redirects" to="/docs/reference/terminology#cloudflare-worker">Worker</Terminology> included with the installed package.
 - <Terminology title="Workers route bound to the full path" to="/docs/reference/terminology#custom-domain">Custom domain</Terminology> routes for the <Terminology title="domain your shortcodes live on" to="/docs/reference/terminology#base-domain">base domain</Terminology> (and `www.` variant for two-part domains).
-- Stringified `SETTINGS`, `LINKS`, and `TRACKERS` as <Terminology title="edge function that serves your redirects" to="/docs/reference/terminology#cloudflare-worker">Worker</Terminology> environment variables.
+- Stringified `SETTINGS`, `LINKS`, and `TRACKERS` as <Terminology title="edge function that serves your redirects" to="/docs/reference/terminology#cloudflare-worker">Worker</Terminology> environment variables, plus `APP_ACCESS` when configured.
 
 When run standalone, the generated file doesn't include the `account_id` field. The `bsl deploy` command generates a `wrangler.toml` with `account_id` included (derived from the permission verification step).
 

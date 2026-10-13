@@ -4,13 +4,16 @@ import type {
   Cli_Commands_ConfigIo_LoadConfig_ConfigPath,
   Cli_Commands_ConfigIo_LoadConfig_RawContent,
   Cli_Commands_ConfigIo_LoadConfig_Returns,
+  Cli_Commands_ConfigIo_NormalizeConfig_AppAccess,
   Cli_Commands_ConfigIo_NormalizeConfig_Config,
   Cli_Commands_ConfigIo_NormalizeConfig_Links,
+  Cli_Commands_ConfigIo_NormalizeConfig_NormalizedAppAccess,
   Cli_Commands_ConfigIo_NormalizeConfig_NormalizedLinks,
   Cli_Commands_ConfigIo_NormalizeConfig_NormalizedTrackers,
   Cli_Commands_ConfigIo_NormalizeConfig_Returns,
   Cli_Commands_ConfigIo_NormalizeConfig_Settings,
   Cli_Commands_ConfigIo_NormalizeConfig_SortedItems,
+  Cli_Commands_ConfigIo_NormalizeConfig_SortedUsers,
   Cli_Commands_ConfigIo_NormalizeConfig_Trackers,
   Cli_Commands_ConfigIo_SaveConfig_Config,
   Cli_Commands_ConfigIo_SaveConfig_ConfigPath,
@@ -36,9 +39,9 @@ function loadConfig(configPath: Cli_Commands_ConfigIo_LoadConfig_ConfigPath): Cl
 /**
  * CLI - Commands - Config IO - Normalize Config.
  *
- * Reorders top-level keys to match the interactive menu order (links, trackers,
- * settings), sorts link items and trackers alphabetically, and places the type
- * key before name in each tracker to match the UI prompt sequence.
+ * Reorders top-level keys to links, trackers, app_access, and settings, sorts
+ * link items, trackers, and app-access users alphabetically, and places the
+ * type key before name in each tracker to match the UI prompt sequence.
  *
  * @param {Cli_Commands_ConfigIo_NormalizeConfig_Config} config - Config.
  *
@@ -50,6 +53,7 @@ function normalizeConfig(config: Cli_Commands_ConfigIo_NormalizeConfig_Config): 
   const links: Cli_Commands_ConfigIo_NormalizeConfig_Links = config['links'];
   const trackers: Cli_Commands_ConfigIo_NormalizeConfig_Trackers = config['trackers'];
   const settings: Cli_Commands_ConfigIo_NormalizeConfig_Settings = config['settings'];
+  const appAccess: Cli_Commands_ConfigIo_NormalizeConfig_AppAccess = config['app_access'];
 
   const sortedItems: Cli_Commands_ConfigIo_NormalizeConfig_SortedItems = [...links['items']].sort(
     (a, b) => a['shortcode'].localeCompare(b['shortcode']),
@@ -72,9 +76,13 @@ function normalizeConfig(config: Cli_Commands_ConfigIo_NormalizeConfig_Config): 
       };
     });
 
+  const sortedUsers: Cli_Commands_ConfigIo_NormalizeConfig_SortedUsers = (appAccess === undefined) ? undefined : appAccess['users'].toSorted((a, b) => a['username'].localeCompare(b['username']));
+  const normalizedAppAccess: Cli_Commands_ConfigIo_NormalizeConfig_NormalizedAppAccess = (sortedUsers === undefined) ? undefined : { users: sortedUsers };
+
   return {
     links: normalizedLinks,
     trackers: normalizedTrackers,
+    ...((normalizedAppAccess === undefined) ? {} : { app_access: normalizedAppAccess }),
     settings,
   };
 }

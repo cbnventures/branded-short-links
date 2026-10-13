@@ -354,7 +354,7 @@ function escapeHtml(input: Worker_Landing_Page_EscapeHtml_Input): Worker_Landing
 }
 
 /**
- * Worker - Landing - Page.
+ * Worker - Landing - Page - Landing Page.
  *
  * Builds and returns the HTML landing page response that shows
  * the project name, description, and optional debug config.

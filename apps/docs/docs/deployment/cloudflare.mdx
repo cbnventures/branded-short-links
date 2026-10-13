@@ -104,9 +104,10 @@ Loads the Cloudflare <Terminology title="Cloudflare credential authorizing CLI d
 
 Runs the same checks as `bsl validate`:
 
-- Schema validation for settings, links, and <Terminology title="background analytics integration on a link" to="/docs/reference/terminology#tracker">trackers</Terminology>.
+- Schema validation for settings, links, <Terminology title="background analytics integration on a link" to="/docs/reference/terminology#tracker">trackers</Terminology>, and optional app access.
 - Duplicate <Terminology title="path segment that maps to a URL" to="/docs/reference/terminology#shortcode">shortcode</Terminology> detection.
 - Duplicate <Terminology title="background analytics integration on a link" to="/docs/reference/terminology#tracker">tracker</Terminology> name detection.
+- Duplicate app-access username detection and reserved `/__bsl/links` path protection.
 
 Deployment stops if validation fails.
 
@@ -124,7 +125,7 @@ Creates a `wrangler.toml` file with:
 - Compatibility date (set to the current date).
 - Account ID (derived from zone info during permission verification).
 - <Terminology title="Workers route bound to the full path" to="/docs/reference/terminology#custom-domain">Custom domain</Terminology> routes for the <Terminology title="domain your shortcodes live on" to="/docs/reference/terminology#base-domain">base domain</Terminology>. Two-part domains (e.g., `example.com`) also get a `www.` route.
-- <Terminology title="the config.json deployment settings file" to="/docs/reference/terminology#config">Config</Terminology> sections (`SETTINGS`, `LINKS`, `TRACKERS`) serialized as JSON string environment variables.
+- <Terminology title="the config.json deployment settings file" to="/docs/reference/terminology#config">Config</Terminology> sections (`SETTINGS`, `LINKS`, `TRACKERS`, and optional `APP_ACCESS`) serialized as JSON string environment variables.
 - Main entry point pointing to the built <Terminology title="edge function that serves your redirects" to="/docs/reference/terminology#cloudflare-worker">worker</Terminology> script.
 
 ### 5. Deploy Worker
@@ -177,7 +178,7 @@ npm run tail
 
 ## Redeployment
 
-After changing your <Terminology title="the config.json deployment settings file" to="/docs/reference/terminology#config">config</Terminology> (adding links, updating <Terminology title="background analytics integration on a link" to="/docs/reference/terminology#tracker">trackers</Terminology>, changing settings), redeploy with the same command:
+After changing your <Terminology title="the config.json deployment settings file" to="/docs/reference/terminology#config">config</Terminology> (adding links, updating <Terminology title="background analytics integration on a link" to="/docs/reference/terminology#tracker">trackers</Terminology>, changing app access, or changing settings), redeploy with the same command:
 
 ```bash
 bsl deploy

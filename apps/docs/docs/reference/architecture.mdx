@@ -31,10 +31,13 @@ The project has two entry points running on different runtimes:
 graph TD
     subgraph Edge["Cloudflare Worker (Edge)"]
         direction TB
-        A1[Parse environment] --> A2[Check HTTP method]
-        A2 --> A3[Match shortcode]
-        A3 --> A4[Fire trackers]
-        A3 --> A5[Return redirect / fallback / landing page]
+        A1[Parse environment] --> A2{Private app API?}
+        A2 -->|Yes| A6[Authenticate app user]
+        A6 --> A7[Return deployment config]
+        A2 -->|No| A3[Check HTTP method]
+        A3 --> A4[Match shortcode]
+        A4 --> A5[Fire trackers]
+        A4 --> A8[Return redirect / fallback / landing page]
     end
 
     subgraph Local["Node.js (Local)"]
@@ -62,13 +65,15 @@ The <Terminology title="edge function that serves your redirects" to="/docs/refe
 
 When a request arrives at the <Terminology title="edge function that serves your redirects" to="/docs/reference/terminology#cloudflare-worker">Cloudflare Worker</Terminology>:
 
-1. **Parse environment** — The <Terminology title="edge function that serves your redirects" to="/docs/reference/terminology#cloudflare-worker">worker</Terminology> reads `SETTINGS`, `LINKS`, and `TRACKERS` from <Terminology title="Cloudflare's Workers deployment CLI" to="/docs/reference/terminology#wrangler">Wrangler</Terminology> environment variables (injected as JSON strings during deployment). It validates them against the Zod <Terminology title="the config.json deployment settings file" to="/docs/reference/terminology#config">config</Terminology> schema.
+1. **Parse environment** — The <Terminology title="edge function that serves your redirects" to="/docs/reference/terminology#cloudflare-worker">worker</Terminology> reads `SETTINGS`, `LINKS`, `TRACKERS`, and optional `APP_ACCESS` from <Terminology title="Cloudflare's Workers deployment CLI" to="/docs/reference/terminology#wrangler">Wrangler</Terminology> environment variables (injected as JSON strings during deployment). It validates them against the Zod <Terminology title="the config.json deployment settings file" to="/docs/reference/terminology#config">config</Terminology> schema.
 
-2. **Check HTTP method** — Only `GET` and `HEAD` requests are processed. All other methods return `405 Method Not Allowed`.
+2. **Check the private app route** — `/__bsl/links` is handled before shortcode matching. When app access is configured, `GET` and `HEAD` require valid Basic authentication; when it is disabled, the route returns `404 Not Found`.
 
-3. **Match <Terminology title="path segment that maps to a URL" to="/docs/reference/terminology#shortcode">shortcode</Terminology>** — The URL pathname is stripped of its trailing slash and matched against the configured <Terminology title="single shortcode-to-URL config entry" to="/docs/reference/terminology#link-item">link items</Terminology>.
+3. **Check HTTP method** — Only `GET` and `HEAD` requests are processed. All other methods return `405 Method Not Allowed`.
 
-4. **Route the response:**
+4. **Match <Terminology title="path segment that maps to a URL" to="/docs/reference/terminology#shortcode">shortcode</Terminology>** — The URL pathname is stripped of its trailing slash and matched against the configured <Terminology title="single shortcode-to-URL config entry" to="/docs/reference/terminology#link-item">link items</Terminology>.
+
+5. **Route the response:**
 
 | Condition                                                                                                                                                               | Response                                                                                                                                                                                     |
 |-------------------------------------------------------------------------------------------------------------------------------------------------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
@@ -78,7 +83,7 @@ When a request arrives at the <Terminology title="edge function that serves your
 | No match, no <Terminology title="redirect used when no shortcode matches" to="/docs/reference/terminology#fallback-url">fallback</Terminology>, root path (`/`)         | Serve the branded <Terminology title="branded page served at the root" to="/docs/reference/terminology#landing-page">landing page</Terminology> (200)                                        |
 | No match, no <Terminology title="redirect used when no shortcode matches" to="/docs/reference/terminology#fallback-url">fallback</Terminology>, other path              | Serve the <Terminology title="page shown when nothing else matches" to="/docs/reference/terminology#404-page">404</Terminology> not-found page (404)                                         |
 
-5. **Log event** — Every request logs a structured JSON payload to `console.info()` with the matched <Terminology title="path segment that maps to a URL" to="/docs/reference/terminology#shortcode">shortcode</Terminology> (or `null`), redirect URL, HTTP response code, and <Terminology title="background analytics integration on a link" to="/docs/reference/terminology#tracker">tracker</Terminology> names. You can view these logs in real time with `npm run tail`. Example payload:
+6. **Log event** — Every redirect request logs a structured JSON payload to `console.info()` with the matched <Terminology title="path segment that maps to a URL" to="/docs/reference/terminology#shortcode">shortcode</Terminology> (or `null`), redirect URL, HTTP response code, and <Terminology title="background analytics integration on a link" to="/docs/reference/terminology#tracker">tracker</Terminology> names. You can view these logs in real time with `npm run tail`. Example payload:
 
 ```json
 {
@@ -88,6 +93,16 @@ When a request arrives at the <Terminology title="edge function that serves your
   "trackers": ["my-ga4", "my-ntfy"]
 }
 ```
+
+## Private App API
+
+The private endpoint at `/__bsl/links` is designed for native clients used by the people who deploy Branded Short Links. It is not a public account or discovery API.
+
+- `GET` returns the deployment name, base and fallback URLs, each shortcode's branded URL, redirect destination and response code, and the tracker configuration.
+- `HEAD` validates the same credentials and returns the same status and headers without a body.
+- Login usernames and <Terminology title="deployer-managed credential for the private app API" to="/docs/reference/terminology#access-key">access keys</Terminology> are never included in the response.
+- Authentication failures always return the same `401 Unauthorized` response so the API does not identify which credential was wrong.
+- Responses use `Cache-Control: private, no-store`.
 
 ## Tracker Dispatch
 
@@ -131,6 +146,8 @@ When `show_response_output` is `true`, an expandable `<details>` element shows t
 
 Settings (including `worker_name`, `base_domain`) and the `fallback_url` are shown unmasked.
 
+The complete `app_access` section is omitted from debug output, including usernames and <Terminology title="deployer-managed credential for the private app API" to="/docs/reference/terminology#access-key">access keys</Terminology>.
+
 A similar <Terminology title="page shown when nothing else matches" to="/docs/reference/terminology#404-page">404 page</Terminology> is served for unmatched paths when no <Terminology title="redirect used when no shortcode matches" to="/docs/reference/terminology#fallback-url">fallback URL</Terminology> is configured.
 
 ## Configuration Pipeline
@@ -145,7 +162,7 @@ graph TD
     Step5 --> Step6["6. Print summary"]
 ```
 
-The <Terminology title="the config.json deployment settings file" to="/docs/reference/terminology#config">config</Terminology> file is never deployed directly. The CLI serializes each section as a JSON string into <Terminology title="Cloudflare's Workers deployment CLI" to="/docs/reference/terminology#wrangler">Wrangler</Terminology> environment variables.
+The <Terminology title="the config.json deployment settings file" to="/docs/reference/terminology#config">config</Terminology> file is never deployed directly. The CLI serializes each section as a JSON string into the `SETTINGS`, `LINKS`, `TRACKERS`, and optional `APP_ACCESS` <Terminology title="Cloudflare's Workers deployment CLI" to="/docs/reference/terminology#wrangler">Wrangler</Terminology> environment variables.
 
 The <Terminology title="edge function that serves your redirects" to="/docs/reference/terminology#cloudflare-worker">worker</Terminology> parses these strings back into objects at runtime.
 
@@ -154,13 +171,16 @@ The <Terminology title="edge function that serves your redirects" to="/docs/refe
 ```text
 packages/branded-short-links/src/
 |-- worker/                <-- Cloudflare Worker runtime
-|   |-- index.ts           <-- Request handler, routing logic
+|   |-- app-api.ts         <-- Authenticated, read-only native app endpoint
+|   |-- handlers.ts        <-- Request and shortcode routing
+|   |-- index.ts           <-- Environment parsing and config validation
 |   |-- trackers.ts        <-- Tracker dispatch (GA4, Facebook, ntfy, Reverse Proxy for ntfy, PostHog, plain-text)
 |   '-- landing/
 |       '-- page.ts        <-- Landing page and 404 page HTML generation
 |-- cli/                   <-- Node.js CLI runtime
 |   |-- index.ts           <-- CLI entry point (Commander)
 |   |-- commands/
+|   |   |-- access.ts      <-- App user and access-key management
 |   |   |-- config-io.ts   <-- Config file read/write
 |   |   |-- deploy.ts      <-- Deployment orchestration (7 steps)
 |   |   |-- generate.ts    <-- wrangler.toml generation
@@ -186,6 +206,7 @@ packages/branded-short-links/src/
 | <Terminology title="edge function that serves your redirects" to="/docs/reference/terminology#cloudflare-worker">Worker</Terminology> entry point | Try/catch wraps the entire fetch handler. Returns JSON error response on failure.                                                                                                                                                                                                                                                                                                                                                        |
 | <Terminology title="the config.json deployment settings file" to="/docs/reference/terminology#config">Config</Terminology> parsing                | Zod `safeParse` at request time validates env vars. Returns 500 with error issues on failure.                                                                                                                                                                                                                                                                                                                                            |
 | <Terminology title="path segment that maps to a URL" to="/docs/reference/terminology#shortcode">Shortcode</Terminology> matching                  | No match falls through to <Terminology title="redirect used when no shortcode matches" to="/docs/reference/terminology#fallback-url">fallback URL</Terminology>, <Terminology title="branded page served at the root" to="/docs/reference/terminology#landing-page">landing page</Terminology>, or <Terminology title="page shown when nothing else matches" to="/docs/reference/terminology#404-page">404</Terminology>. Never crashes. |
+| Private app API                                                                                                                                   | Returns a generic authentication failure, never logs credentials, and disables caching.                                                                                                                                                                                                                                                                                                                                                  |
 | <Terminology title="background analytics integration on a link" to="/docs/reference/terminology#tracker">Tracker</Terminology> dispatch           | `Promise.allSettled()` catches individual failures silently. Never blocks.                                                                                                                                                                                                                                                                                                                                                               |
 | CLI commands                                                                                                                                      | Try/catch at command level. Chalk-formatted errors. Non-zero exit code.                                                                                                                                                                                                                                                                                                                                                                  |
 | <Terminology title="the config.json deployment settings file" to="/docs/reference/terminology#config">Config</Terminology> validation             | Zod schemas catch type mismatches, missing fields, invalid URLs, duplicates.                                                                                                                                                                                                                                                                                                                                                             |

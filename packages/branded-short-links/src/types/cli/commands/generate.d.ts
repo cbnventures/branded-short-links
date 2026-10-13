@@ -28,10 +28,13 @@ export type Cli_Commands_Generate_GenerateWranglerToml_Config_Links = Lib_Schema
 
 export type Cli_Commands_Generate_GenerateWranglerToml_Config_Trackers = Lib_Schema_Config['trackers'];
 
+export type Cli_Commands_Generate_GenerateWranglerToml_Config_AppAccess = Lib_Schema_Config['app_access'];
+
 export type Cli_Commands_Generate_GenerateWranglerToml_Config = {
   settings: Cli_Commands_Generate_GenerateWranglerToml_Config_Settings;
   links: Cli_Commands_Generate_GenerateWranglerToml_Config_Links;
   trackers: Cli_Commands_Generate_GenerateWranglerToml_Config_Trackers;
+  app_access?: Cli_Commands_Generate_GenerateWranglerToml_Config_AppAccess;
 };
 
 export type Cli_Commands_Generate_GenerateWranglerToml_Settings = Lib_Schema_Config['settings'];
@@ -39,6 +42,8 @@ export type Cli_Commands_Generate_GenerateWranglerToml_Settings = Lib_Schema_Con
 export type Cli_Commands_Generate_GenerateWranglerToml_Links = Lib_Schema_Config['links'];
 
 export type Cli_Commands_Generate_GenerateWranglerToml_Trackers = Lib_Schema_Config['trackers'];
+
+export type Cli_Commands_Generate_GenerateWranglerToml_AppAccess = Lib_Schema_Config['app_access'];
 
 export type Cli_Commands_Generate_GenerateWranglerToml_CompatibilityDate = string;
 
@@ -57,5 +62,7 @@ export type Cli_Commands_Generate_GenerateWranglerToml_SettingsAsString = string
 export type Cli_Commands_Generate_GenerateWranglerToml_LinksAsString = string;
 
 export type Cli_Commands_Generate_GenerateWranglerToml_TrackersAsString = string;
+
+export type Cli_Commands_Generate_GenerateWranglerToml_AppAccessAsString = string | undefined;
 
 export type Cli_Commands_Generate_GenerateWranglerToml_Lines = string[];

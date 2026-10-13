@@ -1,5 +1,22 @@
 # branded-short-links
 
+## 2.1.0 - 2026-10-13
+
+### UPDATED
+- Regenerated the bug-report template with sentence-aware pronoun capitalization.
+- Updated Nova and Docusaurus Preset Nova to 0.30.1.
+- Adopted role-based TypeScript preset layers.
+- Standardized root-owned tests under the shared project layout.
+- Aligned JSDoc hierarchies with the function-level contract.
+- Standardized configuration serialization and examples to the canonical links, trackers, app_access, settings order.
+
+### FIXED
+- Passed generated Cloudflare Pages project and branch values through the workflow environment so deployment commands remain shell-safe.
+
+### ADDED
+- Added opt-in private app access for deployment owners, with config-managed users and an authenticated read-only endpoint that returns branded links, destinations, response codes, fallback details, and tracker configuration without exposing app login credentials.
+- Added CLI commands to add, rotate, and remove app users with a choice of five-word memorable, five-chunk compact, or long random access keys.
+
 ## 2.0.11 - 2026-10-11
 
 ### UPDATED

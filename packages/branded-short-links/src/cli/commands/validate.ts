@@ -1,17 +1,21 @@
+import { APP_LINKS_API_PATH } from '../../lib/item.js';
 import { configSchema } from '../../lib/schema.js';
 import { loadConfig } from './config-io.js';
 
 import type {
+  Cli_Commands_Validate_ValidateConfig_AppAccess,
   Cli_Commands_Validate_ValidateConfig_Config,
   Cli_Commands_Validate_ValidateConfig_ConfigPath,
   Cli_Commands_Validate_ValidateConfig_Entry,
   Cli_Commands_Validate_ValidateConfig_Errors,
   Cli_Commands_Validate_ValidateConfig_ExistingShortcodeCount,
   Cli_Commands_Validate_ValidateConfig_ExistingTrackerCount,
+  Cli_Commands_Validate_ValidateConfig_ExistingUsernameCount,
   Cli_Commands_Validate_ValidateConfig_Items,
   Cli_Commands_Validate_ValidateConfig_Links,
   Cli_Commands_Validate_ValidateConfig_NewShortcodeCount,
   Cli_Commands_Validate_ValidateConfig_NewTrackerCount,
+  Cli_Commands_Validate_ValidateConfig_NewUsernameCount,
   Cli_Commands_Validate_ValidateConfig_ParseResult,
   Cli_Commands_Validate_ValidateConfig_Raw,
   Cli_Commands_Validate_ValidateConfig_Returns,
@@ -19,6 +23,8 @@ import type {
   Cli_Commands_Validate_ValidateConfig_ShortcodeCounts,
   Cli_Commands_Validate_ValidateConfig_TrackerNameCounts,
   Cli_Commands_Validate_ValidateConfig_Trackers,
+  Cli_Commands_Validate_ValidateConfig_UsernameCounts,
+  Cli_Commands_Validate_ValidateConfig_UsernameEntryValue,
 } from '../../types/cli/commands/validate.d.ts';
 
 /**
@@ -60,6 +66,10 @@ function validateConfig(configPath: Cli_Commands_Validate_ValidateConfig_ConfigP
     const newShortcodeCount: Cli_Commands_Validate_ValidateConfig_NewShortcodeCount = (existingShortcodeCount ?? 0) + 1;
 
     shortcodeCounts.set(item['shortcode'], newShortcodeCount);
+
+    if (item['shortcode'] === APP_LINKS_API_PATH || item['shortcode'] === `${APP_LINKS_API_PATH}/`) {
+      errors.push(`Shortcode "${item['shortcode']}" is reserved for app access.`);
+    }
   }
 
   for (const shortcodeEntry of shortcodeCounts) {
@@ -86,6 +96,26 @@ function validateConfig(configPath: Cli_Commands_Validate_ValidateConfig_ConfigP
 
     if (entry[1] > 1) {
       errors.push(`Duplicate tracker name "${entry[0]}" found in trackers.`);
+    }
+  }
+
+  const appAccess: Cli_Commands_Validate_ValidateConfig_AppAccess = config['app_access'];
+  const usernameCounts: Cli_Commands_Validate_ValidateConfig_UsernameCounts = new Map<string, number>();
+
+  if (appAccess !== undefined) {
+    for (const user of appAccess['users']) {
+      const existingUsernameCount: Cli_Commands_Validate_ValidateConfig_ExistingUsernameCount = usernameCounts.get(user['username']);
+      const newUsernameCount: Cli_Commands_Validate_ValidateConfig_NewUsernameCount = (existingUsernameCount ?? 0) + 1;
+
+      usernameCounts.set(user['username'], newUsernameCount);
+    }
+  }
+
+  for (const usernameEntry of usernameCounts) {
+    const usernameEntryValue: Cli_Commands_Validate_ValidateConfig_UsernameEntryValue = usernameEntry as Cli_Commands_Validate_ValidateConfig_UsernameEntryValue;
+
+    if (usernameEntryValue[1] > 1) {
+      errors.push(`Duplicate app access username "${usernameEntryValue[0]}" found.`);
     }
   }
 

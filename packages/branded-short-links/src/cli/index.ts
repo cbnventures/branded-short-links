@@ -7,6 +7,9 @@ import { Command } from 'commander';
 
 import { APP_NAME } from '../lib/item.js';
 import { getConfigSamplePath, getPackageVersion } from '../lib/package-runtime.js';
+import {
+  addAccessUser, removeAccessUser, resolveAccessKeyFormat, rotateAccessKey,
+} from './commands/access.js';
 import { deploy } from './commands/deploy.js';
 import { generateWranglerToml } from './commands/generate.js';
 import { removeLink } from './commands/links.js';
@@ -21,11 +24,21 @@ import type {
   Cli_Index_GetConfigFilePath_DefaultDir,
   Cli_Index_GetConfigFilePath_Returns,
   Cli_Index_GetConfigFilePath_SamplePath,
+  Cli_Index_Main_AccessCommand,
+  Cli_Index_Main_AddedUser,
+  Cli_Index_Main_AddFormat,
+  Cli_Index_Main_AddOptions,
+  Cli_Index_Main_AddUsername,
   Cli_Index_Main_ConfigDirs,
   Cli_Index_Main_ConfigPath,
   Cli_Index_Main_LinksCommand,
+  Cli_Index_Main_RemoveUsername,
   Cli_Index_Main_Result,
   Cli_Index_Main_Returns,
+  Cli_Index_Main_RotatedUser,
+  Cli_Index_Main_RotateFormat,
+  Cli_Index_Main_RotateOptions,
+  Cli_Index_Main_RotateUsername,
   Cli_Index_Main_TrackersCommand,
   Cli_Index_Main_TypedName,
   Cli_Index_Main_TypedShortcode,
@@ -121,6 +134,51 @@ async function main(): Cli_Index_Main_Returns {
 
   const configPath: Cli_Index_Main_ConfigPath = getConfigFilePath();
 
+  const accessCommand: Cli_Index_Main_AccessCommand = new Command('access').description('Manage private app access');
+
+  accessCommand
+    .command('add <username>')
+    .description('Add an app access user and generate a key')
+    .option('--format <format>', 'Access-key format: memorable, compact, or random', 'memorable')
+    .action((username, options) => {
+      const addUsername: Cli_Index_Main_AddUsername = username;
+      const addOptions: Cli_Index_Main_AddOptions = options;
+      const addFormat: Cli_Index_Main_AddFormat = resolveAccessKeyFormat(addOptions['format']);
+      const addedUser: Cli_Index_Main_AddedUser = addAccessUser(configPath, addUsername, addFormat);
+
+      Logger.info(`App access user "${addedUser['username']}" added. Access key: ${addedUser['access_key']}`);
+
+      return;
+    });
+
+  accessCommand
+    .command('rotate <username>')
+    .description('Rotate an app access user key')
+    .option('--format <format>', 'Access-key format: memorable, compact, or random', 'memorable')
+    .action((username, options) => {
+      const rotateUsername: Cli_Index_Main_RotateUsername = username;
+      const rotateOptions: Cli_Index_Main_RotateOptions = options;
+      const rotateFormat: Cli_Index_Main_RotateFormat = resolveAccessKeyFormat(rotateOptions['format']);
+      const rotatedUser: Cli_Index_Main_RotatedUser = rotateAccessKey(configPath, rotateUsername, rotateFormat);
+
+      Logger.info(`Access key for "${rotatedUser['username']}" rotated. New access key: ${rotatedUser['access_key']}`);
+
+      return;
+    });
+
+  accessCommand
+    .command('remove <username>')
+    .description('Remove an app access user')
+    .action((username) => {
+      const removeUsername: Cli_Index_Main_RemoveUsername = username;
+
+      removeAccessUser(configPath, removeUsername);
+
+      Logger.info(`App access user "${removeUsername}" removed.`);
+
+      return;
+    });
+
   const linksCommand: Cli_Index_Main_LinksCommand = new Command('links').description('Manage links');
 
   linksCommand
@@ -151,6 +209,7 @@ async function main(): Cli_Index_Main_Returns {
       return;
     });
 
+  program.addCommand(accessCommand);
   program.addCommand(linksCommand);
   program.addCommand(trackersCommand);
 

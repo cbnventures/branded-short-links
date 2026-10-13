@@ -139,7 +139,7 @@ const envFilePath: Cli_Commands_Deploy_EnvFilePath = resolve(configDir, '.env');
 const envTokenKey: Cli_Commands_Deploy_EnvTokenKey = 'CLOUDFLARE_API_TOKEN';
 
 /**
- * CLI - Commands - Deploy.
+ * CLI - Commands - Deploy - Deploy.
  *
  * Orchestrates the full deployment workflow by validating config,
  * resolving authentication, and pushing the worker to Cloudflare.

@@ -1,9 +1,4 @@
 {
-  "settings": {
-    "worker_name": "branded-short-links",
-    "base_domain": "example.com",
-    "show_response_output": false
-  },
   "links": {
     "fallback_url": "https://example.com",
     "items": [
@@ -14,5 +9,13 @@
       }
     ]
   },
-  "trackers": []
+  "trackers": [],
+  "app_access": {
+    "users": []
+  },
+  "settings": {
+    "worker_name": "branded-short-links",
+    "base_domain": "example.com",
+    "show_response_output": false
+  }
 }

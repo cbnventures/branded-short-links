@@ -1,4 +1,7 @@
-import type { Lib_Schema_Config } from '../../lib/schema.d.ts';
+import type {
+  Lib_Schema_AppAccessUserConfig,
+  Lib_Schema_Config,
+} from '../../lib/schema.d.ts';
 
 /**
  * CLI - Commands - Config IO.
@@ -28,11 +31,17 @@ export type Cli_Commands_ConfigIo_NormalizeConfig_Trackers = Lib_Schema_Config['
 
 export type Cli_Commands_ConfigIo_NormalizeConfig_Settings = Lib_Schema_Config['settings'];
 
+export type Cli_Commands_ConfigIo_NormalizeConfig_AppAccess = Lib_Schema_Config['app_access'];
+
 export type Cli_Commands_ConfigIo_NormalizeConfig_SortedItems = Lib_Schema_Config['links']['items'];
 
 export type Cli_Commands_ConfigIo_NormalizeConfig_NormalizedLinks = Lib_Schema_Config['links'];
 
 export type Cli_Commands_ConfigIo_NormalizeConfig_NormalizedTrackers = Lib_Schema_Config['trackers'];
+
+export type Cli_Commands_ConfigIo_NormalizeConfig_SortedUsers = Lib_Schema_AppAccessUserConfig[] | undefined;
+
+export type Cli_Commands_ConfigIo_NormalizeConfig_NormalizedAppAccess = Lib_Schema_Config['app_access'];
 
 /**
  * CLI - Commands - Config IO.
@@ -51,8 +60,11 @@ export type Cli_Commands_ConfigIo_SaveConfig_NormalizedConfig_Links = Lib_Schema
 
 export type Cli_Commands_ConfigIo_SaveConfig_NormalizedConfig_Trackers = Lib_Schema_Config['trackers'];
 
+export type Cli_Commands_ConfigIo_SaveConfig_NormalizedConfig_AppAccess = Lib_Schema_Config['app_access'];
+
 export type Cli_Commands_ConfigIo_SaveConfig_NormalizedConfig = {
   settings: Cli_Commands_ConfigIo_SaveConfig_NormalizedConfig_Settings;
   links: Cli_Commands_ConfigIo_SaveConfig_NormalizedConfig_Links;
   trackers: Cli_Commands_ConfigIo_SaveConfig_NormalizedConfig_Trackers;
+  app_access?: Cli_Commands_ConfigIo_SaveConfig_NormalizedConfig_AppAccess;
 };

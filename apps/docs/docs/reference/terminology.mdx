@@ -24,9 +24,17 @@ Define the domain-specific terms used throughout the Branded Short Links documen
 
 The page the worker serves when a request matches no shortcode, no fallback URL is set, and the path isn't the root. It replaces a generic error page with a response in the same branded style as the landing page.
 
+## Access Key
+
+A deployer-managed credential used with a username and deployment URL to sign in to the private read-only app API. The CLI can generate a five-word memorable key, a compact key with five chunks, or a longer random key intended for copy and paste.
+
 ## API Token
 
 The Cloudflare credential that authorizes the CLI to deploy the worker, requiring Workers Scripts, Workers Routes, and Email Routing Rules edit permissions. The CLI resolves it from a `.env` file or the `CLOUDFLARE_API_TOKEN` environment variable, prompting for one when none is found.
+
+## App Access
+
+The optional config section that lists usernames and access keys allowed to read deployment data from `/__bsl/links`. It is intended only for people who operate their own Branded Short Links deployment, not as a public account system.
 
 ## Base Domain
 
@@ -38,7 +46,7 @@ The edge function that runs on Cloudflare's network, matching each incoming requ
 
 ## Config
 
-The `config.json` file that defines a deployment's settings, links, and trackers in one place. The CLI reads and writes it directly, and it stays out of version control since it can hold live tracker credentials.
+The `config.json` file that defines a deployment's settings, links, trackers, and optional app access in one place. The CLI reads and writes it directly, and it stays out of version control since it can hold live tracker and app credentials.
 
 ## Custom Domain
 

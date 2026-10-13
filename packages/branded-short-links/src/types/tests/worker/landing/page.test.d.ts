@@ -11,10 +11,13 @@ export type Tests_Worker_Landing_Page_MockConfig_Links = Lib_Schema_Config['link
 
 export type Tests_Worker_Landing_Page_MockConfig_Trackers = Lib_Schema_Config['trackers'];
 
+export type Tests_Worker_Landing_Page_MockConfig_AppAccess = Lib_Schema_Config['app_access'];
+
 export type Tests_Worker_Landing_Page_MockConfig = {
   settings: Tests_Worker_Landing_Page_MockConfig_Settings;
   links: Tests_Worker_Landing_Page_MockConfig_Links;
   trackers: Tests_Worker_Landing_Page_MockConfig_Trackers;
+  app_access?: Tests_Worker_Landing_Page_MockConfig_AppAccess;
 };
 
 /**

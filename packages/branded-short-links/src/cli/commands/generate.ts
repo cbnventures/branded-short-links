@@ -12,6 +12,8 @@ import { loadConfig } from './config-io.js';
 import type {
   Cli_Commands_Generate_DefaultWranglerTomlPath,
   Cli_Commands_Generate_GenerateWranglerToml_AccountId,
+  Cli_Commands_Generate_GenerateWranglerToml_AppAccess,
+  Cli_Commands_Generate_GenerateWranglerToml_AppAccessAsString,
   Cli_Commands_Generate_GenerateWranglerToml_CompatibilityDate,
   Cli_Commands_Generate_GenerateWranglerToml_Config,
   Cli_Commands_Generate_GenerateWranglerToml_ConfigPath,
@@ -71,6 +73,7 @@ function generateWranglerToml(configPath: Cli_Commands_Generate_GenerateWrangler
   const settings: Cli_Commands_Generate_GenerateWranglerToml_Settings = config['settings'];
   const links: Cli_Commands_Generate_GenerateWranglerToml_Links = config['links'];
   const trackers: Cli_Commands_Generate_GenerateWranglerToml_Trackers = config['trackers'];
+  const appAccess: Cli_Commands_Generate_GenerateWranglerToml_AppAccess = config['app_access'];
   const compatibilityDate: Cli_Commands_Generate_GenerateWranglerToml_CompatibilityDate = new Date().toISOString().slice(0, 10);
   const outputDir: Cli_Commands_Generate_GenerateWranglerToml_OutputDir = dirname(outputPath);
   const workerEntryPath: Cli_Commands_Generate_GenerateWranglerToml_WorkerEntryPath = getWorkerEntryPath();
@@ -81,6 +84,7 @@ function generateWranglerToml(configPath: Cli_Commands_Generate_GenerateWrangler
   const settingsAsString: Cli_Commands_Generate_GenerateWranglerToml_SettingsAsString = JSON.stringify(settings);
   const linksAsString: Cli_Commands_Generate_GenerateWranglerToml_LinksAsString = JSON.stringify(links);
   const trackersAsString: Cli_Commands_Generate_GenerateWranglerToml_TrackersAsString = JSON.stringify(trackers);
+  const appAccessAsString: Cli_Commands_Generate_GenerateWranglerToml_AppAccessAsString = (appAccess === undefined) ? undefined : JSON.stringify(appAccess);
 
   const lines: Cli_Commands_Generate_GenerateWranglerToml_Lines = [
     `name = "${settings['worker_name']}"`,
@@ -103,6 +107,7 @@ function generateWranglerToml(configPath: Cli_Commands_Generate_GenerateWrangler
     `SETTINGS = ${JSON.stringify(settingsAsString)}`,
     `LINKS = ${JSON.stringify(linksAsString)}`,
     `TRACKERS = ${JSON.stringify(trackersAsString)}`,
+    ...((appAccessAsString === undefined) ? [] : [`APP_ACCESS = ${JSON.stringify(appAccessAsString)}`]),
   ];
 
   mkdirSync(outputDir, { recursive: true });

@@ -13,10 +13,13 @@ export type Tests_Worker_Index_MockConfig_Links = Lib_Schema_Config['links'];
 
 export type Tests_Worker_Index_MockConfig_Trackers = Lib_Schema_Config['trackers'];
 
+export type Tests_Worker_Index_MockConfig_AppAccess = Lib_Schema_Config['app_access'];
+
 export type Tests_Worker_Index_MockConfig = {
   settings: Tests_Worker_Index_MockConfig_Settings;
   links: Tests_Worker_Index_MockConfig_Links;
   trackers: Tests_Worker_Index_MockConfig_Trackers;
+  app_access?: Tests_Worker_Index_MockConfig_AppAccess;
 };
 
 /**
@@ -27,6 +30,21 @@ export type Tests_Worker_Index_MockConfig = {
 export type Tests_Worker_Index_CreateMockCtx_Returns = ExecutionContext;
 
 export type Tests_Worker_Index_CreateMockCtx_Opaque = unknown;
+
+/**
+ * Tests - Worker - Index - Worker Default Export Fetch - Parses Optional App Access Env.
+ *
+ * @since 2.1.0
+ */
+export type Tests_Worker_Index_WorkerDefaultExportFetch_ParsesOptionalAppAccessEnv_Request = Request;
+
+export type Tests_Worker_Index_WorkerDefaultExportFetch_ParsesOptionalAppAccessEnv_Env = Record<string, string>;
+
+export type Tests_Worker_Index_WorkerDefaultExportFetch_ParsesOptionalAppAccessEnv_Ctx = ExecutionContext;
+
+export type Tests_Worker_Index_WorkerDefaultExportFetch_ParsesOptionalAppAccessEnv_Response = Response;
+
+export type Tests_Worker_Index_WorkerDefaultExportFetch_ParsesOptionalAppAccessEnv_Body = string;
 
 /**
  * Tests - Worker - Index - Worker Default Export Fetch - Returns 500 For Invalid Env.

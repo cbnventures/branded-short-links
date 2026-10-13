@@ -1,4 +1,6 @@
+import { APP_LINKS_API_PATH } from '../lib/item.js';
 import { trailingSlashPattern } from '../lib/regex.js';
+import { handleAppLinksRequest } from './app-api.js';
 import { landingPage, notFoundPage } from './landing/page.js';
 import { fireTrackers } from './trackers.js';
 
@@ -37,6 +39,11 @@ async function handleRequest(
 
   // Match shortcode (strip trailing slash).
   const pathname: Worker_Handlers_HandleRequest_Pathname = requestUrl['pathname'].replace(trailingSlashPattern, '') || '/';
+
+  if (pathname === APP_LINKS_API_PATH) {
+    return handleAppLinksRequest(request, config);
+  }
+
   const shortcode: Worker_Handlers_HandleRequest_Shortcode = config['links']['items'].find((item) => pathname === item['shortcode']);
 
   // GET/HEAD → landing page, not found, fallback, or redirect.

@@ -36,6 +36,21 @@ export type Lib_Schema_LinksConfig = {
   items: Lib_Schema_LinksConfig_Items;
 };
 
+export type Lib_Schema_AppAccessUserConfig_Username = string;
+
+export type Lib_Schema_AppAccessUserConfig_AccessKey = string;
+
+export type Lib_Schema_AppAccessUserConfig = {
+  username: Lib_Schema_AppAccessUserConfig_Username;
+  access_key: Lib_Schema_AppAccessUserConfig_AccessKey;
+};
+
+export type Lib_Schema_AppAccessConfig_Users = Lib_Schema_AppAccessUserConfig[];
+
+export type Lib_Schema_AppAccessConfig = {
+  users: Lib_Schema_AppAccessConfig_Users;
+};
+
 export type Lib_Schema_Ga4TrackerConfig_Name = string;
 
 export type Lib_Schema_Ga4TrackerConfig_Type = 'ga4';
@@ -134,8 +149,11 @@ export type Lib_Schema_Config_Links = Lib_Schema_LinksConfig;
 
 export type Lib_Schema_Config_Trackers = Lib_Schema_TrackerConfig[];
 
+export type Lib_Schema_Config_AppAccess = Lib_Schema_AppAccessConfig | undefined;
+
 export type Lib_Schema_Config = {
   settings: Lib_Schema_Config_Settings;
   links: Lib_Schema_Config_Links;
   trackers: Lib_Schema_Config_Trackers;
+  app_access?: Lib_Schema_Config_AppAccess;
 };

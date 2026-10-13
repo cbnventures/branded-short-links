@@ -87,6 +87,12 @@ const mockConfig: Tests_Worker_Landing_Page_MockConfig = {
     measurement_id: 'G-XXXXXXXXXX',
     api_secret: 'secret123',
   }],
+  app_access: {
+    users: [{
+      username: 'mobile',
+      access_key: 'alpha-bravo-charlie-delta-echo',
+    }],
+  },
 };
 
 describe('landingPage', () => {
@@ -139,6 +145,10 @@ describe('landingPage', () => {
     expect(body).not.toContain('https://github.com/example');
 
     expect(body).not.toContain('secret123');
+
+    expect(body).not.toContain('app_access');
+
+    expect(body).not.toContain('alpha-bravo-charlie-delta-echo');
 
     return;
   });

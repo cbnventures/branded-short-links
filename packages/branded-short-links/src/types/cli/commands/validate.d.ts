@@ -23,10 +23,13 @@ export type Cli_Commands_Validate_ValidateConfig_Config_Links = Lib_Schema_Confi
 
 export type Cli_Commands_Validate_ValidateConfig_Config_Trackers = Lib_Schema_Config['trackers'];
 
+export type Cli_Commands_Validate_ValidateConfig_Config_AppAccess = Lib_Schema_Config['app_access'];
+
 export type Cli_Commands_Validate_ValidateConfig_Config = {
   settings: Cli_Commands_Validate_ValidateConfig_Config_Settings;
   links: Cli_Commands_Validate_ValidateConfig_Config_Links;
   trackers: Cli_Commands_Validate_ValidateConfig_Config_Trackers;
+  app_access?: Cli_Commands_Validate_ValidateConfig_Config_AppAccess;
 };
 
 export type Cli_Commands_Validate_ValidateConfig_ShortcodeCounts = Map<string, number>;
@@ -50,6 +53,16 @@ export type Cli_Commands_Validate_ValidateConfig_ExistingTrackerCount = number |
 export type Cli_Commands_Validate_ValidateConfig_NewTrackerCount = number;
 
 export type Cli_Commands_Validate_ValidateConfig_Entry = [string, number];
+
+export type Cli_Commands_Validate_ValidateConfig_AppAccess = Lib_Schema_Config['app_access'];
+
+export type Cli_Commands_Validate_ValidateConfig_UsernameCounts = Map<string, number>;
+
+export type Cli_Commands_Validate_ValidateConfig_ExistingUsernameCount = number | undefined;
+
+export type Cli_Commands_Validate_ValidateConfig_NewUsernameCount = number;
+
+export type Cli_Commands_Validate_ValidateConfig_UsernameEntryValue = [string, number];
 
 export type Cli_Commands_Validate_ValidateConfig_Result_Valid = boolean;
 
